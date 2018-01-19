@@ -1,21 +1,36 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { fetchPosts } from '../actions/posts';
-
+import { isPostsFetching, getPostWith } from '../reducers/index';
+import ContentLoader from 'react-content-loader';
+const ListLoader = () => <ContentLoader type="list" />;
 
 class Root extends Component {
   componentDidMount() {
-    this.props.fetchPosts(this.props.category);
+    const { fetchPosts, category } = this.props;
+    fetchPosts(category);
+  }
+
+  componentDidUpdate() {
+    console.log(1);
   }
 
   render() {
-    return <h1>hello</h1>;
+    const { isPostsFetching, posts } = this.props;
+    return (
+      <Fragment>
+        {isPostsFetching ? <ListLoader /> : <p>{JSON.stringify(posts)}</p>}
+      </Fragment>
+    )
   }
 }
 
 const mapStateToProps = (state, { match: { params } }) => {
+  const { category = 'all' } = params;
   return {
-    category: params.category
+    category,
+    isPostsFetching: isPostsFetching(state, category),
+    posts: getPostWith(state, category)
   };
 }
 

@@ -10,15 +10,20 @@ export const requestPosts = (category) => ({
   category
 });
 
-export const receivePosts = (posts) => ({
+export const receivePosts = (posts, category) => ({
   type: RECEIVE_POSTS,
   payload: posts,
+  category
 });
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const fetchPosts = (category) => (dispatch) => {
   dispatch(requestPosts(category));
-  const fetchURL = category ? `${category}/posts` : '/posts';
-  return fetch(fetchURL, { headers })
-    .then(res => res.json(), err => Promise.reject(err))
-    .then(posts => dispatch(receivePosts(posts)));
+  const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
+  return Promise.all([
+    fetch(fetchURL, { headers }),
+    delay(2000)
+  ])
+    .then(([res]) => res.json(), err => Promise.reject(err))
+    .then(posts => dispatch(receivePosts(posts, category)));
 }
