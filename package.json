@@ -7,12 +7,13 @@
     "date-fns": "^1.29.0",
     "font-awesome": "^4.7.0",
     "normalizr": "^3.2.4",
+    "r2": "^2.0.0",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
     "react-content-loader": "^2.0.2",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
-    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"
@@ -25,5 +26,6 @@
   },
   "devDependencies": {
     "concurrently": "^3.5.1"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }
