@@ -1,29 +1,5 @@
-import { assoc, evolve, not, __ } from 'ramda';
-import { RECEIVE_POSTS, REQUEST_POSTS  } from '../actions/posts';
-const fetchPosts = (state = {
-  all: { isFetching: false, posts: [] }
-}, action) => {
-  const { category, type } = action;
-  switch (type) {
-    case RECEIVE_POSTS:
-      return {
-        ...state,
-        [category]: {
-          isFetching: false,
-          posts: action.payload
-        }
-      }
-    case REQUEST_POSTS:
-      return assoc(category, { isFetching: true }, state);
-    default:
-      return state;
-  }
-}
+import categories from './category';
+import posts from './posts';
+import { combineReducers } from 'redux';
 
-export const isPostsFetching = (state, category) =>
-  state[category].isFetching;
-export const getPostWith = (state, category) =>
-  state[category].posts;
-
-
-export default fetchPosts;
+export default combineReducers({ categories, posts });
