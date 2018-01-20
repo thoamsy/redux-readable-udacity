@@ -6,7 +6,7 @@ import { getCategories } from '../reducers/category';
 import { getPostWith, isPostsFetching } from '../reducers/posts';
 import ContentLoader from 'react-content-loader';
 import CategoryNav from './Category';
-const ListLoader = () => <ContentLoader type="list" />;
+const ListLoader = () => <ContentLoader type="list"/>;
 
 class Root extends Component {
   componentDidMount() {
@@ -29,8 +29,15 @@ class Root extends Component {
     return (
       <Fragment>
         <CategoryNav categories={categories} />
-        <h1>{category}</h1>
-        {isPostsFetching ? <ListLoader /> : <p>{JSON.stringify(posts)}</p>}
+        <section className="section">
+          <h1 className="title">{category}</h1>
+          <hr/>
+          {isPostsFetching ?
+            <div style={{ margin: '0 auto', width: 500}}>
+              <ListLoader />
+            </div>:
+            <p>{JSON.stringify(posts)}</p>}
+        </section>
       </Fragment>
     )
   }
