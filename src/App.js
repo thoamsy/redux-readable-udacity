@@ -1,5 +1,5 @@
 import React from 'react';
-// import 'font-awesome/css/font-awesome.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 import 'bulma/css/bulma.css';
 import Root from './view/Root';
 import { Provider } from 'react-redux';

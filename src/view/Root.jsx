@@ -6,6 +6,7 @@ import { getCategories } from '../reducers/category';
 import { getPostWith, isPostsFetching } from '../reducers/posts';
 import ContentLoader from 'react-content-loader';
 import CategoryNav from './Category';
+import PostList from '../view/Post';
 const ListLoader = () => <ContentLoader type="list"/>;
 
 class Root extends Component {
@@ -29,17 +30,18 @@ class Root extends Component {
     return (
       <Fragment>
         <CategoryNav categories={categories} />
-        <section className="section">
+        <section className="section" style={{ backgroundColor: '#f6f6f6' }}>
           <h1 className="title">{category}</h1>
-          <hr/>
+          <hr />
           {isPostsFetching ?
-            <div style={{ margin: '0 auto', width: 500}}>
+            <div style={{ margin: '0 auto', width: 500 }}>
               <ListLoader />
-            </div>:
-            <p>{JSON.stringify(posts)}</p>}
+            </div> :
+            <PostList posts={posts} />
+          }
         </section>
       </Fragment>
-    )
+    );
   }
 }
 
@@ -51,6 +53,6 @@ const mapStateToProps = (state, { match: { params } }) => {
     posts: getPostWith(state, category),
     categories: getCategories(state)
   };
-}
+};
 
 export default connect(mapStateToProps, { fetchPosts, fetchAllCategories })(Root);

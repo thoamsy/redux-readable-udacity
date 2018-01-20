@@ -1,5 +1,5 @@
 const headers = {
-  Authorization: "I don't know why we need this.",
+  Authorization: 'I don\'t know why we need this.',
 };
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
@@ -24,8 +24,8 @@ export const fetchPosts = (category) => (dispatch, getStore) => {
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
   return Promise.all([
     fetch(fetchURL, { headers }),
-    delay(20000)
+    delay(2000)
   ])
     .then(([res]) => res.json(), err => Promise.reject(err))
     .then(posts => dispatch(receivePosts(posts, category)));
-}
+};

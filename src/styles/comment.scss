@@ -1,0 +1,50 @@
+@mixin column {
+  display: flex;
+  flex-direction: column;
+}
+.component-block {
+  padding: 0 20px;
+  .comment {
+    max-width: 60%;
+    height: auto;
+    min-height: 200px;
+    margin: auto;
+    &:not(:last-child) {
+      margin-bottom: 0px;
+    }
+    &:first-child {
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
+    &:not(:last-child):not(:first-child) {
+      border-radius: 0px;
+    }
+    &:last-child {
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+
+  .comment-header {
+    @include column;
+
+    .author {
+      color: #676867;
+    }
+  }
+
+  .body {
+    margin: 20px 0;
+    word-wrap: break-word;
+    word-break: break-word;
+    p {
+      font-size: 18px;
+      line-height: 1.5;
+      margin-top: 15px;
+      text-justify: auto;
+    }
+    p:first-child {
+      margin-top: 0px;
+    }
+  }
+}
