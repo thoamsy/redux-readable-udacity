@@ -17,7 +17,9 @@ export const receivePosts = (posts, category) => ({
 });
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-export const fetchPosts = (category) => (dispatch) => {
+export const fetchPosts = (category) => (dispatch, getStore) => {
+  if (getStore().allPosts[category]) return;
+
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
   return Promise.all([
