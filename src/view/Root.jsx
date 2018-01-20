@@ -17,15 +17,19 @@ class Root extends Component {
     ]);
   }
 
-  componentDidUpdate() {
-    console.log(1);
+  componentDidUpdate(prevProps) {
+    const { fetchPosts, category } = this.props;
+    if (prevProps.category !== category) {
+      fetchPosts(category);
+    }
   }
 
   render() {
-    const { isPostsFetching, posts, categories } = this.props;
+    const { isPostsFetching, posts, categories, category } = this.props;
     return (
       <Fragment>
         <CategoryNav categories={categories} />
+        <h1>{category}</h1>
         {isPostsFetching ? <ListLoader /> : <p>{JSON.stringify(posts)}</p>}
       </Fragment>
     )

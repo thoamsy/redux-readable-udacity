@@ -1,8 +1,6 @@
 import { assoc, evolve, not, __ } from 'ramda';
 import { RECEIVE_POSTS, REQUEST_POSTS  } from '../actions/posts';
-const fetchPosts = (state = {
-  all: { isFetching: false, posts: [] }
-}, action) => {
+const fetchPosts = (state = { }, action) => {
   const { category, type } = action;
   switch (type) {
     case RECEIVE_POSTS:
@@ -22,9 +20,9 @@ const fetchPosts = (state = {
 
 
 export const isPostsFetching = (state, category) =>
-  state.posts[category].isFetching;
+  state.allPosts[category] ? state.allPosts[category].isFetching : false;
 export const getPostWith = (state, category) =>
-  state.posts[category].posts;
+  state.allPosts[category] ? state.allPosts[category].posts : [];
 
 
 export default fetchPosts;
