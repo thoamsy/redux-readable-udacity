@@ -25,6 +25,6 @@ CategoriesNav.propTypes = {
     name: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired
   }))
-}
+};
 
 export default CategoriesNav;

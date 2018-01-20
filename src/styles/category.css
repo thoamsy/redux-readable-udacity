@@ -3,7 +3,8 @@
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
-  align-items: center; }
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(26, 26, 26, 0.1); }
   .navbar a.category {
     text-transform: uppercase;
     font-size: 18px;
@@ -15,3 +16,5 @@
     .navbar a.category.is-active {
       color: rgba(0, 0, 0, 0.84);
       font-weight: 600; }
+
+/*# sourceMappingURL=category.css.map */
