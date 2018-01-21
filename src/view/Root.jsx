@@ -30,7 +30,8 @@ class Root extends Component {
     return (
       <Fragment>
         <CategoryNav categories={categories} />
-        <section className="section" style={{ backgroundColor: '#f6f6f6' }}>
+        <section className="section"
+          style={{ backgroundColor: '#f6f6f6' }}>
           <h1 className="title">{category}</h1>
           <hr />
           {isPostsFetching ?

@@ -12,7 +12,8 @@
     color: rgba(0, 0, 0, 0.56);
     transition: color ease-out .3s; }
     .navbar a.category:hover {
-      color: rgba(0, 0, 0, 0.84); }
+      color: rgba(0, 0, 0, 0.84);
+      text-decoration: underline; }
     .navbar a.category.is-active {
       color: rgba(0, 0, 0, 0.84);
       font-weight: 600; }

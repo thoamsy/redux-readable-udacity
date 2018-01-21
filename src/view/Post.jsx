@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import '../styles/post.css';
 import { format } from 'date-fns';
 
-const Post = ({ author, title, timestamp, body, category }) => (
+const Post = ({ title, timestamp, body, category }) => (
   <div className="comment-container">
     <article className="comment">
       {/* eslint-disable */}
       <a className="delete" aria-label="delete post" />
       {/* eslint-enable */}
-      <p className="category">来自分类：{category}</p>
-      <h2 className="author">{author}</h2>
+      <strong className="has-text-info" style={{textTransform: 'capitalize'}}>{category}</strong>
       <h2 className="comment-title">{title}</h2>
       <div className="body">{body}</div>
-      <time className="comment-time">{format(timestamp, 'YYYY-MM-DD')}</time>
+      <time className="has-text-grey" style={{ margin: '10px 0' }}>{format(timestamp, 'YYYY-MM-DD')}</time>
     </article>
     <div className="actions">
       <button className="button">
@@ -31,7 +30,6 @@ const Post = ({ author, title, timestamp, body, category }) => (
   </div>
 );
 Post.propTypes = {
-  author: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   category: PropTypes.string,
@@ -39,7 +37,15 @@ Post.propTypes = {
 };
 
 const PostList = ({ posts }) => (
-  <div className="container">{posts.map(post => <Post key={post.timestamp} {...post} />)}</div>
+  <div className="container">
+  {
+      !posts.length ?
+        <div className="notification is-warning">
+          该分类没有任何文章，去其他分类看看吧。(´･ω･`)
+        </div> :
+    posts.map(post => <Post key={post.timestamp} {...post} />)
+  }
+  </div>
 );
 
 export default PostList;

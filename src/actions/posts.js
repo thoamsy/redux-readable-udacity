@@ -24,7 +24,7 @@ export const fetchPosts = (category) => (dispatch, getStore) => {
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
   return Promise.all([
     fetch(fetchURL, { headers }),
-    delay(2000)
+    delay(1000)
   ])
     .then(([res]) => res.json(), err => Promise.reject(err))
     .then(posts => dispatch(receivePosts(posts, category)));
