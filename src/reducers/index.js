@@ -1,5 +1,13 @@
 import categories from './category';
-import allPosts from './posts';
+import postsByCategory from './postsByCategory';
 import { combineReducers } from 'redux';
 
-export default combineReducers({ categories, allPosts });
+export default combineReducers({ categories, postsByCategory });
+
+export const isPostsFetching = (state, category) =>
+  state.postsByCategory[category] ? state.postsByCategory[category].isFetching : false;
+export const getPost = (state, category) => {
+  const posts = state.postsByCategory[category];
+  console.log(posts);
+  return posts ? posts.ids.map(id => posts.byId[id]) : [];
+};

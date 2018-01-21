@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { fetchPosts } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
 import { getCategories } from '../reducers/category';
-import { getPostWith, isPostsFetching } from '../reducers/posts';
+import { getPost, isPostsFetching } from '../reducers/';
 import ContentLoader from 'react-content-loader';
 import CategoryNav from './Category';
 import PostList from '../view/Post';
@@ -51,7 +51,7 @@ const mapStateToProps = (state, { match: { params } }) => {
   return {
     category,
     isPostsFetching: isPostsFetching(state, category),
-    posts: getPostWith(state, category),
+    posts: getPost(state, category),
     categories: getCategories(state)
   };
 };
