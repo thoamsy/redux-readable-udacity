@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../styles/post.css';
 import { format } from 'date-fns';
 
-const Post = ({ title, timestamp, body, category }) => (
+const Post = ({ title, timestamp, body, category, voteScore }) => (
   <div className="comment-container">
     <article className="comment">
       {/* eslint-disable */}
@@ -19,7 +19,7 @@ const Post = ({ title, timestamp, body, category }) => (
         <span className="icon is-small">
           <i className="fa fa-angle-up" />
         </span>
-        <span>400</span>
+        <span>{voteScore}</span>
       </button>
       <button className="button">
         <span className="icon is-small">
@@ -32,8 +32,9 @@ const Post = ({ title, timestamp, body, category }) => (
 Post.propTypes = {
   body: PropTypes.string.isRequired,
   timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  category: PropTypes.string,
-  title: PropTypes.string.isRequired
+  category: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  voteScore: PropTypes.number.isRequired
 };
 
 const PostList = ({ posts }) => (
