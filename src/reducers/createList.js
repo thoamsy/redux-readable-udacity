@@ -1,25 +1,15 @@
 import { combineReducers } from 'redux';
-import { prop } from 'ramda';
+import { prop, T, F } from 'ramda';
 import { RECEIVE_POSTS, REQUEST_POSTS } from '../actions/posts';
+import createReducer from './createReducer';
 
-const ids = (state = [], action) => {
-  switch (action.type) {
-    case RECEIVE_POSTS:
-      return action.payload.map(prop('id'));
-    default:
-      return state;
-  }
-};
-const isFetching = (state = false, action) => {
-  switch (action.type) {
-    case REQUEST_POSTS:
-      return true;
-    case RECEIVE_POSTS:
-      return false;
-    default:
-      return state;
-  }
-};
+const ids = createReducer([], {
+  [RECEIVE_POSTS]: (state, action) => action.payload.map(prop('id')),
+});
+const isFetching = createReducer(false, {
+  [REQUEST_POSTS]: T,
+  [RECEIVE_POSTS]: F,
+});
 // TODO: add error reducer
 
 export default combineReducers({ isFetching, ids });

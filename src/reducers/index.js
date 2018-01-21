@@ -8,6 +8,5 @@ export const isPostsFetching = (state, category) =>
   state.postsByCategory[category] ? state.postsByCategory[category].isFetching : false;
 export const getPost = (state, category) => {
   const posts = state.postsByCategory[category];
-  console.log(posts);
   return posts ? posts.ids.map(id => posts.byId[id]) : [];
 };
