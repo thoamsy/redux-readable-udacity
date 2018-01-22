@@ -18,4 +18,8 @@
       color: rgba(0, 0, 0, 0.84);
       font-weight: 600; }
 
+.tags input:checked + .tag {
+  background-color: #23d160;
+  color: #fff; }
+
 /*# sourceMappingURL=category.css.map */

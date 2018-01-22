@@ -5,14 +5,16 @@ import '../styles/category.css';
 import v4 from 'uuid/v4';
 
 const EditPostItem = () => (
-  <Link
-    to={`/${v4()}/edit`}
-    data-tooltip="新建帖子"
-    className="tooltip is-tooltip-bottom">
-    <span className="icon has-text-link is-large">
-      <i className="fa fa-pencil-square fa-2x" />
-    </span>
-  </Link>
+  <div className="navbar-item">
+    <Link
+      to={`/${v4()}/edit`}
+      data-tooltip="新建帖子"
+      className="tooltip is-tooltip-bottom">
+      <span className="icon has-text-link is-large">
+        <i className="fa fa-pencil-square fa-2x" />
+      </span>
+    </Link>
+  </div>
 );
 const CategoriesItem = ({ categories }) =>
   categories.map(category => (
