@@ -1,44 +1,49 @@
 import { assoc, prop, evolve, not, __, reduce, always } from 'ramda';
-import { RECEIVE_POSTS, REQUEST_POSTS, RECEIVE_POST_VOTE, REQUEST_POST_VOTE, postVoteScore } from '../actions/posts';
-import createReducer from './createReducer';
+import {
+  RECEIVE_POSTS,
+  REQUEST_POSTS,
+  RECEIVE_POST_VOTE,
+  REQUEST_POST_VOTE
+} from '../actions/posts';
 
-// TODO: add a post reducer;
-const posts = createReducer(
-  {
-    byId: {},
-    ids: [],
-    isFetching: false,
-  },
-  {
-    [REQUEST_POSTS]: evolve({ isFetching: not }),
-    [RECEIVE_POSTS]: (state, action) =>
-      evolve({
-        byId: reduce(
-          (posts, post) => assoc(post.id, post, posts),
-          __,
-          action.payload
-        ),
+const postReducer = (action) => (state = {}) => {
+  const { type, postId, update } = action;
+  switch (type) {
+    case RECEIVE_POST_VOTE:
+    case REQUEST_POST_VOTE:
+      return evolve({ [postId]: { voteScore: update } }, state);
+    case RECEIVE_POSTS:
+      return reduce((posts, post) => assoc(post.id, post, posts), state, action.payload);
+    case REQUEST_POSTS:
+    default:
+      return state;
+  }
+};
+
+const posts = (state = {
+  byId: {},
+  ids: [],
+  isFetching: false,
+}, action) => {
+  const updatePosts = evolve(__, state);
+  switch (action.type) {
+    case REQUEST_POSTS:
+      return updatePosts({ isFetching: not });
+    case RECEIVE_POSTS:
+      return updatePosts({
+        byId: postReducer(action),
         isFetching: not,
         ids: always(action.payload.map(prop('id')))
-      }, state),
-    [REQUEST_POST_VOTE]: (state, action) =>
-      evolve({
-        byId: {
-          [action.postId]: {
-            voteScore: action.update
-          }
-        }
-      }, state),
-    [RECEIVE_POST_VOTE]: (state, action) =>
-      evolve({
-        byId: {
-          [action.postId]: {
-            voteScore: always(action.voteScore)
-          }
-        }
-      }, state),
+      });
+    case REQUEST_POST_VOTE:
+    case RECEIVE_POST_VOTE:
+      return updatePosts({
+        byId: postReducer(action)
+      });
+    default:
+      return state;
   }
-);
+};
 
 // TODO: add error reducer
 

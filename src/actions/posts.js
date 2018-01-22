@@ -1,4 +1,4 @@
-import { prop, inc, dec } from 'ramda';
+import { prop, inc, dec, always } from 'ramda';
 const headers = {
   Authorization: 'I don\'t know why we need this.',
 };
@@ -28,7 +28,7 @@ const requestPostVote = (postId, category, up) => ({
 });
 const receivePostVote =  (postId, category, voteScore) => ({
   type: RECEIVE_POST_VOTE,
-  voteScore,
+  update: always(voteScore),
   postId,
   category
 });
