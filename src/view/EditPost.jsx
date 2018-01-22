@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { pick } from 'ramda';
 import { connect } from 'react-redux';
 import Navbar from './Navbar';
@@ -28,6 +29,15 @@ const ChooseCategory = ({ categories }) => (
   </div>
 );
 
+ChooseCategory.propType = {
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ),
+};
+
 const GeneralInput = ({ eleType, inputRef, ...props }) => (
   <div className="field">
     <label className="label">{props.name}</label>
@@ -41,6 +51,12 @@ const GeneralInput = ({ eleType, inputRef, ...props }) => (
     </div>
   </div>
 );
+GeneralInput.propType = {
+  eleType: PropTypes.string.isRequired,
+  inputRef: PropTypes.func,
+  name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string
+};
 class EditPost extends Component {
   authorInput = null;
   titleInput = null;
