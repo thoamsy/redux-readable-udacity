@@ -1,7 +1,8 @@
 import { assoc, prop, evolve, not, __, reduce, always } from 'ramda';
-import { RECEIVE_POSTS, REQUEST_POSTS } from '../actions/posts';
+import { RECEIVE_POSTS, REQUEST_POSTS, RECEIVE_POST_VOTE, REQUEST_POST_VOTE, postVoteScore } from '../actions/posts';
 import createReducer from './createReducer';
 
+// TODO: add a post reducer;
 const posts = createReducer(
   {
     byId: {},
@@ -19,6 +20,22 @@ const posts = createReducer(
         ),
         isFetching: not,
         ids: always(action.payload.map(prop('id')))
+      }, state),
+    [REQUEST_POST_VOTE]: (state, action) =>
+      evolve({
+        byId: {
+          [action.postId]: {
+            voteScore: action.update
+          }
+        }
+      }, state),
+    [RECEIVE_POST_VOTE]: (state, action) =>
+      evolve({
+        byId: {
+          [action.postId]: {
+            voteScore: always(action.voteScore)
+          }
+        }
       }, state),
   }
 );

@@ -1,11 +1,12 @@
+import { prop, inc, dec } from 'ramda';
 const headers = {
   Authorization: 'I don\'t know why we need this.',
 };
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const REQUEST_POSTS = 'REQUEST_POSTS';
-export const POST_VOTE_SCORE_UP = 'POST_VOTE_SCORE_UP';
-export const POST_VOTE_SROCE_DOWN = 'POST_VOTE_SROCE_DOWN';
+export const REQUEST_POST_VOTE = 'REQUEST_POST_VOTE';
+export const RECEIVE_POST_VOTE = 'RECEIVE_POST_VOTE';
 
 const requestPosts = (category) => ({
   type: REQUEST_POSTS,
@@ -18,17 +19,29 @@ const receivePosts = (posts, category) => ({
   category
 });
 
-export const postVoteScoreUp = (postId) => ({
-  type: POST_VOTE_SCORE_UP,
-  payload: JSON.stringify({ option: 'upVote' }),
-  postId
+// 每次触发，就加一
+const requestPostVote = (postId, category, up) => ({
+  type: REQUEST_POST_VOTE,
+  postId,
+  update: up ? inc : dec,
+  category
+});
+const receivePostVote =  (postId, category, voteScore) => ({
+  type: RECEIVE_POST_VOTE,
+  voteScore,
+  postId,
+  category
 });
 
-export const postVoteScoreDown = (postId) => ({
-  type: POST_VOTE_SROCE_DOWN,
-  payload: JSON.stringify({ option: 'downVote' }),
-  postId
-});
+export const postVoteScore = (postId, category, up) => (dispatch) => {
+  dispatch(requestPostVote(postId, category, up));
+  const body = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
+  const voteURL = `/posts/${postId}`;
+  return fetch(voteURL, { headers: {'content-type': 'application/json', 'Authorization': 'hh'}, body, method: 'POST' })
+    .then(res => res.json(), Promise.reject)
+    .then(prop('voteScore'))
+    .then(voteScore => dispatch(receivePostVote(postId, category, voteScore)));
+};
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const fetchPosts = (category) => (dispatch, getStore) => {
@@ -40,6 +53,6 @@ export const fetchPosts = (category) => (dispatch, getStore) => {
     fetch(fetchURL, { headers }),
     delay(1000)
   ])
-    .then(([res]) => res.json(), err => Promise.reject(err))
+    .then(([res]) => res.json(), Promise.reject)
     .then(posts => dispatch(receivePosts(posts, category)));
 };
