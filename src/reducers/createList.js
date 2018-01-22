@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { prop, T, F } from 'ramda';
 import { RECEIVE_POSTS, REQUEST_POSTS } from '../actions/posts';
-import createReducer from './createReducer';
+import createReducer from '../util/createReducer';
 
 const ids = createReducer([], {
   [RECEIVE_POSTS]: (state, action) => action.payload.map(prop('id')),
