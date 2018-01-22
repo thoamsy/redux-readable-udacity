@@ -1,16 +1,15 @@
 import React from 'react';
 
-const NavBar = ({ children }) => {
-  const [start, end] = React.Children.toArray(children);
-  console.log(start, end);
+const NavBar = ({ children, categories }) => {
+  const [start, end] = children;
   return (
     <nav className="navbar is-transparent is-fixed-top">
       <div className="navbar-start">
-        {start}
+        {typeof start === 'function' ? start(categories) : start}
       </div>
       <div className="navbar-end">
         <div className="navbar-item">
-          {end}
+          {typeof end === 'function' ? end(categories) : end}
         </div>
       </div>
     </nav>

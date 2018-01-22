@@ -5,7 +5,8 @@ import { fetchAllCategories } from '../actions/category';
 import { getCategories } from '../reducers/category';
 import { getPost, isPostsFetching } from '../reducers/';
 import ContentLoader from 'react-content-loader';
-import CategoryNav from './Category';
+import Navbar from './Navbar';
+import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
 import PostList from '../view/Post';
 const ListLoader = () => <ContentLoader type="list"/>;
 
@@ -29,7 +30,13 @@ class Root extends Component {
     const { isPostsFetching, posts, categories, category } = this.props;
     return (
       <Fragment>
-        <CategoryNav categories={categories} />
+        <Navbar categories={categories}>
+          {
+            (categories) => <CategoriesItem categories={categories} />
+          }
+          <EditPostItem/>
+        </Navbar>
+
         <section className="section"
           style={{ backgroundColor: '#f6f6f6' }}>
           <h1 className="title">{category}</h1>
