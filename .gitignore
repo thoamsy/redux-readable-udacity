@@ -23,6 +23,6 @@ yarn-error.log*
 api-server/node_modules/
 .vscode/
 
-.sass-cache/
+.sass-cache/*
 src/styles/*.css.map
 test/date-fns.js

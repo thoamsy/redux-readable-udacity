@@ -4,3 +4,7 @@
 ```bash
 yarn && yarn start
 ```
+
+该项目主要用到了 [bulma](https://bulma.io/) 作为 css 库, 一些自定义样式使用 `scss` 编写.
+Redux 的风格会尝试学习 Dan[https://github.com/gaearon] 的风格, 并不断改进.
+另外除了必备的几个库外, 还是用了一些第三方的库以提升开发者的体验.
