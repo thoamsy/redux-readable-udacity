@@ -1,6 +1,7 @@
 import React from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bulma/css/bulma.css';
+import 'bulma-tooltip/bulma-tooltip.min.css';
 import Root from './view/Root';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';

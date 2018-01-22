@@ -18,6 +18,13 @@ const CategoriesNav = ({ categories }) => (
         ))
       }
     </div>
+    <div className="navbar-end">
+      <div className="navbar-item">
+        <a data-tooltip="新建博客" className="tooltip is-tooltip-bottom"><span className="icon has-text-info is-large">
+          <i className="fa fa-pencil-square fa-2x"></i>
+        </span></a>
+      </div>
+    </div>
   </nav>
 );
 CategoriesNav.propTypes = {
