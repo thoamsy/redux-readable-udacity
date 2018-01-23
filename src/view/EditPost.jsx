@@ -4,27 +4,17 @@ import { pick } from 'ramda';
 import { connect } from 'react-redux';
 import Navbar from './Navbar';
 
-
-const ChooseCategory = ({ categories }) => (
+const ChooseCategory = ({ categories, value, onChange }) => (
   <div className="field">
     <label className="label">文章分类</label>
-    <div className="control">
-      <div className="tags">
-        {categories.map(({ name }) =>
-          <Fragment key={name}>
-          <input type="radio"
-            id={name + 'abcdefg'}
-            name="choose-category"
-            style={{ position: 'absolute', left: -9999 }}
-          />
-          <label
-            className="tag is-medium"
-            htmlFor={name + 'abcdefg'}>
-            {name}
-          </label>
-        </Fragment>
-        )}
-      </div>
+      <div className="select is-multiple">
+      <select size={categories.length}
+        onChange={onChange}
+        value={value}
+        multiple
+        name="category">
+        {categories.map(({ name }) => <option value={name} key={name}>{name}</option>)}
+      </select>
     </div>
   </div>
 );
@@ -38,63 +28,86 @@ ChooseCategory.propType = {
   ),
 };
 
-const GeneralInput = ({ eleType, inputRef, ...props }) => (
+const GeneralInput = ({ eleType, labelName, ...props }) => (
   <div className="field">
-    <label className="label">{props.name}</label>
+    <label className="label">{labelName}</label>
     <div className="control">
-      {
-        React.createElement(
-          eleType,
-          { ...props, ref: inputRef, className: props.className || eleType }
-        )
-      }
+      {React.createElement(eleType, {
+        ...props,
+        className: props.className || eleType,
+      })}
     </div>
   </div>
 );
 GeneralInput.propType = {
-  eleType: PropTypes.string.isRequired,
+  eleType: PropTypes.oneOf(['input', 'textarea', 'button']),
   inputRef: PropTypes.func,
   name: PropTypes.string.isRequired,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
 };
 class EditPost extends Component {
-  authorInput = null;
-  titleInput = null;
-  bodyInput = null;
+  state = {
+    author: '',
+    title: '',
+    body: '',
+    category: [],
+  };
+
+  handleInputChange = ({ target }) => {
+    let { value, name, type } = target;
+    // 这里是因为 UI 实现细节使用的 select-multiple, 主要是懒得自己写 CSS 了.
+    if (type.includes('select')) {
+      value = [value];
+    }
+    console.log(type, value);
+    this.setState({
+      [name]: value,
+    });
+  };
+
   render() {
     return (
       <Fragment>
         <Navbar>
           <h1>nihao</h1>
         </Navbar>
-      <section className="section">
-        <div className="container">
-          <GeneralInput
-            eleType="input"
-            name="作者"
-            placeholder="请输入一个名字"
-            inputRef={node => this.authorInput = node}
-          />
-          <ChooseCategory categories={this.props.categories.slice(1)} />
-          <GeneralInput
-            eleType="input"
-            name="文章标题"
-            placeholder="请输入标题"
-            inputRef={node => this.titleInput = node}
-          />
-          <GeneralInput
-            eleType="textarea"
-            name="文章"
-            placeholder="说点什么吧"
-            inputRef={node => this.bodyInput = node}
-          />
-        </div>
-      </section>
+        <section className="section">
+          <div className="container">
+            <GeneralInput
+              eleType="input"
+              labelName="作者"
+              placeholder="请输入一个名字"
+              value={this.state.author}
+              onChange={this.handleInputChange}
+              name="author"
+            />
+            <ChooseCategory
+              categories={this.props.categories.slice(1)}
+              value={this.state.category}
+              onChange={this.handleInputChange}
+            />
+            <GeneralInput
+              eleType="input"
+              labelName="文章标题"
+              placeholder="请输入标题"
+              value={this.state.title}
+              onChange={this.handleInputChange}
+              name="title"
+            />
+            <GeneralInput
+              eleType="textarea"
+              labelName="文章"
+              placeholder="说点什么吧"
+              value={this.state.body}
+              onChange={this.handleInputChange}
+              name="body"
+            />
+          </div>
+        </section>
       </Fragment>
     );
-  };
+  }
 }
 EditPost = connect(pick(['categories']))(EditPost);
-
 
 export default EditPost;
