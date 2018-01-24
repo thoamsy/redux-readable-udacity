@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { fetchPosts } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
+import { fetchSavedPost } from '../actions/editPost';
 import { getCategories } from '../reducers/category';
 import { getPost, isPostsFetching } from '../reducers/';
 import ContentLoader from 'react-content-loader';
@@ -27,14 +28,14 @@ class Root extends Component {
   }
 
   render() {
-    const { isPostsFetching, posts, categories, category } = this.props;
+    const { isPostsFetching, posts, categories, category, saved } = this.props;
     return (
       <Fragment>
         <Navbar categories={categories}>
           {
             (categories) => <CategoriesItem categories={categories} />
           }
-          <EditPostItem/>
+          <EditPostItem id={saved.id}/>
         </Navbar>
 
         <section className="section"
@@ -59,8 +60,9 @@ const mapStateToProps = (state, { match: { params } }) => {
     category,
     isPostsFetching: isPostsFetching(state, category),
     posts: getPost(state, category),
-    categories: getCategories(state)
+    categories: getCategories(state),
+    saved: state.edited.saved
   };
 };
 
-export default connect(mapStateToProps, { fetchPosts, fetchAllCategories })(Root);
+export default connect(mapStateToProps, { fetchPosts, fetchAllCategories, fetchSavedPost })(Root);

@@ -1,8 +1,9 @@
 import categories from './category';
 import postsByCategory from './postsByCategory';
+import edited from './editPost';
 import { combineReducers } from 'redux';
 
-export default combineReducers({ categories, postsByCategory });
+export default combineReducers({ categories, postsByCategory, edited });
 
 export const isPostsFetching = (state, category) =>
   state.postsByCategory[category] ? state.postsByCategory[category].isFetching : false;

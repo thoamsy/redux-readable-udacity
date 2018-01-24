@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { pick } from 'ramda';
+import { pick, identical } from 'ramda';
 import { connect } from 'react-redux';
+import { savePost, fetchSavedPost } from '../actions/editPost';
 import Navbar from './Navbar';
 
 const ChooseCategory = ({ categories, value, onChange }) => (
@@ -46,30 +47,52 @@ GeneralInput.propType = {
   placeholder: PropTypes.string,
 };
 class EditPost extends Component {
-  state = {
-    author: '',
-    title: '',
-    body: '',
-    category: [],
-  };
+  state = { ...this.props.edited.saved }
+  get post() {
+    return {
+      ...this.state,
+    };
+  }
+
+  componentDidMount() {
+    this.props.fetchSavedPost();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!identical(nextProps.edited.saved, this.props.edited.saved)) {
+      this.setState(nextProps.edited.saved);
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.savePost(this.post);
+  }
 
   handleInputChange = ({ target }) => {
-    let { value, name, type } = target;
-    // 这里是因为 UI 实现细节使用的 select-multiple, 主要是懒得自己写 CSS 了.
-    if (type.includes('select')) {
-      value = [value];
-    }
-    console.log(type, value);
+    let { value, name } = target;
     this.setState({
       [name]: value,
     });
   };
 
   render() {
+    const { edited, history } = this.props;
     return (
       <Fragment>
         <Navbar>
-          <h1>nihao</h1>
+          <div className="navbar-item">
+            <h1>{edited.navState}</h1>
+          </div>
+            <div className="navbar-item">
+              <div className="field is-grouped">
+                <p className="control">
+                  <a className="button is-text">Publish</a>
+                </p>
+                <p className="control">
+                <a className="button is-danger" onClick={() => history.goBack()}>Cancel</a>
+                </p>
+              </div>
+            </div>
         </Navbar>
         <section className="section">
           <div className="container">
@@ -83,7 +106,7 @@ class EditPost extends Component {
             />
             <ChooseCategory
               categories={this.props.categories.slice(1)}
-              value={this.state.category}
+              value={[this.state.category]}
               onChange={this.handleInputChange}
             />
             <GeneralInput
@@ -108,6 +131,6 @@ class EditPost extends Component {
     );
   }
 }
-EditPost = connect(pick(['categories']))(EditPost);
+EditPost = connect(pick(['categories', 'edited']), { savePost, fetchSavedPost })(EditPost);
 
 export default EditPost;

@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink, Link } from 'react-router-dom';
 import '../styles/category.css';
-import v4 from 'uuid/v4';
 
-const EditPostItem = () => (
+const EditPostItem = ({ id }) => (
   <div className="navbar-item">
     <Link
-      to={`/${v4()}/edit`}
+      to={`/${id}/edit`}
       data-tooltip="新建帖子"
       className="tooltip is-tooltip-bottom">
       <span className="icon has-text-link is-large">
