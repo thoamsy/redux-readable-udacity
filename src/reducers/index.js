@@ -11,3 +11,5 @@ export const getPost = (state, category) => {
   const posts = state.postsByCategory[category];
   return posts ? posts.ids.map(id => posts.byId[id]) : [];
 };
+export const getCategories = (state) => state.categories;
+export const getEdited = state => state.edited;

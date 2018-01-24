@@ -14,6 +14,5 @@ const categories = (state = [{
       return state;
   }
 };
-export const getCategories = (state) => state.categories;
 
 export default categories;

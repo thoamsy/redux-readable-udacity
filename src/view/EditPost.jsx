@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { pick, identical } from 'ramda';
+import { pick, identical, isEmpty, complement } from 'ramda';
 import { connect } from 'react-redux';
 import { savePost, fetchSavedPost } from '../actions/editPost';
 import Navbar from './Navbar';
@@ -47,7 +47,7 @@ GeneralInput.propType = {
   placeholder: PropTypes.string,
 };
 class EditPost extends Component {
-  state = { ...this.props.edited.saved }
+  state = { ...this.props.edited }
   get post() {
     return {
       ...this.state,
@@ -59,13 +59,16 @@ class EditPost extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!identical(nextProps.edited.saved, this.props.edited.saved)) {
-      this.setState(nextProps.edited.saved);
+    if (!identical(nextProps.edited, this.props.edited)) {
+      this.setState(nextProps.edited);
     }
   }
 
   componentWillUnmount() {
-    this.props.savePost(this.post);
+    const isValid = complement(isEmpty);
+    if (Object.values(this.post).some(isValid)) {
+      this.props.savePost({ ...this.post, id: this.props.match.params.id });
+    }
   }
 
   handleInputChange = ({ target }) => {
@@ -76,12 +79,12 @@ class EditPost extends Component {
   };
 
   render() {
-    const { edited, history } = this.props;
+    const { history } = this.props;
     return (
       <Fragment>
         <Navbar>
           <div className="navbar-item">
-            <h1>{edited.navState}</h1>
+            <h1>发布</h1>
           </div>
             <div className="navbar-item">
               <div className="field is-grouped">

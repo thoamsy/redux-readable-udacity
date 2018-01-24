@@ -1,11 +1,8 @@
 import { assoc } from 'ramda';
-import delay from '../util/delay';
 export const CREATE_NEW_POST = 'CREATE_NEW_POST';
 export const INIT_POST = 'INIT_POST';
-export const SAVE_POST = 'SAVE_POST';
-export const SAVING_POST = 'SAVING_POST';
-export const SAVED_POST = 'SAVED_POST';
 export const PUBLISH_POST = 'PUBLISH_POST';
+export const SAVE_POST = 'SAVE_POST';
 
 const makeActionCreator = (type, ...keys) => (...args) =>
   keys.reduce((action, key, i) => assoc(key, args[i], action), { type });
@@ -21,26 +18,22 @@ export const createNewPost = makeActionCreator(
 
 export const localKey = 'editedPost';
 function saveToLocal(post) {
-  console.log(post);
   localStorage.setItem(localKey, JSON.stringify(post));
 }
 
-export const savePost = post => async dispatch => {
-  dispatch({
-    type: SAVING_POST,
-  });
+export const savePost = post => dispatch => {
   saveToLocal(post);
   dispatch({
-    type: SAVED_POST,
-  });
-  await delay(1000);
-  dispatch({
     type: SAVE_POST,
+    post
   });
 };
 
 export const fetchSavedPost = () => dispatch => {
+  let saved = localStorage.getItem(localKey);
+  saved = saved || null;
   dispatch({
-    type: INIT_POST
+    type: INIT_POST,
+    saved: JSON.parse(saved)
   });
 };

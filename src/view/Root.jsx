@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { fetchPosts } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
 import { fetchSavedPost } from '../actions/editPost';
-import { getCategories } from '../reducers/category';
-import { getPost, isPostsFetching } from '../reducers/';
+import { getPost, isPostsFetching, getCategories, getEdited } from '../reducers/';
 import ContentLoader from 'react-content-loader';
 import Navbar from './Navbar';
 import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
+import v4 from 'uuid/v4';
 import PostList from '../view/Post';
 const ListLoader = () => <ContentLoader type="list"/>;
 
@@ -16,7 +16,8 @@ class Root extends Component {
     const { fetchPosts, category, fetchAllCategories } = this.props;
     Promise.all([
       fetchPosts(category),
-      fetchAllCategories()
+      fetchAllCategories(),
+      fetchSavedPost(),
     ]);
   }
 
@@ -28,14 +29,14 @@ class Root extends Component {
   }
 
   render() {
-    const { isPostsFetching, posts, categories, category, saved } = this.props;
+    const { isPostsFetching, posts, categories, category, edited } = this.props;
     return (
       <Fragment>
         <Navbar categories={categories}>
           {
             (categories) => <CategoriesItem categories={categories} />
           }
-          <EditPostItem id={saved.id}/>
+          <EditPostItem id={edited.id || v4()}/>
         </Navbar>
 
         <section className="section"
@@ -61,7 +62,7 @@ const mapStateToProps = (state, { match: { params } }) => {
     isPostsFetching: isPostsFetching(state, category),
     posts: getPost(state, category),
     categories: getCategories(state),
-    saved: state.edited.saved
+    edited: getEdited(state)
   };
 };
 
