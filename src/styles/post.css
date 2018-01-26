@@ -49,4 +49,8 @@
       color: #fff;
       background-color: #0084ff; }
 
+.CodeMirror-empty { outline: 1px solid #c22; }
+.CodeMirror-empty.CodeMirror-focused { outline: none; }
+.CodeMirror pre.CodeMirror-placeholder { color: #999; }
+
 /*# sourceMappingURL=post.css.map */

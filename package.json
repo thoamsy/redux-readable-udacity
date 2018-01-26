@@ -5,6 +5,7 @@
   "dependencies": {
     "bulma": "^0.6.2",
     "bulma-tooltip": "^0.1.1",
+    "codemirror": "^5.33.0",
     "date-fns": "^1.29.0",
     "font-awesome": "^4.7.0",
     "normalizr": "^3.2.4",

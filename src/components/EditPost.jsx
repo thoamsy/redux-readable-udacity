@@ -4,6 +4,13 @@ import { pick, identical, isEmpty, complement } from 'ramda';
 import { connect } from 'react-redux';
 import { savePost, fetchSavedPost } from '../actions/editPost';
 import Navbar from './Navbar';
+import CodeMirror from 'codemirror';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/gfm/gfm';
+import 'codemirror/theme/ttcn.css';
+import 'codemirror/addon/display/placeholder';
+import 'codemirror/addon/selection/active-line';
+import 'codemirror/mode/javascript/javascript';
 
 const ChooseCategory = ({ categories, value, onChange }) => (
   <div className="field">
@@ -51,11 +58,21 @@ class EditPost extends Component {
   get post() {
     return {
       ...this.state,
+      body: this.code.doc.getValue()
     };
   }
 
   componentDidMount() {
     this.props.fetchSavedPost();
+    this.code = CodeMirror.fromTextArea(document.querySelector('#editSection'), {
+      mode: {
+        name: 'gfm',
+        highlightFormatting: true
+      },
+      theme: 'ttcn',
+      styleActiveLine: true,
+      lineNumber: true
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -66,6 +83,7 @@ class EditPost extends Component {
 
   componentWillUnmount() {
     const isValid = complement(isEmpty);
+    this.code.toTextArea();
     if (Object.values(this.post).some(isValid)) {
       this.props.savePost({ ...this.post, id: this.props.match.params.id });
     }
@@ -123,7 +141,8 @@ class EditPost extends Component {
             <GeneralInput
               eleType="textarea"
               labelName="文章"
-              placeholder="说点什么吧"
+              placeholder="说点什么吧, 支持 Markdown"
+              id="editSection"
               value={this.state.body}
               onChange={this.handleInputChange}
               name="body"
