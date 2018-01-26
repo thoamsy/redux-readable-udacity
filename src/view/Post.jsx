@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { connect } from 'react-redux';
 import { postVoteScore } from '../actions/posts';
 
-const Post = connect()(({ title, timestamp, body, category, voteScore, dispatch, id }) => (
+const Post = connect()(({ title, timestamp, body, category, voteScore, dispatch, id, commentCount }) => (
   <div className="comment-container">
     <article className="comment">
       {/* eslint-disable */}
@@ -16,18 +16,26 @@ const Post = connect()(({ title, timestamp, body, category, voteScore, dispatch,
       <div className="body">{body}</div>
       <time className="has-text-grey" style={{ margin: '10px 0' }}>{format(timestamp, 'YYYY-MM-DD')}</time>
     </article>
-    <div className="actions">
-      <button className="button" onClick={() => dispatch(postVoteScore(id, category, true))}>
-        <span className="icon is-small">
-          <i className="fa fa-angle-up" />
-        </span>
-        <span>{voteScore}</span>
-      </button>
-      <button className="button" onClick={() => dispatch(postVoteScore(id, category))}>
-        <span className="icon is-small">
-          <i className="fa fa-angle-down" />
-        </span>
-      </button>
+    <div className="actions level is-mobile">
+      <div className="level-left">
+        <div className="level-item">
+          <button className="button" onClick={() => dispatch(postVoteScore(id, category, true))}>
+            <span className="icon is-small">
+              <i className="fa fa-angle-up" />
+            </span>
+            <span>{voteScore}</span>
+          </button>
+          <button className="button" onClick={() => dispatch(postVoteScore(id, category))}>
+            <span className="icon is-small">
+              <i className="fa fa-angle-down" />
+            </span>
+          </button>
+        </div>
+        <a className="level-item">
+          <span className="icon is-medium"><i className="fa fa-commenting"></i></span>
+          {commentCount} 条评论
+        </a>
+      </div>
     </div>
   </div>
 ));
@@ -37,7 +45,8 @@ Post.propTypes = {
   timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   category: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  voteScore: PropTypes.number.isRequired
+  voteScore: PropTypes.number.isRequired,
+  commentCount: PropTypes.number.isRequired
 };
 Post.displayName = 'Post';
 
