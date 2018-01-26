@@ -1,0 +1,33 @@
+.comment-block {
+  padding: 0 20px;
+  max-width: 640px;
+  margin: auto; }
+  .comment-block .comment {
+    height: auto;
+    min-height: 200px; }
+    .comment-block .comment:not(:last-child) {
+      margin-bottom: 0; }
+    .comment-block .comment:first-child {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0; }
+    .comment-block .comment:not(:first-child) {
+      border-radius: 0; }
+    .comment-block .comment:last-child {
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px; }
+  .comment-block .comment-header {
+    display: flex;
+    flex-direction: column; }
+    .comment-block .comment-header .author {
+      color: #676867; }
+  .comment-block .body {
+    margin: 20px 0;
+    word-wrap: break-word;
+    word-break: break-word; }
+    .comment-block .body p {
+      font-size: 18px;
+      line-height: 1.5;
+      margin-top: 15px;
+      text-justify: auto; }
+    .comment-block .body p:first-child {
+      margin-top: 0; }

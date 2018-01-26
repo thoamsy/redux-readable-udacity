@@ -1,4 +1,5 @@
 import React, { Fragment, Component } from 'react';
+import Comments from './Comments';
 import fetchComments from '../actions/comments';
 import { connect } from 'react-redux';
 const leftTop = {
@@ -11,7 +12,7 @@ class PostDetail extends Component {
     const { dispatch, match } = this.props;
     const { id } = match.params;
     const { url } = match;
-    dispatch(fetchComments(url, id));
+    dispatch(fetchComments(`${url}/comments`, id));
   }
 
   render() {
@@ -25,6 +26,7 @@ class PostDetail extends Component {
               vitae debitis nisi aperiam, obcaecati repellat ipsum quibusdam,
               placeat praesentium suscipit similique.
             </article>
+            <Comments />
           </div>
         </section>
         <a className="icon has-text-grey" style={leftTop}>
