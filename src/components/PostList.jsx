@@ -4,6 +4,7 @@ import '../styles/post.css';
 import { format } from 'date-fns';
 import { connect } from 'react-redux';
 import { postVoteScore } from '../actions/posts';
+import { Link } from 'react-router-dom';
 
 const Post = connect()(({ title, timestamp, body, category, voteScore, dispatch, id, commentCount }) => (
   <div className="comment-container">
@@ -13,7 +14,7 @@ const Post = connect()(({ title, timestamp, body, category, voteScore, dispatch,
       {/* eslint-enable */}
       <strong className="has-text-info" style={{textTransform: 'capitalize'}}>{category}</strong>
       <h2 className="comment-title">{title}</h2>
-      <div className="body">{body}</div>
+      <div className="body"><p>{body}</p><Link to={`/posts/${id}`}>阅读全文</Link></div>
       <time className="has-text-grey" style={{ margin: '10px 0' }}>{format(timestamp, 'YYYY-MM-DD')}</time>
     </article>
     <div className="actions level is-mobile">
@@ -59,6 +60,7 @@ const PostList = ({ posts }) => (
         </div> :
     posts.map(post => <Post key={post.timestamp} {...post} />)
   }
+
   </div>
 );
 
