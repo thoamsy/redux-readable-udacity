@@ -2,14 +2,14 @@ export const FETCH_COMMENTS_REQUEST = 'FETCH_COMMENTS_REQUEST';
 export const FETCH_COMMENTS_SUCCESS = 'FETCH_COMMENTS_SUCCESS';
 export const FETCH_COMMENTS_FAILURE = 'FETCH_COMMENTS_FAILURE';
 
-const fetchCommentsRequest = (parentId) => ({
+const fetchCommentsRequest = (postId) => ({
   type: FETCH_COMMENTS_REQUEST,
-  parentId
+  postId
 });
-const fetchCommentsSuccess = (comments, parentId) => ({
+const fetchCommentsSuccess = (comments, postId) => ({
   type: FETCH_COMMENTS_SUCCESS,
   payload: comments,
-  parentId
+  postId
 });
 const fetchCommentsFailure = err => ({
   type: FETCH_COMMENTS_FAILURE,
@@ -23,10 +23,12 @@ const fetchCommentsFailure = err => ({
  */
 const fetchComments = (fetchUrl, id) => (dispatch, getStore) => {
   if (getStore().comments.isFetching[id]) return false;
-  fetchCommentsRequest(id);
+  dispatch(fetchCommentsRequest(id));
 
   return fetch(fetchUrl, {
-    Authorization: 'shit',
+    headers: {
+      Authorization: 'shit',
+    }
   })
     .then(res => {
       if (res.ok || res.status === 304) {
@@ -35,7 +37,7 @@ const fetchComments = (fetchUrl, id) => (dispatch, getStore) => {
         throw Error(res.statusText);
       }
     })
-    .then(comments => dispatch(fetchCommentsSuccess(comments)))
+    .then(comments => dispatch(fetchCommentsSuccess(comments, id)))
     .catch(err => dispatch(fetchCommentsFailure(err || 'Something Wrong')));
 };
 export default fetchComments;
