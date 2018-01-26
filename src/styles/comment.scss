@@ -10,14 +10,14 @@
     min-height: 200px;
     margin: auto;
     &:not(:last-child) {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
     &:first-child {
-      border-bottom-left-radius: 0px;
-      border-bottom-right-radius: 0px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
     &:not(:last-child):not(:first-child) {
-      border-radius: 0px;
+      border-radius: 0;
     }
     &:last-child {
       border-bottom-left-radius: 5px;
@@ -44,7 +44,7 @@
       text-justify: auto;
     }
     p:first-child {
-      margin-top: 0px;
+      margin-top: 0;
     }
   }
 }

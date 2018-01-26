@@ -4,6 +4,7 @@ import 'bulma/css/bulma.css';
 import 'bulma-tooltip/bulma-tooltip.min.css';
 import Root from './components/Root';
 import EditPost from './components/EditPost';
+import PostDetail from './components/PostDetail';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import configure from './storeConfigure';
@@ -13,7 +14,7 @@ const App = () => (
       <Switch>
         <Route path="/:category?" exact component={Root} />
         <Route path="/:id/edit" component={EditPost} />
-        <Route path="/posts/:id" />
+        <Route path="/posts/:id" component={PostDetail}/>
       </Switch>
     </Router>
   </Provider>
