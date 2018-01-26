@@ -15,10 +15,10 @@ const byId = (state = {}, action) => {
 const isFetching = (state = {}, action) => {
   switch (action.type) {
     case FETCH_COMMENTS_REQUEST:
-      return assoc(action.parentId, true, state);
+      return assoc(action.postId, true, state);
     case FETCH_COMMENTS_SUCCESS:
     case FETCH_COMMENTS_FAILURE:
-      return dissoc(action.parentId, state);
+      return assoc(action.postId, false, state);
     default:
       return state;
   }

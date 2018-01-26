@@ -9,10 +9,10 @@ const leftTop = {
 };
 class PostDetail extends Component {
   componentDidMount() {
-    const { dispatch, match } = this.props;
+    const { match, fetchComments } = this.props;
     const { id } = match.params;
     const { url } = match;
-    dispatch(fetchComments(`${url}/comments`, id));
+    fetchComments(`${url}/comments`, id);
   }
 
   render() {
@@ -29,7 +29,7 @@ class PostDetail extends Component {
             <Comments />
           </div>
         </section>
-        <a className="icon has-text-grey" style={leftTop}>
+        <a className="icon has-text-grey" style={leftTop} onClick={this.props.close}>
           <i className="fa fa-times fa-2x" />
         </a>
       </Fragment>
@@ -37,4 +37,4 @@ class PostDetail extends Component {
   }
 }
 
-export default connect()(PostDetail);
+export default connect(null, { fetchComments })(PostDetail);

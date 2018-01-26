@@ -12,7 +12,7 @@ const divider = {
   width: 75,
 };
 
-const Comments = err => (
+const Comments = ({ err }) => (
   <div>
     {err ? (
       <h1 className="title has-text-danger">评论获取失败，请重试</h1>
