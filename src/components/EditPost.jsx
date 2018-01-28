@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { pick, identical, isEmpty, complement } from 'ramda';
 import { connect } from 'react-redux';
-import { savePost, fetchSavedPost } from '../actions/editPost';
+import { savePost, fetchSavedPost, publishPost } from '../actions/editPost';
 import Navbar from './Navbar';
 import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
@@ -54,7 +54,7 @@ GeneralInput.propType = {
   placeholder: PropTypes.string,
 };
 class EditPost extends Component {
-  state = { ...this.props.edited }
+  state = pick(['author', 'body', 'category', 'id', 'title'], this.props.edited)
   get post() {
     return {
       ...this.state,
@@ -76,16 +76,24 @@ class EditPost extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!identical(nextProps.edited, this.props.edited)) {
-      this.setState(nextProps.edited);
+    const { edited } = nextProps;
+    if (!identical(edited, this.props.edited)) {
+      this.setState(edited);
+      this.code.doc.setValue(edited.body);
     }
   }
 
   componentWillUnmount() {
     const isValid = complement(isEmpty);
+    // 防止 code mirror 导致的内存泄漏。
     this.code.toTextArea();
-    if (Object.values(this.post).some(isValid)) {
-      this.props.savePost({ ...this.post, id: this.props.match.params.id });
+
+    const { post } = this;
+    const keys = Object.keys(post);
+    for (let key of keys) {
+      if (key !== 'id' && isValid(post[key])) {
+        this.props.savePost({ ...post, id: this.props.match.params.id });
+      }
     }
   }
 
@@ -96,8 +104,15 @@ class EditPost extends Component {
     });
   };
 
+  onPublic = () => {
+    const { publishPost, history } = this.props;
+    if (window.confirm('你确定发布吗？')) {
+      publishPost(this.post).then(() => history.goBack());
+    }
+  }
+
   render() {
-    const { history } = this.props;
+    const { history, edited: { isSaving } } = this.props;
     return (
       <Fragment>
         <Navbar>
@@ -107,10 +122,12 @@ class EditPost extends Component {
             <div className="navbar-item">
               <div className="field is-grouped">
                 <p className="control">
-                  <a className="button is-text">Publish</a>
+                <a onClick={this.onPublic}
+                  className={`button is-text ${isSaving ? 'is-loading' : ''}`}>Publish</a>
                 </p>
                 <p className="control">
-                <a className="button is-danger" onClick={() => history.goBack()}>Cancel</a>
+                <a className="button is-danger"
+                  onClick={() => !isSaving && history.goBack()}>Cancel</a>
                 </p>
               </div>
             </div>
@@ -153,6 +170,6 @@ class EditPost extends Component {
     );
   }
 }
-EditPost = connect(pick(['categories', 'edited']), { savePost, fetchSavedPost })(EditPost);
+EditPost = connect(pick(['categories', 'edited']), { savePost, fetchSavedPost, publishPost })(EditPost);
 
 export default EditPost;

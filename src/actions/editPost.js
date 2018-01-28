@@ -1,24 +1,16 @@
-import { assoc } from 'ramda';
-export const CREATE_NEW_POST = 'CREATE_NEW_POST';
+import v4 from 'uuid/v4';
 export const INIT_POST = 'INIT_POST';
-export const PUBLISH_POST = 'PUBLISH_POST';
 export const SAVE_POST = 'SAVE_POST';
-
-const makeActionCreator = (type, ...keys) => (...args) =>
-  keys.reduce((action, key, i) => assoc(key, args[i], action), { type });
-
-export const createNewPost = makeActionCreator(
-  CREATE_NEW_POST,
-  'title',
-  'category',
-  'body',
-  'author',
-  'id'
-);
+export const PUBLISH_POST = 'PUBLISH_POST';
+export const PUBLISH_POST_SUCCESS = 'PUBLISH_POST_SUCCESS';
+export const PUBLISH_POST_FAILURE = 'PUBLISH_POST_FAILURE';
 
 export const localKey = 'editedPost';
 function saveToLocal(post) {
   localStorage.setItem(localKey, JSON.stringify(post));
+}
+function removePost() {
+  localStorage.removeItem(localKey);
 }
 
 export const savePost = post => dispatch => {
@@ -29,6 +21,37 @@ export const savePost = post => dispatch => {
   });
 };
 
+export const publishPost = ({ author, category, title, body, id }) => dispatch => {
+  // 这个操作由 button 触发，只要保证该 button 会有对应的 loading 动画的话，就不用处理多次点击的竞态。
+  dispatch({ type: PUBLISH_POST });
+  id = id || v4();
+  const data = {
+    author,
+    category,
+    title,
+    body,
+    id,
+    timestamp: Date.now()
+  };
+  return fetch('/posts', {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json',
+      authorization: 'hello'
+    },
+    body: JSON.stringify(data)
+  }).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw Error(res.statusText);
+  }).then(payload => {
+    dispatch({ type: PUBLISH_POST_SUCCESS, category, payload });
+    removePost();
+  }).catch(err => {
+    dispatch({ type: PUBLISH_POST_FAILURE, category });
+  });
+};
 export const fetchSavedPost = () => dispatch => {
   let saved = localStorage.getItem(localKey);
   saved = saved || null;

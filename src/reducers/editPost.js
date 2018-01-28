@@ -1,11 +1,14 @@
 import * as actions from '../actions/editPost';
+import { evolve, not } from 'ramda';
 
-export const editPost = (state = {
-    author: '',
-    body: '',
-    title: '',
-    category: ''
-}, action) => {
+const initState = {
+  author: '',
+  body: '',
+  title: '',
+  category: '',
+  isSaving: false
+};
+export const editPost = (state = initState, action) => {
   const { type } = action;
   switch (type) {
     case actions.INIT_POST:
@@ -13,6 +16,11 @@ export const editPost = (state = {
       return action.saved ? action.saved : state;
     case actions.SAVE_POST:
       return action.post;
+    case actions.PUBLISH_POST:
+    case actions.PUBLISH_POST_FAILURE:
+      return evolve({ isSaving: not }, state);
+    case actions.PUBLISH_POST_SUCCESS:
+      return initState;
     default:
       return state;
   }

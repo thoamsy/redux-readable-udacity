@@ -1,4 +1,4 @@
-import { assoc, prop, evolve, not, __, reduce, always, assocPath } from 'ramda';
+import { assoc, prop, evolve, not, __, reduce, always, assocPath, append } from 'ramda';
 import {
   RECEIVE_POSTS,
   REQUEST_POSTS,
@@ -6,6 +6,7 @@ import {
   REQUEST_POST_VOTE,
 } from '../actions/posts';
 import { FETCH_COMMENTS_SUCCESS } from '../actions/comments';
+import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 
 const postReducer = action => (state = {}) => {
   const { type, postId, update, payload } = action;
@@ -21,7 +22,8 @@ const postReducer = action => (state = {}) => {
       );
     case FETCH_COMMENTS_SUCCESS:
       return assocPath([postId, 'comments'], payload.map(prop('id')), state);
-    case REQUEST_POSTS:
+    case PUBLISH_POST_SUCCESS:
+      return assoc(payload.id, payload, state);
     default:
       return state;
   }
@@ -47,9 +49,13 @@ const posts = (
       });
     case REQUEST_POST_VOTE:
     case RECEIVE_POST_VOTE:
-    case FETCH_COMMENTS_SUCCESS:
       return updatePosts({
         byId: postReducer(action),
+      });
+    case PUBLISH_POST_SUCCESS:
+      return updatePosts({
+        byId: postReducer(action),
+        ids: append(action.payload.id)
       });
     default:
       return state;
