@@ -53,8 +53,9 @@ GeneralInput.propType = {
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
 };
+const pickMeta = pick(['author', 'category', 'id', 'title']);
 class EditPost extends Component {
-  state = pick(['author', 'body', 'category', 'id', 'title'], this.props.edited)
+  state = pickMeta(this.props.edited)
   get post() {
     return {
       ...this.state,
@@ -78,7 +79,7 @@ class EditPost extends Component {
   componentWillReceiveProps(nextProps) {
     const { edited } = nextProps;
     if (!identical(edited, this.props.edited)) {
-      this.setState(edited);
+      this.setState(pickMeta(edited));
       this.code.doc.setValue(edited.body);
     }
   }
@@ -90,9 +91,11 @@ class EditPost extends Component {
 
     const { post } = this;
     const keys = Object.keys(post);
+    console.log(keys);
     for (let key of keys) {
       if (key !== 'id' && isValid(post[key])) {
         this.props.savePost({ ...post, id: this.props.match.params.id });
+        return;
       }
     }
   }

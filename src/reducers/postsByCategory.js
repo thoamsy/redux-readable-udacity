@@ -7,7 +7,7 @@ import posts from './posts';
 
 const postsByCategory = (state = {}, action) => {
   const { category = 'all' } = action;
-  console.log(state);
+
   switch (action.type) {
     case REQUEST_POSTS:
     case RECEIVE_POSTS:

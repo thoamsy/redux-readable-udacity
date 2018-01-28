@@ -45,7 +45,8 @@ export const postVoteScore = (postId, category, up) => (dispatch) => {
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const fetchPosts = (category) => (dispatch, getStore) => {
-  if (getStore().postsByCategory[category]) return;
+  const posts = getStore().postsByCategory[category];
+  if (posts) return posts;
 
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
