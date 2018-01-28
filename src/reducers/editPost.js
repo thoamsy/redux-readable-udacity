@@ -3,7 +3,7 @@ import * as actions from '../actions/editPost';
 export const editPost = (state = {
     author: '',
     body: '',
-    titie: '',
+    title: '',
     category: ''
 }, action) => {
   const { type } = action;
