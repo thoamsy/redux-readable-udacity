@@ -49,7 +49,7 @@ export const publishPost = ({ author, category, title, body, id }) => dispatch =
     dispatch({ type: PUBLISH_POST_SUCCESS, category, payload });
     removePost();
   }).catch(err => {
-    dispatch({ type: PUBLISH_POST_FAILURE, category });
+    dispatch({ type: PUBLISH_POST_FAILURE, category, err });
   });
 };
 export const fetchSavedPost = () => dispatch => {

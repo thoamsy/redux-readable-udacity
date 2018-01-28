@@ -14,11 +14,16 @@ const ListLoader = () => <ContentLoader type="list"/>;
 class Root extends Component {
   componentDidMount() {
     const { fetchPosts, category, fetchAllCategories } = this.props;
-    Promise.all([
-      fetchPosts(category),
-      fetchAllCategories(),
-      fetchSavedPost(),
-    ]);
+    fetchSavedPost();
+    let pos = 0;
+    fetchAllCategories()
+    .then(() => this.props.categories)
+    .then(function preload(categories) {
+      if (!categories.length) return;
+      categories.slice(0, 3).map(({ name }) => fetchPosts(name));
+      pos += 3;
+      return preload(categories.slice(pos));
+    });
   }
 
   componentDidUpdate(prevProps) {

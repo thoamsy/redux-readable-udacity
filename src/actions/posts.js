@@ -37,6 +37,7 @@ export const postVoteScore = (postId, category, up) => (dispatch) => {
   dispatch(requestPostVote(postId, category, up));
   const body = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
   const voteURL = `/posts/${postId}`;
+  console.log(body);
   return fetch(voteURL, { headers: {'content-type': 'application/json', 'Authorization': 'hh'}, body, method: 'POST' })
     .then(res => res.json(), Promise.reject)
     .then(prop('voteScore'))

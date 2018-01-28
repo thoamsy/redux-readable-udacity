@@ -1,4 +1,4 @@
-import { assoc, prop, evolve, not, __, reduce, always, assocPath, append } from 'ramda';
+import { assoc, prop, evolve, T, F, __, reduce, assocPath, append, concat } from 'ramda';
 import {
   RECEIVE_POSTS,
   REQUEST_POSTS,
@@ -13,6 +13,7 @@ const postReducer = action => (state = {}) => {
   switch (type) {
     case RECEIVE_POST_VOTE:
     case REQUEST_POST_VOTE:
+    console.log(update);
       return evolve({ [postId]: { voteScore: update } }, state);
     case RECEIVE_POSTS:
       return reduce(
@@ -37,15 +38,16 @@ const posts = (
   },
   action
 ) => {
+
   const updatePosts = evolve(__, state);
   switch (action.type) {
     case REQUEST_POSTS:
-      return updatePosts({ isFetching: not });
+      return updatePosts({ isFetching: T });
     case RECEIVE_POSTS:
       return updatePosts({
         byId: postReducer(action),
-        isFetching: not,
-        ids: always(action.payload.map(prop('id'))),
+        isFetching: F,
+        ids: concat(action.payload.map(prop('id'))),
       });
     case REQUEST_POST_VOTE:
     case RECEIVE_POST_VOTE:

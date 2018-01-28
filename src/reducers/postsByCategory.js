@@ -10,12 +10,13 @@ const postsByCategory = (state = {}, action) => {
 
   switch (action.type) {
     case REQUEST_POSTS:
-    case RECEIVE_POSTS:
-    case PUBLISH_POST_SUCCESS:
-      return assoc(category || 'all', posts(state[category], action), state);
+    case RECEIVE_POSTS: {
+      return assoc(category, posts(state[category], action), state);
+    }
     case RECEIVE_POST_VOTE:
     case REQUEST_POST_VOTE:
     case FETCH_COMMENTS_SUCCESS:
+    case PUBLISH_POST_SUCCESS:
       return evolve({
         [action.category]: posts(__, action),
         all: posts(__, action)

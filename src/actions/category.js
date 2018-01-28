@@ -18,7 +18,7 @@ const requestCategoriesFailure = (err) => ({
 
 export const fetchAllCategories = () => (dispatch, getStore) => {
   // 防止多次获取
-  if (getStore().categories.length > 1) return;
+  if (getStore().categories.length > 1) return Promise.resolve();
   const url = '/categories';
   return fetch(url, { headers }).then(res => {
     if (res.ok) {
