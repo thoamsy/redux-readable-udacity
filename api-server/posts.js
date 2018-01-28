@@ -1,9 +1,9 @@
-const clone = require('clone')
+const clone = require('clone');
 
-let db = {}
+let db = {};
 
 const defaultData = {
-  "8xf0y6ziyjabvozdd253nd": {
+  '8xf0y6ziyjabvozdd253nd': {
     id: '8xf0y6ziyjabvozdd253nd',
     timestamp: 1467166872634,
     title: 'Udacity is the best place to learn React',
@@ -14,7 +14,7 @@ const defaultData = {
     deleted: false,
     commentCount: 2
   },
-  "6ni6ok3ym7mf1p33lnez": {
+  '6ni6ok3ym7mf1p33lnez': {
     id: '6ni6ok3ym7mf1p33lnez',
     timestamp: 1468479767190,
     title: 'Learn Redux in 10 minutes!',
@@ -25,49 +25,49 @@ const defaultData = {
     deleted: false,
     commentCount: 0
   }
-}
+};
 
 function getData (token) {
-  let data = db[token]
+  let data = db[token];
   if (data == null) {
-    data = db[token] = clone(defaultData)
+    data = db[token] = clone(defaultData);
   }
-  return data
+  return data;
 }
 
 function getByCategory (token, category) {
   return new Promise((res) => {
-    let posts = getData(token)
-    let keys = Object.keys(posts)
-    let filtered_keys = keys.filter(key => posts[key].category === category && !posts[key].deleted)
-    res(filtered_keys.map(key => posts[key]))
-  })
+    let posts = getData(token);
+    let keys = Object.keys(posts);
+    let filtered_keys = keys.filter(key => posts[key].category === category && !posts[key].deleted);
+    res(filtered_keys.map(key => posts[key]));
+  });
 }
 
 function get (token, id) {
   return new Promise((res) => {
-    const posts = getData(token)
+    const posts = getData(token);
     res(
       posts[id].deleted
         ? {}
         : posts[id]
-    )
-  })
+    );
+  });
 }
 
 function getAll (token) {
   return new Promise((res) => {
-    const posts = getData(token)
-    let keys = Object.keys(posts)
+    const posts = getData(token);
+    let keys = Object.keys(posts);
     // 这一步用来去除已被删除的 post，所以前端不需要担心这个问题。
-    let filtered_keys = keys.filter(key => !posts[key].deleted)
-    res(filtered_keys.map(key => posts[key]))
-  })
+    let filtered_keys = keys.filter(key => !posts[key].deleted);
+    res(filtered_keys.map(key => posts[key]));
+  });
 }
 
 function add (token, post) {
   return new Promise((res) => {
-    let posts = getData(token)
+    let posts = getData(token);
 
     posts[post.id] = {
       id: post.id,
@@ -79,52 +79,54 @@ function add (token, post) {
       voteScore: 1,
       deleted: false,
       commentCount: 0
-    }
+    };
+    defaultData[post.id] = posts[post.id];
 
-    res(posts[post.id])
-  })
+    res(posts[post.id]);
+  });
 }
 
 function vote (token, id, option) {
   return new Promise((res) => {
-    let posts = getData(token)
-    const post = posts[id]
+    let posts = getData(token);
+    const post = posts[id];
+
     switch(option) {
-        case "upVote":
-            post.voteScore = post.voteScore + 1
-            break
-        case "downVote":
-            post.voteScore = post.voteScore - 1
-            break
+        case 'upVote':
+            post.voteScore = post.voteScore + 1;
+            break;
+        case 'downVote':
+            post.voteScore = post.voteScore - 1;
+            break;
         default:
-            console.log(`posts.vote received incorrect parameter: ${option}`)
+            console.log(`posts.vote received incorrect parameter: ${option}`);
     }
-    res(post)
-  })
+    res(post);
+  });
 }
 
 function disable (token, id) {
     return new Promise((res) => {
-      let posts = getData(token)
-      posts[id].deleted = true
-      res(posts[id])
-    })
+      let posts = getData(token);
+      posts[id].deleted = true;
+      res(posts[id]);
+    });
 }
 
 function edit (token, id, post) {
     return new Promise((res) => {
-        let posts = getData(token)
+        let posts = getData(token);
         for (const prop in post) {
-            posts[id][prop] = post[prop]
+            posts[id][prop] = post[prop];
         }
-        res(posts[id])
-    })
+        res(posts[id]);
+    });
 }
 
 function incrementCommentCounter(token, id, count) {
-  const data = getData(token)
+  const data = getData(token);
   if (data[id]) {
-    data[id].commentCount += count
+    data[id].commentCount += count;
   }
 }
 
@@ -137,4 +139,4 @@ module.exports = {
   disable,
   edit,
   incrementCommentCounter
-}
+};

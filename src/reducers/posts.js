@@ -3,7 +3,6 @@ import {
   RECEIVE_POSTS,
   REQUEST_POSTS,
   RECEIVE_POST_VOTE,
-  REQUEST_POST_VOTE,
 } from '../actions/posts';
 import { FETCH_COMMENTS_SUCCESS } from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
@@ -12,8 +11,6 @@ const postReducer = action => (state = {}) => {
   const { type, postId, update, payload } = action;
   switch (type) {
     case RECEIVE_POST_VOTE:
-    case REQUEST_POST_VOTE:
-    console.log(update);
       return evolve({ [postId]: { voteScore: update } }, state);
     case RECEIVE_POSTS:
       return reduce(
@@ -49,7 +46,6 @@ const posts = (
         isFetching: F,
         ids: concat(action.payload.map(prop('id'))),
       });
-    case REQUEST_POST_VOTE:
     case RECEIVE_POST_VOTE:
       return updatePosts({
         byId: postReducer(action),

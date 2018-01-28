@@ -1,5 +1,5 @@
 // import createReducer from './createReducer';
-import { RECEIVE_POSTS, REQUEST_POSTS, RECEIVE_POST_VOTE, REQUEST_POST_VOTE } from '../actions/posts';
+import { RECEIVE_POSTS, REQUEST_POSTS, RECEIVE_POST_VOTE } from '../actions/posts';
 import { FETCH_COMMENTS_SUCCESS  } from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 import { assoc, evolve, __ } from 'ramda';
@@ -14,7 +14,6 @@ const postsByCategory = (state = {}, action) => {
       return assoc(category, posts(state[category], action), state);
     }
     case RECEIVE_POST_VOTE:
-    case REQUEST_POST_VOTE:
     case FETCH_COMMENTS_SUCCESS:
     case PUBLISH_POST_SUCCESS:
       return evolve({

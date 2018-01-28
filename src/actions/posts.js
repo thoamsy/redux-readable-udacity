@@ -8,15 +8,15 @@ export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const REQUEST_POST_VOTE = 'REQUEST_POST_VOTE';
 export const RECEIVE_POST_VOTE = 'RECEIVE_POST_VOTE';
 
-const requestPosts = (category) => ({
+const requestPosts = category => ({
   type: REQUEST_POSTS,
-  category
+  category,
 });
 
 const receivePosts = (posts, category) => ({
   type: RECEIVE_POSTS,
   payload: posts,
-  category
+  category,
 });
 
 // 每次触发，就加一
@@ -24,37 +24,44 @@ const requestPostVote = (postId, category, up) => ({
   type: REQUEST_POST_VOTE,
   postId,
   update: up ? inc : dec,
-  category
+  category,
 });
-const receivePostVote =  (postId, category, voteScore) => ({
+const receivePostVote = (postId, category, voteScore) => ({
   type: RECEIVE_POST_VOTE,
   update: always(voteScore),
   postId,
-  category
+  category,
 });
 
-export const postVoteScore = (postId, category, up) => (dispatch) => {
+export const postVoteScore = (postId, category, up) => dispatch => {
   dispatch(requestPostVote(postId, category, up));
   const body = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
   const voteURL = `/posts/${postId}`;
   console.log(body);
-  return fetch(voteURL, { headers: {'content-type': 'application/json', 'Authorization': 'hh'}, body, method: 'POST' })
-    .then(res => res.json(), Promise.reject)
+  return fetch(voteURL, {
+    headers: { 'content-type': 'application/json', Authorization: 'hh' },
+    body,
+    method: 'POST',
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      throw Error(res.statusText);
+    })
     .then(prop('voteScore'))
-    .then(voteScore => dispatch(receivePostVote(postId, category, voteScore)));
+    .then(voteScore => dispatch(receivePostVote(postId, category, voteScore)))
+    .catch(err => console.log(err));
 };
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-export const fetchPosts = (category) => (dispatch, getStore) => {
+export const fetchPosts = category => (dispatch, getStore) => {
   const posts = getStore().postsByCategory[category];
   if (posts) return posts;
 
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
-  return Promise.all([
-    fetch(fetchURL, { headers }),
-    delay(1000)
-  ])
+  return Promise.all([fetch(fetchURL, { headers }), delay(1000)])
     .then(([res]) => res.json(), Promise.reject)
     .then(posts => dispatch(receivePosts(posts, category)));
 };

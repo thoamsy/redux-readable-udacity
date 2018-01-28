@@ -74,6 +74,7 @@ class EditPost extends Component {
       styleActiveLine: true,
       lineNumber: true
     });
+    this.code.setSize('100%', 150);
   }
 
   componentWillReceiveProps(nextProps) {

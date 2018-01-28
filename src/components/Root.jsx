@@ -8,7 +8,7 @@ import ContentLoader from 'react-content-loader';
 import Navbar from './Navbar';
 import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
 import v4 from 'uuid/v4';
-import PostList from '../view/PostList';
+import PostList from '../components/PostList';
 const ListLoader = () => <ContentLoader type="list"/>;
 
 class Root extends Component {
