@@ -1,4 +1,3 @@
-export default `
 import Markdown from 'markdown-it';
 import hljs from 'highlight.js';
 
@@ -11,20 +10,17 @@ const md = Markdown({
       return hljs.highlight(lang, str).value;
     }
     return '';
-  }
+  },
 });
 
-self.onmessage = ({ data }) => {
+onmessage = ({ data }) => {
   const { useFor } = data;
   switch (useFor) {
     case 'render': {
-      postMessage({
-        article: self.postMessage(md.render(data.markdown || ''))
-      });
+      postMessage(md.render(data.markdown || ''));
       break;
     }
     default:
       break;
   }
 };
-`;

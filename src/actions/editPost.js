@@ -1,18 +1,9 @@
 import v4 from 'uuid/v4';
-import Markdown from 'markdown-it';
-import hljs from 'highlight.js';
+/* eslint-disable */
+const MarkWorker = require('worker-loader!../util/renderMarkdown.js');
+/* eslint-enable */
+console.log(MarkWorker);
 
-const md = Markdown({
-  breaks: true,
-  linkify: true,
-  typographer: true,
-  highlight(str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      return hljs.highlight(lang, str).value;
-    }
-    return '';
-  }
-});
 export const INIT_POST = 'INIT_POST';
 export const SAVE_POST = 'SAVE_POST';
 export const PUBLISH_POST = 'PUBLISH_POST';
@@ -35,6 +26,8 @@ export const savePost = post => dispatch => {
   });
 };
 
+
+const render = MarkWorker();
 export const publishPost = ({ author, category, title, body, id }) => dispatch => {
   // 这个操作由 button 触发，只要保证该 button 会有对应的 loading 动画的话，就不用处理多次点击的竞态。
   dispatch({ type: PUBLISH_POST });
@@ -60,9 +53,12 @@ export const publishPost = ({ author, category, title, body, id }) => dispatch =
     }
     throw Error(res.statusText);
   }).then(payload => {
-    payload.body = md.render(payload.body);
-    requestAnimationFrame(() => dispatch({ type: PUBLISH_POST_SUCCESS, category, payload }));
-    removePost();
+    render.postMessage({ useFor: 'render', markdown: payload.body });
+    render.onmessage = ({ data }) => {
+      payload.body = data;
+      dispatch({ type: PUBLISH_POST_SUCCESS, category, payload });
+      removePost();
+    };
   }).catch(err => {
     dispatch({ type: PUBLISH_POST_FAILURE, category, err });
   });

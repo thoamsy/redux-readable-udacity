@@ -21,7 +21,8 @@
     "react-scripts": "1.1.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "worker-loader": "^1.1.0"
   },
   "scripts": {
     "start": "concurrently \"node api-server/server.js\" \"react-scripts start\"",
