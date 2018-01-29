@@ -1,3 +1,4 @@
+export default `
 import Markdown from 'markdown-it';
 import hljs from 'highlight.js';
 
@@ -13,12 +14,12 @@ const md = Markdown({
   }
 });
 
-onmessage = ({ data }) => {
+self.onmessage = ({ data }) => {
   const { useFor } = data;
   switch (useFor) {
     case 'render': {
       postMessage({
-        article: postMessage(md.render(data.markdown || ''))
+        article: self.postMessage(md.render(data.markdown || ''))
       });
       break;
     }
@@ -26,3 +27,4 @@ onmessage = ({ data }) => {
       break;
   }
 };
+`;

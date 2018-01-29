@@ -1,4 +1,18 @@
 import v4 from 'uuid/v4';
+import Markdown from 'markdown-it';
+import hljs from 'highlight.js';
+
+const md = Markdown({
+  breaks: true,
+  linkify: true,
+  typographer: true,
+  highlight(str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(lang, str).value;
+    }
+    return '';
+  }
+});
 export const INIT_POST = 'INIT_POST';
 export const SAVE_POST = 'SAVE_POST';
 export const PUBLISH_POST = 'PUBLISH_POST';
@@ -46,7 +60,8 @@ export const publishPost = ({ author, category, title, body, id }) => dispatch =
     }
     throw Error(res.statusText);
   }).then(payload => {
-    dispatch({ type: PUBLISH_POST_SUCCESS, category, payload });
+    payload.body = md.render(payload.body);
+    requestAnimationFrame(() => dispatch({ type: PUBLISH_POST_SUCCESS, category, payload }));
     removePost();
   }).catch(err => {
     dispatch({ type: PUBLISH_POST_FAILURE, category, err });
