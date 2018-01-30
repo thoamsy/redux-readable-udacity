@@ -14,13 +14,7 @@ const md = Markdown({
 });
 
 onmessage = ({ data }) => {
-  const { useFor } = data;
-  switch (useFor) {
-    case 'render': {
-      postMessage(md.render(data.markdown || ''));
-      break;
-    }
-    default:
-      break;
-  }
+  const { category, payload } = data;
+  payload.body = md.render(payload.body);
+  postMessage({ category, payload });
 };

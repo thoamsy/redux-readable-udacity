@@ -1,8 +1,4 @@
 import v4 from 'uuid/v4';
-/* eslint-disable */
-const MarkWorker = require('worker-loader!../util/renderMarkdown.js');
-/* eslint-enable */
-console.log(MarkWorker);
 
 export const INIT_POST = 'INIT_POST';
 export const SAVE_POST = 'SAVE_POST';
@@ -27,7 +23,6 @@ export const savePost = post => dispatch => {
 };
 
 
-const render = MarkWorker();
 export const publishPost = ({ author, category, title, body, id }) => dispatch => {
   // 这个操作由 button 触发，只要保证该 button 会有对应的 loading 动画的话，就不用处理多次点击的竞态。
   dispatch({ type: PUBLISH_POST });
@@ -53,12 +48,12 @@ export const publishPost = ({ author, category, title, body, id }) => dispatch =
     }
     throw Error(res.statusText);
   }).then(payload => {
-    render.postMessage({ useFor: 'render', markdown: payload.body });
-    render.onmessage = ({ data }) => {
-      payload.body = data;
-      dispatch({ type: PUBLISH_POST_SUCCESS, category, payload });
-      removePost();
-    };
+    dispatch({
+      type: 'POST_WORKER',
+      payload,
+      category
+    });
+    removePost();
   }).catch(err => {
     dispatch({ type: PUBLISH_POST_FAILURE, category, err });
   });
