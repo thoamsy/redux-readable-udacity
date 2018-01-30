@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/post.css';
+import 'highlight.js/styles/github.css';
 import { format } from 'date-fns';
 import { connect } from 'react-redux';
 import { postVoteScore } from '../actions/posts';
