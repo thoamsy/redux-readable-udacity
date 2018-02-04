@@ -54,7 +54,10 @@ const posts = (
   },
   action
 ) => {
-  const updatePosts = compose(evolve(__, state), merge({ byId: postReducer(action) }));
+  const updatePosts = compose(
+    evolve(__, state),
+    merge({ byId: postReducer(action) })
+  );
   switch (action.type) {
     case REQUEST_POSTS:
       return evolve({ isFetching: T }, state);
@@ -71,7 +74,7 @@ const posts = (
       });
     case DELETE_POST:
       return updatePosts({
-        ids: reject(equals(action.postId))
+        ids: reject(equals(action.postId)),
       });
     default:
       return state;
