@@ -13,7 +13,7 @@ const ListLoader = () => <ContentLoader type="list"/>;
 
 class Root extends Component {
   componentDidMount() {
-    const { fetchPosts, category, fetchAllCategories } = this.props;
+    const { fetchPosts, fetchAllCategories } = this.props;
     fetchSavedPost();
     let pos = 0;
     fetchAllCategories()

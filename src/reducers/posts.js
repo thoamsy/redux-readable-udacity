@@ -1,8 +1,25 @@
-import { assoc, prop, evolve, T, F, __, reduce, assocPath, append, concat } from 'ramda';
+import {
+  assoc,
+  prop,
+  evolve,
+  T,
+  F,
+  __,
+  reduce,
+  assocPath,
+  append,
+  always,
+  dissoc,
+  reject,
+  equals,
+  merge,
+  compose,
+} from 'ramda';
 import {
   RECEIVE_POSTS,
   REQUEST_POSTS,
   RECEIVE_POST_VOTE,
+  DELETE_POST,
 } from '../actions/posts';
 import { FETCH_COMMENTS_SUCCESS } from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
@@ -22,6 +39,8 @@ const postReducer = action => (state = {}) => {
       return assocPath([postId, 'comments'], payload.map(prop('id')), state);
     case PUBLISH_POST_SUCCESS:
       return assoc(payload.id, payload, state);
+    case DELETE_POST:
+      return dissoc(postId, state);
     default:
       return state;
   }
@@ -35,25 +54,24 @@ const posts = (
   },
   action
 ) => {
-
-  const updatePosts = evolve(__, state);
+  const updatePosts = compose(evolve(__, state), merge({ byId: postReducer(action) }));
   switch (action.type) {
     case REQUEST_POSTS:
-      return updatePosts({ isFetching: T });
+      return evolve({ isFetching: T }, state);
     case RECEIVE_POSTS:
       return updatePosts({
-        byId: postReducer(action),
         isFetching: F,
-        ids: concat(action.payload.map(prop('id'))),
+        ids: always(action.payload.map(prop('id'))),
       });
     case RECEIVE_POST_VOTE:
-      return updatePosts({
-        byId: postReducer(action),
-      });
+      return updatePosts({});
     case PUBLISH_POST_SUCCESS:
       return updatePosts({
-        byId: postReducer(action),
-        ids: append(action.payload.id)
+        ids: append(action.payload.id),
+      });
+    case DELETE_POST:
+      return updatePosts({
+        ids: reject(equals(action.postId))
       });
     default:
       return state;

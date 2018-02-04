@@ -7,6 +7,7 @@ export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const REQUEST_POST_VOTE = 'REQUEST_POST_VOTE';
 export const RECEIVE_POST_VOTE = 'RECEIVE_POST_VOTE';
+export const DELETE_POST = 'DELETE_POST';
 
 const requestPosts = category => ({
   type: REQUEST_POSTS,
@@ -65,3 +66,9 @@ export const fetchPosts = category => (dispatch, getStore) => {
     .then(([res]) => res.json(), Promise.reject)
     .then(posts => dispatch(receivePosts(posts, category)));
 };
+
+export const deletePost = (postId, category) => ({
+  type: DELETE_POST,
+  postId,
+  category,
+});
