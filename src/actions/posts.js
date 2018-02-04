@@ -37,7 +37,7 @@ export const postVoteScore = (postId, category, up) => dispatch => {
   dispatch(requestPostVote(postId, category, up));
   const body = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
   const voteURL = `/posts/${postId}`;
-  console.log(body);
+
   return fetch(voteURL, {
     headers: { 'content-type': 'application/json', Authorization: 'hh' },
     body,
@@ -57,7 +57,7 @@ export const postVoteScore = (postId, category, up) => dispatch => {
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const fetchPosts = category => (dispatch, getStore) => {
   const posts = getStore().postsByCategory[category];
-  if (posts) return posts;
+  if (posts && posts.ids) return posts;
 
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';

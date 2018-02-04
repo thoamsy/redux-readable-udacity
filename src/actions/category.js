@@ -26,6 +26,5 @@ export const fetchAllCategories = () => (dispatch, getStore) => {
     } else {
       return Promise.reject(res.statusText);
     }
-  }).then(compose(dispatch, requestCategories))
-    .catch(compose(dispatch, requestCategoriesFailure));
+  }).then(compose(dispatch, requestCategories), compose(dispatch, requestCategoriesFailure));
 };

@@ -92,7 +92,6 @@ class EditPost extends Component {
 
     const { post } = this;
     const keys = Object.keys(post);
-    console.log(keys);
     for (let key of keys) {
       if (key !== 'id' && isValid(post[key])) {
         this.props.savePost({ ...post, id: this.props.match.params.id });
