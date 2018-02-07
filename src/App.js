@@ -1,7 +1,6 @@
 import React from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bulma/css/bulma.css';
-import 'bulma-tooltip/bulma-tooltip.min.css';
 import Root from './components/Root';
 import EditPost from './components/EditPost';
 import PostDetail from './components/PostDetail';

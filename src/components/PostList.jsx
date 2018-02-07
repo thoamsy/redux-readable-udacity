@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import '../styles/post.css';
 import 'highlight.js/styles/github.css';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deletePost } from '../actions/posts';
@@ -17,6 +17,7 @@ const Post = ({
   incVoteScore,
   decVoteScore,
   onDeletePost,
+  onClickComments,
   id,
   commentCount,
 }) => (
@@ -26,7 +27,7 @@ const Post = ({
       <button
         className="delete"
         aria-label="delete post"
-        onClick={onDeletePost(id)}
+        onClick={onDeletePost}
       />
       {/* eslint-enable */}
       <strong className="has-text-info" style={{ textTransform: 'capitalize' }}>
@@ -56,7 +57,7 @@ const Post = ({
             </span>
           </button>
         </div>
-        <a className="level-item">
+          <a className="level-item" onClick={onClickComments}>
           <span className="icon is-medium">
             <i className="fa fa-commenting" />
           </span>
@@ -81,20 +82,24 @@ Post.propTypes = {
 };
 
 class PostContainer extends Component {
-  static displayName = 'Post';
   onHandleVoteScoreChange = up => {
     const { category, id, postVoteScore } = this.props;
     return () => postVoteScore(id, category, up);
   };
+
   onDeletePost = id => () => this.props.deletePost(id, this.props.category);
 
+  onClickComments = (id) => () => this.setState({ to: `/posts/${id}/comments` });
+
   render() {
+    const { id } = this.props;
     return (
       <Post
         {...this.props}
         incVoteScore={this.onHandleVoteScoreChange(true)}
         decVoteScore={this.onHandleVoteScoreChange()}
-        onDeletePost={this.onDeletePost}
+        onDeletePost={this.onDeletePost(id)}
+        onClickComments={this.onClickComments(id)}
       />
     );
   }

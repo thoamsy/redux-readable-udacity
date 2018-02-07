@@ -60,9 +60,11 @@ export const fetchPosts = category => (dispatch, getStore) => {
   const posts = getStore().postsByCategory[category];
   if (posts && posts.ids) return posts;
 
+  const randomDelay = Math.random() * 1000;
+
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
-  return Promise.all([fetch(fetchURL, { headers }), delay(1000)])
+  return Promise.all([fetch(fetchURL, { headers }), delay(randomDelay)])
     .then(([res]) => res.json(), Promise.reject)
     .then(posts => dispatch(receivePosts(posts, category)));
 };

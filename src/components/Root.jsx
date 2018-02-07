@@ -1,5 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { List } from 'react-content-loader';
+import Navbar from './Navbar';
+import v4 from 'uuid/v4';
+
+import PostList from '../components/PostList';
+import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
 import { fetchPosts } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
 import { fetchSavedPost } from '../actions/editPost';
@@ -9,12 +15,6 @@ import {
   getCategories,
   getEdited,
 } from '../reducers/';
-import ContentLoader from 'react-content-loader';
-import Navbar from './Navbar';
-import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
-import v4 from 'uuid/v4';
-import PostList from '../components/PostList';
-const ListLoader = () => <ContentLoader type="list" />;
 
 class Root extends Component {
   componentDidMount() {
@@ -51,7 +51,7 @@ class Root extends Component {
           <hr />
           {isPostsFetching ? (
             <div style={{ margin: '0 auto', width: 500 }}>
-              <ListLoader />
+              <List />
             </div>
           ) : (
             <PostList posts={posts} />
