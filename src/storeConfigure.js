@@ -19,5 +19,6 @@ const workerMiddleware = ({ dispatch }) => {
 
 const dev =
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-export default () => createStore(reducers,
- compose(applyMiddleware(thunk, workerMiddleware), dev));
+const middlewares = dev ? compose(applyMiddleware(thunk, workerMiddleware), dev) : applyMiddleware(thunk, workerMiddleware);
+
+export default () => createStore(reducers, middlewares);

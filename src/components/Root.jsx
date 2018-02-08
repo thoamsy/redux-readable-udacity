@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { List } from 'react-content-loader';
+import { evolve, not } from 'ramda';
 import Navbar from './Navbar';
 import v4 from 'uuid/v4';
 
@@ -17,6 +18,10 @@ import {
 } from '../reducers/';
 
 class Root extends Component {
+  state = {
+    isToggle: false,
+  };
+
   componentDidMount() {
     const { fetchPosts, fetchAllCategories } = this.props;
     let pos = 0;
@@ -37,11 +42,22 @@ class Root extends Component {
     }
   }
 
+  onToggleMenu = ({ target }) => {
+    this.setState(
+      evolve({
+        isToggle: not,
+      })
+    );
+  };
+
   render() {
     const { isPostsFetching, posts, categories, category, edited } = this.props;
     return (
       <Fragment>
-        <Navbar categories={categories}>
+        <Navbar
+          categories={categories}
+          onToggleMenu={this.onToggleMenu}
+          isNavbarToggle={this.state.isToggle}>
           {categories => <CategoriesItem categories={categories} />}
           <EditPostItem id={edited.id || v4()} />
         </Navbar>
