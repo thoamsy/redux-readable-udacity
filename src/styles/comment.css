@@ -1,10 +1,9 @@
 .comment-block {
   padding: 0 20px;
   max-width: 640px;
-  margin: auto; }
+  margin: 3.5rem auto 0; }
   .comment-block .comment {
-    height: auto;
-    min-height: 200px; }
+    height: auto; }
     .comment-block .comment:not(:last-child) {
       margin-bottom: 0; }
     .comment-block .comment:first-child {
@@ -21,7 +20,7 @@
     .comment-block .comment-header .author {
       color: #676867; }
   .comment-block .body {
-    margin: 20px 0;
+    margin-top: 20px;
     word-wrap: break-word;
     word-break: break-word; }
     .comment-block .body p {

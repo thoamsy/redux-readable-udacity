@@ -21,8 +21,8 @@ const Post = ({
   id,
   isThumbnail,
 }) => (
-  <div className="comment-container">
-    <article className="comment">
+  <div className="post-container">
+    <article className="post">
       {/* eslint-disable */}
       {isThumbnail && (
         <button
@@ -35,14 +35,14 @@ const Post = ({
       <strong className="has-text-info" style={{ textTransform: 'capitalize' }}>
         {category}
       </strong>
-      <h2 className="comment-title title">{title}</h2>
+      <h2 className="post-title title">{title}</h2>
       <h4 className="subtitle">
         by <a className="link is-link">{author}</a>
       </h4>
       <div className="body">
         <div
           dangerouslySetInnerHTML={{ __html: body }}
-          className={`content is-marginless ${
+          className={`content ${
             isThumbnail ? 'is-thumbnail' : ''
           }`}
         />
