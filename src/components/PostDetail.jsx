@@ -1,40 +1,52 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import Comments from './Comments';
+import PostContainer from './PostContainer';
 import fetchComments from '../actions/comments';
 import { connect } from 'react-redux';
+import { getPost } from '../reducers/';
+import format from 'date-fns/format';
+
 const leftTop = {
   position: 'absolute',
-  left: 20,
-  top: 20,
+  left: 44,
+  top: 44,
 };
 class PostDetail extends Component {
   componentDidMount() {
+    // 通过路由切换的试图的时候，滚动条可能还是保留在那个位置。
+    if (!!window.scrollY) window.scrollTo(0, 0);
     const { match, fetchComments } = this.props;
-    const { id } = match.params;
-    const { url } = match;
-    fetchComments(`${url}/comments`, id);
+    const { params: { id }, url } = match;
+    fetchComments(`${url}/comments`, id).then(console.log);
+  }
+
+  onBack = () => {
+    this.props.history.goBack();
   }
 
   render() {
+    const { post } = this.props;
     return (
-      <Fragment>
+      <div style={{ background: '#fafafa' }}>
         <section className="section">
           <div className="container">
-            <article className="content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui a
-              harum sint repellendus tempore voluptatem veniam officia, magnam
-              vitae debitis nisi aperiam, obcaecati repellat ipsum quibusdam,
-              placeat praesentium suscipit similique.
-            </article>
+            <PostContainer {...post}/>
             <Comments />
           </div>
         </section>
-        <a className="icon has-text-grey" style={leftTop} onClick={this.props.close}>
-          <i className="fa fa-times fa-2x" />
+        <a className="icon has-text-info" style={leftTop} onClick={this.onBack}>
+          <i className="fa fa-arrow-left fa-2x" />
         </a>
-      </Fragment>
+      </div>
     );
   }
 }
+const mapStateToMaps = (state, ownProps) => {
+  const { match } = ownProps;
+  const { id } = match.params;
+  return {
+    post: getPost(state, id)
+  };
+};
 
-export default connect(null, { fetchComments })(PostDetail);
+export default connect(mapStateToMaps, { fetchComments })(PostDetail);
