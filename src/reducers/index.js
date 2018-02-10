@@ -3,6 +3,7 @@ import postsByCategory from './postsByCategory';
 import edited from './editPost';
 import comments from './comments';
 import { combineReducers } from 'redux';
+import { prop, pathOr, __, propOr } from 'ramda';
 
 export default combineReducers({
   categories,
@@ -12,20 +13,25 @@ export default combineReducers({
 });
 
 export const isPostsFetching = (state, category) =>
-  state.postsByCategory[category]
-    ? state.postsByCategory[category].isFetching
-    : false;
+  pathOr(false, ['postsByCategory', category, 'isFetching'], state);
+
 export const getPostsByCategory = (state, category) => {
   const posts = state.postsByCategory[category];
   return posts ? posts.ids.map(id => posts.byId[id]) : [];
 };
-export const getComments = (state, postId) =>
-  state.postsByCategory.all[postId].comments;
-export const getCategories = state => state.categories;
-export const getEdited = state => state.edited;
-export const getPost = (state, id) =>
+
+export const getComments = (state, postId) => {
+  const { comments: { byId } } = state;
+  return propOr([], 'comments', getPost(state, postId)).map(prop(__, byId));
+};
+export const isCommentsFetching = (state, postId) =>
+  pathOr(false, ['comments', 'isFetching', postId], state);
+
+export const getCategories = prop('categories');
+export const getEdited = prop('edited');
+export const getPost = (state, postId) =>
   state.postsByCategory.all
-    ? state.postsByCategory.all.byId[id]
+    ? state.postsByCategory.all.byId[postId]
     : {
         author: 'thingtwo',
         body: 'Everyone says so after all.',

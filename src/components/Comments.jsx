@@ -1,10 +1,13 @@
-import React, { Fragment }  from 'react';
+import React from 'react';
 import '../styles/comment.css';
+import distanceInWords from 'date-fns/distance_in_words';
+import { List } from 'react-content-loader';
 
 const headTitle = {
   fontSize: 16,
   color: 'rgba(0,0,0,.68)',
   fontWeight: 600,
+  margin: '10px 0',
 };
 const divider = {
   marginBottom: 20,
@@ -12,54 +15,47 @@ const divider = {
   width: 75,
 };
 
-const Comments = ({ err }) => (
-  <Fragment>
-    {err ? (
-      <h1 className="title has-text-danger">评论获取失败，请重试</h1>
-    ) : (
-      <section className="comment-block">
-        <h4 style={headTitle}>Response</h4>
-        <div className="field">
-          <div className="control">
-            <input
-              type="text"
-              className="input"
-              placeholder="Write a response"
-            />
+const Comments = ({ err, comments, isFetching }) => {
+  if (err) {
+    return <h1 className="title has-text-danger">评论获取失败，请重试</h1>;
+  }
+  if (isFetching) {
+    return (
+      <div style={{ margin: '0 auto', width: 500 }}>
+        <List />
+      </div>
+    );
+  }
+  return (
+    <section className="comment-block">
+      <h4 style={headTitle}>Response</h4>
+      <div className="field">
+        <div className="control">
+          <input type="text" className="input" placeholder="Write a response" />
+        </div>
+      </div>
+      <div style={divider} />
+      {!!comments.length ? (
+        comments.map(comment => (
+          <div className="comment box" key={comment.id}>
+            <header className="comment-header">
+              <p className="author">{comment.author}</p>
+              <time>
+                {distanceInWords(comment.timestamp, new Date(), {
+                  addSuffix: true,
+                })}
+              </time>
+            </header>
+            <article className="body">
+              <p>{comment.body}</p>
+            </article>
           </div>
-        </div>
-        <div style={divider} />
-        <div className="comment box">
-          <header className="comment-header">
-            <p className="author">nihao</p>
-            <time>2014/12/12</time>
-          </header>
-          <article className="body">
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Necessitatibus porro soluta eveniet blanditiis nulla minus quasi
-              voluptates, quia corrupti aliquid! Corporis necessitatibus, dicta
-              iusto soluta mollitia iste enim aspernatur eveniet.
-            </p>
-          </article>
-        </div>
-        <div className="comment box">
-          <header className="comment-header">
-            <p className="author">nihao</p>
-            <time>2014/12/12</time>
-          </header>
-          <article className="body">
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Necessitatibus porro soluta eveniet blanditiis nulla minus quasi
-              voluptates, quia corrupti aliquid! Corporis necessitatibus, dicta
-              iusto soluta mollitia iste enim aspernatur eveniet.
-            </p>
-          </article>
-        </div>
-      </section>
-    )}
-  </Fragment>
-);
+        ))
+      ) : (
+        <h2 className="subtitle">快来留下第一个评论吧！</h2>
+      )}
+    </section>
+  );
+};
 
 export default Comments;

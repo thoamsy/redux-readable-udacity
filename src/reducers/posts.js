@@ -66,8 +66,6 @@ const posts = (
         isFetching: F,
         ids: always(action.payload.map(prop('id'))),
       });
-    case RECEIVE_POST_VOTE:
-      return updatePosts({});
     case PUBLISH_POST_SUCCESS:
       return updatePosts({
         ids: append(action.payload.id),
@@ -76,6 +74,9 @@ const posts = (
       return updatePosts({
         ids: reject(equals(action.postId)),
       });
+    case RECEIVE_POST_VOTE:
+    case FETCH_COMMENTS_SUCCESS:
+      return updatePosts({});
     default:
       return state;
   }

@@ -3,8 +3,7 @@ import Comments from './Comments';
 import PostContainer from './PostContainer';
 import fetchComments from '../actions/comments';
 import { connect } from 'react-redux';
-import { getPost } from '../reducers/';
-import format from 'date-fns/format';
+import { getPost, getComments, isCommentsFetching } from '../reducers/';
 
 const leftTop = {
   position: 'absolute',
@@ -25,13 +24,13 @@ class PostDetail extends Component {
   }
 
   render() {
-    const { post } = this.props;
+    const { post, comments, isFetching } = this.props;
     return (
       <div style={{ background: '#fafafa' }}>
         <section className="section">
           <div className="container">
             <PostContainer {...post}/>
-            <Comments />
+            <Comments comments={comments} isFetching={isFetching}/>
           </div>
         </section>
         <a className="icon has-text-info" style={leftTop} onClick={this.onBack}>
@@ -45,7 +44,9 @@ const mapStateToMaps = (state, ownProps) => {
   const { match } = ownProps;
   const { id } = match.params;
   return {
-    post: getPost(state, id)
+    post: getPost(state, id),
+    comments: getComments(state, id),
+    isFetching: isCommentsFetching(state, id),
   };
 };
 

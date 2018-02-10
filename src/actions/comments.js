@@ -1,15 +1,16 @@
+import delay from '../util/delay';
 export const FETCH_COMMENTS_REQUEST = 'FETCH_COMMENTS_REQUEST';
 export const FETCH_COMMENTS_SUCCESS = 'FETCH_COMMENTS_SUCCESS';
 export const FETCH_COMMENTS_FAILURE = 'FETCH_COMMENTS_FAILURE';
 
-const fetchCommentsRequest = (postId) => ({
+const fetchCommentsRequest = postId => ({
   type: FETCH_COMMENTS_REQUEST,
-  postId
+  postId,
 });
 const fetchCommentsSuccess = (comments, postId) => ({
   type: FETCH_COMMENTS_SUCCESS,
   payload: comments,
-  postId
+  postId,
 });
 const fetchCommentsFailure = err => ({
   type: FETCH_COMMENTS_FAILURE,
@@ -23,14 +24,18 @@ const fetchCommentsFailure = err => ({
  */
 const fetchComments = (fetchUrl, id) => (dispatch, getStore) => {
   if (getStore().comments.isFetching[id]) return Promise.resolve();
+  const ms = Math.random() * 1000;
   dispatch(fetchCommentsRequest(id));
 
-  return fetch(fetchUrl, {
-    headers: {
-      Authorization: 'shit',
-    }
-  })
-    .then(res => {
+  return Promise.all([
+    fetch(fetchUrl, {
+      headers: {
+        Authorization: 'shit',
+      },
+    }),
+    delay(ms),
+  ])
+    .then(([res]) => {
       if (res.ok || res.status === 304) {
         return res.json();
       } else {
