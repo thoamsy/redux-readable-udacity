@@ -11,7 +11,7 @@ import { fetchPosts } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
 import { fetchSavedPost } from '../actions/editPost';
 import {
-  getPost,
+  getPostsByCategory,
   isPostsFetching,
   getCategories,
   getEdited,
@@ -83,7 +83,7 @@ const mapStateToProps = (state, { match: { params } }) => {
   return {
     category,
     isPostsFetching: isPostsFetching(state, category),
-    posts: getPost(state, category),
+    posts: getPostsByCategory(state, category),
     categories: getCategories(state),
     edited: getEdited(state),
   };

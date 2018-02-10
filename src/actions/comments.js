@@ -22,7 +22,7 @@ const fetchCommentsFailure = err => ({
  * @param {*} id 帖子的 id，用于获取是否处于 fetching 状态
  */
 const fetchComments = (fetchUrl, id) => (dispatch, getStore) => {
-  if (getStore().comments.isFetching[id]) return false;
+  if (getStore().comments.isFetching[id]) return Promise.resolve();
   dispatch(fetchCommentsRequest(id));
 
   return fetch(fetchUrl, {

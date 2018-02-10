@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment }  from 'react';
 import '../styles/comment.css';
 
 const headTitle = {
@@ -13,7 +13,7 @@ const divider = {
 };
 
 const Comments = ({ err }) => (
-  <div>
+  <Fragment>
     {err ? (
       <h1 className="title has-text-danger">评论获取失败，请重试</h1>
     ) : (
@@ -59,7 +59,7 @@ const Comments = ({ err }) => (
         </div>
       </section>
     )}
-  </div>
+  </Fragment>
 );
 
 export default Comments;

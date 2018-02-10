@@ -7,8 +7,10 @@ import PostDetail from './components/PostDetail';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import configure from './storeConfigure';
+
+const store = configure();
 const App = () => (
-  <Provider store={configure()}>
+  <Provider store={store}>
     <Router>
       <Switch>
         <Route path="/:category?" exact component={Root} />
