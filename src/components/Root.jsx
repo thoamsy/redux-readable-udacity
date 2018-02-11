@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import { List } from 'react-content-loader';
-import { evolve, not } from 'ramda';
-import Navbar from './Navbar';
-import v4 from 'uuid/v4';
-
 import PostList from '../components/PostList';
+import { List } from 'react-content-loader';
+import Navbar from './Navbar';
+import SortControl from './SortControl';
+
+import v4 from 'uuid/v4';
+import { connect } from 'react-redux';
+import { evolve, not } from 'ramda';
 import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
-import { fetchPosts } from '../actions/posts';
+import { fetchPosts, changeSortWay } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
 import { fetchSavedPost } from '../actions/editPost';
 import {
@@ -15,12 +16,17 @@ import {
   isPostsFetching,
   getCategories,
   getEdited,
+  getPostSortWay,
 } from '../reducers/';
 
-const style = {
-  marginTop: '3.25rem',
+const sectionStyle = {
+  marginTop: '2rem',
   backgroundColor: '#f6f6f6',
 };
+const titleStyle = {
+  textTransform: 'capitalize',
+};
+
 class Root extends Component {
   // 导航栏的三明治效果，这个仅仅是 UI 变换，为了方便就放在 state 里
   state = {
@@ -55,8 +61,12 @@ class Root extends Component {
     );
   };
 
+  onChangeSortWay = () => {
+    this.props.changeSortWay(this.props.category);
+  };
+
   render() {
-    const { isPostsFetching, posts, categories, category, edited } = this.props;
+    const { isPostsFetching, posts, categories, category, edited, sortWay } = this.props;
     return (
       <Fragment>
         <Navbar
@@ -68,8 +78,12 @@ class Root extends Component {
           <EditPostItem id={edited.id || v4()} />
         </Navbar>
 
-        <section className="section" style={style}>
-          <h1 className="title">{category}</h1>
+        <section className="section" style={sectionStyle}>
+          <h1 className="title" style={titleStyle}>{category}</h1>
+          <SortControl
+            isTimeStamp={sortWay === 'timestamp'}
+            onClick={this.onChangeSortWay}
+          />
           <hr />
           {isPostsFetching ? (
             <div style={{ margin: '0 auto', width: 500 }}>
@@ -92,11 +106,13 @@ const mapStateToProps = (state, { match: { params } }) => {
     posts: getPostsByCategory(state, category),
     categories: getCategories(state),
     edited: getEdited(state),
+    sortWay: getPostSortWay(state, category),
   };
 };
 
 export default connect(mapStateToProps, {
   fetchPosts,
   fetchAllCategories,
+  changeSortWay,
   fetchSavedPost,
 })(Root);

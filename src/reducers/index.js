@@ -3,7 +3,7 @@ import postsByCategory from './postsByCategory';
 import edited from './editPost';
 import comments from './comments';
 import { combineReducers } from 'redux';
-import { prop, pathOr, __, propOr } from 'ramda';
+import { prop, pathOr, __, propOr, descend, sort, compose } from 'ramda';
 
 export default combineReducers({
   categories,
@@ -15,9 +15,19 @@ export default combineReducers({
 export const isPostsFetching = (state, category) =>
   pathOr(false, ['postsByCategory', category, 'isFetching'], state);
 
+const sortPostsWith = (type) => {
+  const sortDescendWith = compose(sort, descend, prop);
+  return sortDescendWith(type);
+};
+
 export const getPostsByCategory = (state, category) => {
   const posts = state.postsByCategory[category];
-  return posts ? posts.ids.map(id => posts.byId[id]) : [];
+  console.log(posts);
+  return posts ? sortPostsWith(posts.sortBy)(posts.ids.map(id => posts.byId[id])) : [];
+};
+
+export const getPostSortWay = (state, category) => {
+  return pathOr('timestamp', ['postsByCategory', category, 'sortBy'], state);
 };
 
 export const getComments = (state, postId) => {

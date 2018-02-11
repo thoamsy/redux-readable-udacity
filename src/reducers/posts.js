@@ -23,6 +23,7 @@ import {
   REQUEST_POSTS,
   RECEIVE_POST_VOTE,
   DELETE_POST,
+  CHANGE_SORT_WAY,
 } from '../actions/posts';
 import {
   FETCH_COMMENTS_SUCCESS,
@@ -67,11 +68,13 @@ const postReducer = action => (state = {}) => {
   }
 };
 
+const sortWays = ['timestamp', 'voteScore'];
 const posts = (
   state = {
     byId: {},
     ids: [],
     isFetching: false,
+    sortBy: sortWays[0]
   },
   action
 ) => {
@@ -100,11 +103,13 @@ const posts = (
     case ADD_COMMENT_SUCCESS:
     case DELETE_COMMENT:
       return updatePosts({});
+    case CHANGE_SORT_WAY:
+      return evolve(__, state)({
+        sortBy: way => sortWays[+!sortWays.indexOf(way)]
+      });
     default:
       return state;
   }
 };
-
-// TODO: add error reducer
 
 export default posts;

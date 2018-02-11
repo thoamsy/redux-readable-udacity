@@ -66,6 +66,7 @@ export const publishPost = ({
       err => dispatch({ type: PUBLISH_POST_FAILURE, category, err })
     );
 };
+
 export const fetchSavedPost = () => dispatch => {
   let saved = localStorage.getItem(localKey);
   saved = saved || null;
