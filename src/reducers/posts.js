@@ -14,18 +14,20 @@ import {
   equals,
   merge,
   compose,
+  inc
 } from 'ramda';
+
 import {
   RECEIVE_POSTS,
   REQUEST_POSTS,
   RECEIVE_POST_VOTE,
   DELETE_POST,
 } from '../actions/posts';
-import { FETCH_COMMENTS_SUCCESS } from '../actions/comments';
+import { FETCH_COMMENTS_SUCCESS, ADD_COMMENT_SUCCESS  } from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 
 const postReducer = action => (state = {}) => {
-  const { type, postId, update, payload } = action;
+  const { type, postId, update, payload, commentId } = action;
   switch (type) {
     case RECEIVE_POST_VOTE:
       return evolve({ [postId]: { voteScore: update } }, state);
@@ -37,8 +39,15 @@ const postReducer = action => (state = {}) => {
       );
     case FETCH_COMMENTS_SUCCESS:
       return assocPath([postId, 'comments'], payload.map(prop('id')), state);
+    case ADD_COMMENT_SUCCESS:
+      return evolve({
+        [postId]: {
+          comments: append(commentId),
+          commentCount: inc
+        }
+      }, state);
     case PUBLISH_POST_SUCCESS:
-      return assoc(payload.id, payload, state);
+      return assoc(postId, payload, state);
     case DELETE_POST:
       return dissoc(postId, state);
     default:
@@ -76,6 +85,7 @@ const posts = (
       });
     case RECEIVE_POST_VOTE:
     case FETCH_COMMENTS_SUCCESS:
+    case ADD_COMMENT_SUCCESS:
       return updatePosts({});
     default:
       return state;

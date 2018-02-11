@@ -28,7 +28,12 @@
     @include column;
 
     .author {
-      color: #676867;
+      color: #1a1a1a;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    time {
+      color: #8590a6;
     }
   }
 

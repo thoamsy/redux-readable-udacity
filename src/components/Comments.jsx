@@ -15,7 +15,7 @@ const divider = {
   width: 75,
 };
 
-const Comments = ({ err, comments, isFetching }) => {
+const Comments = ({ err, comments, isFetching, onChange, currentInput, submitComment, isCommenting }) => {
   if (err) {
     return <h1 className="title has-text-danger">评论获取失败，请重试</h1>;
   }
@@ -29,9 +29,18 @@ const Comments = ({ err, comments, isFetching }) => {
   return (
     <section className="comment-block">
       <h4 style={headTitle}>Response</h4>
-      <div className="field">
+      <div className="field is-grouped">
+        <div className="control is-expanded">
+          <input
+            type="text"
+            className="input"
+            placeholder="Write a response"
+            onChange={onChange}
+            value={currentInput}
+          />
+        </div>
         <div className="control">
-          <input type="text" className="input" placeholder="Write a response" />
+          <a className="button is-info" onClick={submitComment}>评论</a>
         </div>
       </div>
       <div style={divider} />
