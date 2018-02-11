@@ -5,7 +5,10 @@ import {
   RECEIVE_POST_VOTE,
   DELETE_POST,
 } from '../actions/posts';
-import { FETCH_COMMENTS_SUCCESS, ADD_COMMENT_SUCCESS } from '../actions/comments';
+import {
+  FETCH_COMMENTS_SUCCESS,
+  ADD_COMMENT_SUCCESS,
+} from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 import { assoc, evolve, __ } from 'ramda';
 import posts from './posts';

@@ -4,11 +4,11 @@ import {
   FETCH_COMMENTS_SUCCESS,
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_REQUEST,
-  ADD_COMMENT_SUCCESS
+  ADD_COMMENT_SUCCESS,
 } from '../actions/comments';
 
 import { assoc, prop, __, evolve, append, compose, merge } from 'ramda';
-const byId = (action) => (state = {}) => {
+const byId = action => (state = {}) => {
   const { type, payload, commentId, err } = action;
   switch (type) {
     case FETCH_COMMENTS_SUCCESS:
@@ -28,7 +28,7 @@ const byId = (action) => (state = {}) => {
       return state;
   }
 };
-const isFetching = (action) => (state = {}) => {
+const isFetching = action => (state = {}) => {
   switch (action.type) {
     case FETCH_COMMENTS_REQUEST:
       return assoc(action.postId, true, state);

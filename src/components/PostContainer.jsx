@@ -42,9 +42,7 @@ const Post = ({
       <div className="body">
         <div
           dangerouslySetInnerHTML={{ __html: body }}
-          className={`content ${
-            isThumbnail ? 'is-thumbnail' : ''
-          }`}
+          className={`content ${isThumbnail ? 'is-thumbnail' : ''}`}
         />
         {isThumbnail && <Link to={`/posts/${id}`}>阅读全文</Link>}
       </div>

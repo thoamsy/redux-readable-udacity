@@ -15,7 +15,7 @@ const App = () => (
       <Switch>
         <Route path="/:category?" exact component={Root} />
         <Route path="/:id/edit" component={EditPost} />
-        <Route path="/posts/:id" component={PostDetail}/>
+        <Route path="/posts/:id" component={PostDetail} />
       </Switch>
     </Router>
   </Provider>

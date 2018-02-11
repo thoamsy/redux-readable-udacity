@@ -17,7 +17,12 @@ import {
   getEdited,
 } from '../reducers/';
 
+const style = {
+  marginTop: '3.25rem',
+  backgroundColor: '#f6f6f6',
+};
 class Root extends Component {
+  // 导航栏的三明治效果，这个仅仅是 UI 变换，为了方便就放在 state 里
   state = {
     isToggle: false,
   };
@@ -57,12 +62,13 @@ class Root extends Component {
         <Navbar
           categories={categories}
           onToggleMenu={this.onToggleMenu}
-          isNavbarToggle={this.state.isToggle}>
+          isNavbarToggle={this.state.isToggle}
+        >
           {categories => <CategoriesItem categories={categories} />}
           <EditPostItem id={edited.id || v4()} />
         </Navbar>
 
-        <section className="section" style={{ backgroundColor: '#f6f6f6' }}>
+        <section className="section" style={style}>
           <h1 className="title">{category}</h1>
           <hr />
           {isPostsFetching ? (

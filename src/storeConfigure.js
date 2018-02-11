@@ -13,12 +13,14 @@ const workerMiddleware = ({ dispatch }) => {
   };
   return next => action => {
     if (action.type !== 'POST_WORKER') return next(action);
-    render.postMessage({ payload: action.payload, category: action.category });
+    render.postMessage({ ...action });
   };
 };
 
 const dev =
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-const middlewares = dev ? compose(applyMiddleware(thunk, workerMiddleware), dev) : applyMiddleware(thunk, workerMiddleware);
+const middlewares = dev
+  ? compose(applyMiddleware(thunk, workerMiddleware), dev)
+  : applyMiddleware(thunk, workerMiddleware);
 
 export default () => createStore(reducers, middlewares);

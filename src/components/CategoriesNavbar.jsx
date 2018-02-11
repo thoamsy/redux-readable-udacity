@@ -8,7 +8,8 @@ const EditPostItem = ({ id }) => (
     <Link
       to={`/${id}/edit`}
       data-tooltip="新建帖子"
-      className="tooltip is-tooltip-bottom">
+      className="tooltip is-tooltip-bottom"
+    >
       <span className="icon has-text-link is-large">
         <i className="fa fa-pencil-square fa-2x" />
       </span>
@@ -22,7 +23,8 @@ const CategoriesItem = ({ categories }) =>
       exact
       activeClassName="is-active"
       className="navbar-item category"
-      to={'/' + category.path}>
+      to={'/' + category.path}
+    >
       {category.name}
     </NavLink>
   ));

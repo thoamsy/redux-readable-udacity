@@ -18,12 +18,17 @@ export const savePost = post => dispatch => {
   saveToLocal(post);
   dispatch({
     type: SAVE_POST,
-    post
+    post,
   });
 };
 
-
-export const publishPost = ({ author, category, title, body, id }) => dispatch => {
+export const publishPost = ({
+  author,
+  category,
+  title,
+  body,
+  id,
+}) => dispatch => {
   // 这个操作由 button 触发，只要保证该 button 会有对应的 loading 动画的话，就不用处理多次点击的竞态。
   dispatch({ type: PUBLISH_POST });
   id = id || v4();
@@ -33,36 +38,39 @@ export const publishPost = ({ author, category, title, body, id }) => dispatch =
     title,
     body,
     id,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
   return fetch('/posts', {
     method: 'post',
     headers: {
       'content-type': 'application/json',
-      authorization: 'hello'
+      authorization: 'hello',
     },
-    body: JSON.stringify(data)
-  }).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw Error(res.statusText);
-  }).then(payload => {
-    dispatch({
-      type: 'POST_WORKER',
-      payload,
-      category
+    body: JSON.stringify(data),
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      throw Error(res.statusText);
+    })
+    .then(payload => {
+      dispatch({
+        type: 'POST_WORKER',
+        payload,
+        category,
+      });
+      removePost();
+    })
+    .catch(err => {
+      dispatch({ type: PUBLISH_POST_FAILURE, category, err });
     });
-    removePost();
-  }).catch(err => {
-    dispatch({ type: PUBLISH_POST_FAILURE, category, err });
-  });
 };
 export const fetchSavedPost = () => dispatch => {
   let saved = localStorage.getItem(localKey);
   saved = saved || null;
   dispatch({
     type: INIT_POST,
-    saved: JSON.parse(saved)
+    saved: JSON.parse(saved),
   });
 };

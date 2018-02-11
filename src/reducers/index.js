@@ -30,16 +30,4 @@ export const isCommentsFetching = (state, postId) =>
 export const getCategories = prop('categories');
 export const getEdited = prop('edited');
 export const getPost = (state, postId) =>
-  state.postsByCategory.all
-    ? state.postsByCategory.all.byId[postId]
-    : {
-        author: 'thingtwo',
-        body: 'Everyone says so after all.',
-        category: 'react',
-        commentCount: 2,
-        deleted: false,
-        id: '8xf0y6ziyjabvozdd253nd',
-        timestamp: 1467166872634,
-        title: 'Udacity is the best place to learn React',
-        voteScore: 6,
-      };
+  state.postsByCategory.all.byId[postId];

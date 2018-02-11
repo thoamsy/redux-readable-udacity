@@ -6,7 +6,7 @@ const initState = {
   body: '',
   title: '',
   category: '',
-  isSaving: false
+  isSaving: false,
 };
 export const editPost = (state = initState, action) => {
   const { type } = action;
@@ -25,6 +25,5 @@ export const editPost = (state = initState, action) => {
       return state;
   }
 };
-
 
 export default editPost;

@@ -3,14 +3,18 @@ a.category {
   font-size: 18px;
   text-decoration: none;
   color: rgba(0, 0, 0, 0.56);
-  transition: color ease-out 0.3s; }
-  a.category:hover {
-    color: rgba(0, 0, 0, 0.84);
-    text-decoration: underline; }
-  a.category.is-active {
-    color: rgba(0, 0, 0, 0.84);
-    font-weight: 600; }
+  transition: color ease-out 0.3s;
+}
+a.category:hover {
+  color: rgba(0, 0, 0, 0.84);
+  text-decoration: underline;
+}
+a.category.is-active {
+  color: rgba(0, 0, 0, 0.84);
+  font-weight: 600;
+}
 
 .tags input:checked + .tag {
   background-color: #23d160;
-  color: #fff; }
+  color: #fff;
+}

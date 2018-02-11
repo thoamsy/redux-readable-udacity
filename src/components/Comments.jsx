@@ -15,7 +15,15 @@ const divider = {
   width: 75,
 };
 
-const Comments = ({ err, comments, isFetching, onChange, currentInput, submitComment, isCommenting }) => {
+const Comments = ({
+  err,
+  comments,
+  isFetching,
+  onChange,
+  currentInput,
+  submitComment,
+  isCommenting,
+}) => {
   if (err) {
     return <h1 className="title has-text-danger">评论获取失败，请重试</h1>;
   }
@@ -40,7 +48,9 @@ const Comments = ({ err, comments, isFetching, onChange, currentInput, submitCom
           />
         </div>
         <div className="control">
-          <a className="button is-info" onClick={submitComment}>评论</a>
+          <a className="button is-info" onClick={submitComment}>
+            评论
+          </a>
         </div>
       </div>
       <div style={divider} />

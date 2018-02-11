@@ -1,6 +1,6 @@
 import { prop, inc, dec, always } from 'ramda';
 const headers = {
-  Authorization: 'I don\'t know why we need this.',
+  Authorization: "I don't know why we need this.",
 };
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';

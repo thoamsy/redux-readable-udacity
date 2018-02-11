@@ -15,13 +15,19 @@ import 'codemirror/mode/javascript/javascript';
 const ChooseCategory = ({ categories, value, onChange }) => (
   <div className="field">
     <label className="label">文章分类</label>
-      <div className="select is-multiple">
-      <select size={categories.length}
+    <div className="select is-multiple">
+      <select
+        size={categories.length}
         onChange={onChange}
         value={value}
         multiple
-        name="category">
-        {categories.map(({ name }) => <option value={name} key={name}>{name}</option>)}
+        name="category"
+      >
+        {categories.map(({ name }) => (
+          <option value={name} key={name}>
+            {name}
+          </option>
+        ))}
       </select>
     </div>
   </div>
@@ -55,25 +61,28 @@ GeneralInput.propType = {
 };
 const pickMeta = pick(['author', 'category', 'id', 'title']);
 class EditPost extends Component {
-  state = pickMeta(this.props.edited)
+  state = pickMeta(this.props.edited);
   get post() {
     return {
       ...this.state,
-      body: this.code.doc.getValue()
+      body: this.code.doc.getValue(),
     };
   }
 
   componentDidMount() {
     this.props.fetchSavedPost();
-    this.code = CodeMirror.fromTextArea(document.querySelector('#editSection'), {
-      mode: {
-        name: 'gfm',
-        highlightFormatting: true
-      },
-      theme: 'ttcn',
-      styleActiveLine: true,
-      lineNumber: true
-    });
+    this.code = CodeMirror.fromTextArea(
+      document.querySelector('#editSection'),
+      {
+        mode: {
+          name: 'gfm',
+          highlightFormatting: true,
+        },
+        theme: 'ttcn',
+        styleActiveLine: true,
+        lineNumber: true,
+      }
+    );
     this.code.setSize('100%', 150);
   }
 
@@ -112,7 +121,7 @@ class EditPost extends Component {
     if (window.confirm('你确定发布吗？')) {
       publishPost(this.post).then(() => history.goBack());
     }
-  }
+  };
 
   render() {
     const { history, edited: { isSaving } } = this.props;
@@ -122,18 +131,26 @@ class EditPost extends Component {
           <div className="navbar-item">
             <h1>发布</h1>
           </div>
-            <div className="navbar-item">
-              <div className="field is-grouped">
-                <p className="control">
-                <a onClick={this.onPublic}
-                  className={`button is-text ${isSaving ? 'is-loading' : ''}`}>Publish</a>
-                </p>
-                <p className="control">
-                <a className="button is-danger"
-                  onClick={() => !isSaving && history.goBack()}>Cancel</a>
-                </p>
-              </div>
+          <div className="navbar-item">
+            <div className="field is-grouped">
+              <p className="control">
+                <a
+                  onClick={this.onPublic}
+                  className={`button is-text ${isSaving ? 'is-loading' : ''}`}
+                >
+                  Publish
+                </a>
+              </p>
+              <p className="control">
+                <a
+                  className="button is-danger"
+                  onClick={() => !isSaving && history.goBack()}
+                >
+                  Cancel
+                </a>
+              </p>
             </div>
+          </div>
         </Navbar>
         <section className="section">
           <div className="container">
@@ -173,6 +190,10 @@ class EditPost extends Component {
     );
   }
 }
-EditPost = connect(pick(['categories', 'edited']), { savePost, fetchSavedPost, publishPost })(EditPost);
+EditPost = connect(pick(['categories', 'edited']), {
+  savePost,
+  fetchSavedPost,
+  publishPost,
+})(EditPost);
 
 export default EditPost;

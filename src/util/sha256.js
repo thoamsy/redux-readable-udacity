@@ -2,7 +2,8 @@ function sha256(str) {
   // We transform the string into an arraybuffer.
   var buffer = new TextEncoder('utf-8').encode(str);
   return (crypto.subtle || crypto.webkitSubtle)
-    .digest('SHA-256', buffer).then(hex);
+    .digest('SHA-256', buffer)
+    .then(hex);
 }
 
 function hex(buffer) {

@@ -12,16 +12,16 @@ const leftTop = {
 };
 class PostDetail extends Component {
   state = {
-    comment: ''
-  }
+    comment: '',
+  };
 
-  handleInputChange = ({ target }) => this.setState({ comment: target.value })
+  handleInputChange = ({ target }) => this.setState({ comment: target.value });
   submitComment = () => {
     this.props.addComment(this.props.post.id, this.state.comment);
     this.setState({
-      comment: ''
+      comment: '',
     });
-  }
+  };
 
   componentDidMount() {
     // 通过路由切换的试图的时候，滚动条可能还是保留在那个位置。
@@ -33,7 +33,7 @@ class PostDetail extends Component {
 
   onBack = () => {
     this.props.history.goBack();
-  }
+  };
 
   render() {
     const { post, comments, isFetching } = this.props;
@@ -41,7 +41,7 @@ class PostDetail extends Component {
       <div style={{ background: '#fafafa' }}>
         <section className="section">
           <div className="container">
-            <PostContainer {...post}/>
+            <PostContainer {...post} />
             <Comments
               comments={comments}
               isFetching={isFetching}
@@ -67,4 +67,6 @@ const mapStateToMaps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToMaps, { fetchComments, addComment })(PostDetail);
+export default connect(mapStateToMaps, { fetchComments, addComment })(
+  PostDetail
+);

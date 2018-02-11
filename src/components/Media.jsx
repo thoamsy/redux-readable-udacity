@@ -7,18 +7,23 @@ const Media = ({ avatar, author, body, children, timestamp }) => (
       <p className="image is-64x64">
         <img
           src={avatar || 'https://bulma.io/images/placeholders/128x128.png'}
-          alt="an avatar" />
+          alt="an avatar"
+        />
       </p>
     </figure>
     <div className="media-content">
       <div className="content">
         <p>
           <strong>{author}</strong>
-          <small>{distanceInWords(timestamp, new Date(), { addSuffix: true })}</small>
+          <small>
+            {distanceInWords(timestamp, new Date(), { addSuffix: true })}
+          </small>
           <br />
           {body}
           <br />
-          <span className="icon is-small"><i className="fa fa-heart"></i></span>
+          <span className="icon is-small">
+            <i className="fa fa-heart" />
+          </span>
         </p>
       </div>
       {children}
