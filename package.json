@@ -28,7 +28,8 @@
     "dev": "concurrently \"nodemon api-server/server.js\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write 'src/**/*.{js,jsx,json,scss}'"
   },
   "devDependencies": {
     "concurrently": "^3.5.1"

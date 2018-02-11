@@ -1,0 +1,7 @@
+{
+  "semi": true,
+  "jsxBracketSameLine": false,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "parser": "babylon"
+}
