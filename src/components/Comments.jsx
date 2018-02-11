@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/comment.css';
 import distanceInWords from 'date-fns/distance_in_words';
+import zh from 'date-fns/locale/zh_cn';
 import { List } from 'react-content-loader';
 
 const headTitle = {
@@ -23,6 +24,7 @@ const Comments = ({
   currentInput,
   submitComment,
   isCommenting,
+  onDeleteComment,
 }) => {
   if (err) {
     return <h1 className="title has-text-danger">评论获取失败，请重试</h1>;
@@ -57,11 +59,13 @@ const Comments = ({
       {!!comments.length ? (
         comments.map(comment => (
           <div className="comment box" key={comment.id}>
+            <button className="delete" onClick={onDeleteComment(comment.id)} />
             <header className="comment-header">
               <p className="author">{comment.author}</p>
               <time>
                 {distanceInWords(comment.timestamp, new Date(), {
                   addSuffix: true,
+                  locale: zh
                 })}
               </time>
             </header>

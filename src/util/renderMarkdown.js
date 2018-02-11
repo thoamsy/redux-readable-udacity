@@ -15,6 +15,8 @@ const md = Markdown({
 
 onmessage = ({ data }) => {
   const { category, payload } = data;
-  payload.body = md.render(payload.body);
+  const origin = payload.body;
+  payload.body = md.render(origin);
+  payload.origin = origin;
   postMessage({ category, payload, postId: payload.id });
 };

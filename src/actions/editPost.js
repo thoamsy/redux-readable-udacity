@@ -54,17 +54,17 @@ export const publishPost = ({
       }
       throw Error(res.statusText);
     })
-    .then(payload => {
-      dispatch({
-        type: 'POST_WORKER',
-        payload,
-        category,
-      });
-      removePost();
-    })
-    .catch(err => {
-      dispatch({ type: PUBLISH_POST_FAILURE, category, err });
-    });
+    .then(
+      payload => {
+        dispatch({
+          type: 'POST_WORKER',
+          payload,
+          category,
+        });
+        removePost();
+      },
+      err => dispatch({ type: PUBLISH_POST_FAILURE, category, err })
+    );
 };
 export const fetchSavedPost = () => dispatch => {
   let saved = localStorage.getItem(localKey);
