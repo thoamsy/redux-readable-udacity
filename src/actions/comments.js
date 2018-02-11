@@ -1,6 +1,7 @@
 import delay from '../util/delay';
 import v4 from 'uuid/v4';
 import { getPost } from '../reducers/';
+
 export const FETCH_COMMENTS_REQUEST = 'FETCH_COMMENTS_REQUEST';
 export const FETCH_COMMENTS_SUCCESS = 'FETCH_COMMENTS_SUCCESS';
 export const FETCH_COMMENTS_FAILURE = 'FETCH_COMMENTS_FAILURE';
@@ -14,6 +15,7 @@ const fetchCommentsSuccess = (comments, postId) => ({
   payload: comments,
   postId,
 });
+
 const fetchCommentsFailure = err => ({
   type: FETCH_COMMENTS_FAILURE,
   err,
@@ -61,12 +63,14 @@ const addCommentRequest = commentId => ({
   type: ADD_COMMENT_REQUEST,
   commentId,
 });
-const addCommentSuccess = (postId, commentId, payload) => ({
+const addCommentSuccess = (postId, commentId, payload, category) => ({
   type: ADD_COMMENT_SUCCESS,
   commentId,
   payload,
   postId,
+  category,
 });
+
 const addCommentFailure = (commentId, err) => ({
   type: ADD_COMMENT_FAILURE,
   err,
@@ -85,7 +89,12 @@ const fakeNames = [
   'Abdul',
 ];
 
-export const addComment = (parentId, content) => dispatch => {
+/**
+ *
+ * @param {string} parentId 评论关联的 post 的 id
+ * @param {string} 评论内容
+ */
+export const addComment = (parentId, content, category) => dispatch => {
   const commentId = v4();
   dispatch(addCommentRequest(commentId));
   const fetchUrl = '/comments';
@@ -113,7 +122,16 @@ export const addComment = (parentId, content) => dispatch => {
       throw Error(res.statusText);
     })
     .then(
-      comment => dispatch(addCommentSuccess(parentId, commentId, comment)),
+      comment =>
+        dispatch(addCommentSuccess(parentId, commentId, comment, category)),
       err => dispatch(addCommentFailure(commentId, err))
     );
 };
+
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+export const deleteComment = (commentId, postId, category) => ({
+  type: DELETE_COMMENT,
+  commentId,
+  postId,
+  category,
+});

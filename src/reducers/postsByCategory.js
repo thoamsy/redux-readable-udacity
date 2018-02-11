@@ -8,6 +8,7 @@ import {
 import {
   FETCH_COMMENTS_SUCCESS,
   ADD_COMMENT_SUCCESS,
+  DELETE_COMMENT,
 } from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 import { assoc, evolve, __ } from 'ramda';
@@ -26,13 +27,11 @@ const postsByCategory = (state = {}, action) => {
     case PUBLISH_POST_SUCCESS:
     case DELETE_POST:
     case ADD_COMMENT_SUCCESS:
-      return evolve(
-        {
-          [action.category]: posts(__, action),
-          all: posts(__, action),
-        },
-        state
-      );
+    case DELETE_COMMENT:
+      return evolve(__, state)({
+        [action.category]: posts(__, action),
+        all: posts(__, action),
+      });
     default:
       return state;
   }

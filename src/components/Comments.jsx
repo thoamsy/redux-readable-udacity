@@ -65,7 +65,7 @@ const Comments = ({
               <time>
                 {distanceInWords(comment.timestamp, new Date(), {
                   addSuffix: true,
-                  locale: zh
+                  locale: zh,
                 })}
               </time>
             </header>

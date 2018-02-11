@@ -5,9 +5,21 @@ import {
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
+  DELETE_COMMENT,
 } from '../actions/comments';
 
-import { assoc, prop, __, evolve, append, compose, merge } from 'ramda';
+import {
+  assoc,
+  prop,
+  __,
+  evolve,
+  append,
+  compose,
+  merge,
+  dissoc,
+  reject,
+  equals,
+} from 'ramda';
 const byId = action => (state = {}) => {
   const { type, payload, commentId, err } = action;
   switch (type) {
@@ -22,6 +34,8 @@ const byId = action => (state = {}) => {
       return assoc(commentId, { ...payload, isCommenting: false }, state);
     case ADD_COMMENT_FAILURE:
       return assoc(commentId, { err }, state);
+    case DELETE_COMMENT:
+      return dissoc(commentId, state);
     case FETCH_COMMENTS_FAILURE:
     case FETCH_COMMENTS_REQUEST:
     default:
@@ -68,6 +82,10 @@ const comments = (
     case ADD_COMMENT_SUCCESS:
       return updateComment({
         ids: append(commentId),
+      });
+    case DELETE_COMMENT:
+      return updateComment({
+        ids: reject(equals(commentId)),
       });
     default:
       return state;

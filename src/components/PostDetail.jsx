@@ -1,23 +1,30 @@
 import React, { Component } from 'react';
 import Comments from './Comments';
 import PostContainer from './PostContainer';
-import { fetchComments, addComment } from '../actions/comments';
+import { fetchComments, addComment, deleteComment } from '../actions/comments';
 import { connect } from 'react-redux';
 import { getPost, getComments, isCommentsFetching } from '../reducers/';
 
 const leftTop = {
   position: 'absolute',
-  left: 44,
-  top: 44,
+  left: 48,
+  top: 24,
 };
+
 class PostDetail extends Component {
   state = {
     comment: '',
   };
 
   handleInputChange = ({ target }) => this.setState({ comment: target.value });
+  onDeleteComment = commentId => () => {
+    const { deleteComment, post } = this.props;
+    deleteComment(commentId, post.id, post.category);
+  };
+
   submitComment = () => {
-    this.props.addComment(this.props.post.id, this.state.comment);
+    const { post, addComment } = this.props;
+    addComment(post.id, this.state.comment, post.category);
     this.setState({
       comment: '',
     });
@@ -48,6 +55,7 @@ class PostDetail extends Component {
               onChange={this.handleInputChange}
               currentInput={this.state.comment}
               submitComment={this.submitComment}
+              onDeleteComment={this.onDeleteComment}
             />
           </div>
         </section>
@@ -67,6 +75,8 @@ const mapStateToMaps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToMaps, { fetchComments, addComment })(
-  PostDetail
-);
+export default connect(mapStateToMaps, {
+  fetchComments,
+  addComment,
+  deleteComment,
+})(PostDetail);
