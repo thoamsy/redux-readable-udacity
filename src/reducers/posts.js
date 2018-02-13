@@ -23,7 +23,8 @@ import {
   REQUEST_POSTS,
   RECEIVE_POST_VOTE,
   DELETE_POST,
-  CHANGE_SORT_WAY,
+  SWITCH_POST_SORT_WAY,
+  SWITCH_COMMENT_SORT_WAY,
 } from '../actions/posts';
 import {
   FETCH_COMMENTS_SUCCESS,
@@ -32,14 +33,19 @@ import {
 } from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 
+export const sortWays = ['timestamp', 'voteScore'];
+const switchSortWay = way => sortWays[+!sortWays.indexOf(way)];
+
 const postReducer = action => (state = {}) => {
   const { type, postId, voteScore, payload, commentId } = action;
+
+  const sortWay = sortWays[0];
   switch (type) {
     case RECEIVE_POST_VOTE:
       return evolve({ [postId]: { voteScore: always(voteScore) } }, state);
     case RECEIVE_POSTS:
       return reduce(
-        (posts, post) => assoc(post.id, post, posts),
+        (posts, post) => assoc(post.id, { ...post, sortWay }, posts),
         state,
         payload
       );
@@ -63,18 +69,23 @@ const postReducer = action => (state = {}) => {
           commentCount: dec,
         },
       });
+    case SWITCH_COMMENT_SORT_WAY:
+      return evolve(__, state)({
+        [postId]: {
+          sortWay: switchSortWay,
+        },
+      });
     default:
       return state;
   }
 };
 
-const sortWays = ['timestamp', 'voteScore'];
 const posts = (
   state = {
     byId: {},
     ids: [],
     isFetching: false,
-    sortBy: sortWays[0]
+    sortWay: sortWays[0],
   },
   action
 ) => {
@@ -102,10 +113,12 @@ const posts = (
     case FETCH_COMMENTS_SUCCESS:
     case ADD_COMMENT_SUCCESS:
     case DELETE_COMMENT:
+    case SWITCH_COMMENT_SORT_WAY:
       return updatePosts({});
-    case CHANGE_SORT_WAY:
+    case SWITCH_POST_SORT_WAY:
+      // 针对整个分类的排序，所以作为该 state 下的属性即可。
       return evolve(__, state)({
-        sortBy: way => sortWays[+!sortWays.indexOf(way)]
+        sortWay: switchSortWay,
       });
     default:
       return state;

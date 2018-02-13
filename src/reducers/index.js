@@ -15,25 +15,31 @@ export default combineReducers({
 export const isPostsFetching = (state, category) =>
   pathOr(false, ['postsByCategory', category, 'isFetching'], state);
 
-const sortPostsWith = (type) => {
+const sortWith = type => {
   const sortDescendWith = compose(sort, descend, prop);
   return sortDescendWith(type);
 };
 
-export const getPostsByCategory = (state, category) => {
-  const posts = state.postsByCategory[category];
-  // console.log(posts);
-  return posts ? sortPostsWith(posts.sortBy)(posts.ids.map(id => posts.byId[id])) : [];
+export const getPostSortWay = (state, category) => {
+  return pathOr('timestamp', ['postsByCategory', category, 'sortWay'], state);
 };
 
-export const getPostSortWay = (state, category) => {
-  return pathOr('timestamp', ['postsByCategory', category, 'sortBy'], state);
+export const getPostsByCategory = (state, category) => {
+  const posts = state.postsByCategory[category];
+  const result = posts
+    ? sortWith(posts.sortWay)(posts.ids.map(id => posts.byId[id]))
+    : [];
+  return result;
 };
 
 export const getComments = (state, postId) => {
   const { comments: { byId } } = state;
-  return propOr([], 'comments', getPost(state, postId)).map(prop(__, byId));
+  const post = getPost(state, postId);
+  return sortWith(post.sortWay)(
+    propOr([], 'comments', post).map(prop(__, byId))
+  );
 };
+
 export const isCommentsFetching = (state, postId) =>
   pathOr(false, ['comments', 'isFetching', postId], state);
 

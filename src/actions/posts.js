@@ -8,7 +8,8 @@ export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const REQUEST_POST_VOTE = 'REQUEST_POST_VOTE';
 export const RECEIVE_POST_VOTE = 'RECEIVE_POST_VOTE';
 export const DELETE_POST = 'DELETE_POST';
-export const CHANGE_SORT_WAY = 'CHANGE_SORT_WAY';
+export const SWITCH_POST_SORT_WAY = 'SWITCH_POST_SORT_WAY';
+export const SWITCH_COMMENT_SORT_WAY = 'SWITCH_COMMENT_SORT_WAY';
 
 const requestPosts = category => ({
   type: REQUEST_POSTS,
@@ -21,18 +22,21 @@ const receivePosts = (posts, category) => ({
   category,
 });
 
-const receivePostVote = (postId, category) => (voteScore) => ({
+const receivePostVote = (postId, category) => voteScore => ({
   type: RECEIVE_POST_VOTE,
   voteScore,
   postId,
   category,
 });
 
-export const postVoteScore = (up) => (postId, category) => dispatch => {
+export const postVoteScore = up => (postId, category) => dispatch => {
   const body = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
   const voteURL = `/posts/${postId}`;
 
-  const dispatchVoteScore = compose(dispatch, receivePostVote(postId, category));
+  const dispatchVoteScore = compose(
+    dispatch,
+    receivePostVote(postId, category)
+  );
 
   return fetch(voteURL, {
     headers: { 'content-type': 'application/json', Authorization: 'hh' },
@@ -69,7 +73,12 @@ export const deletePost = (postId, category) => ({
   category,
 });
 
-export const changeSortWay = (category) => ({
-  type: CHANGE_SORT_WAY,
+export const switchPostSortWay = category => ({
+  type: SWITCH_POST_SORT_WAY,
   category,
+});
+
+export const switchCommentSortWay = postId => ({
+  type: SWITCH_COMMENT_SORT_WAY,
+  postId,
 });

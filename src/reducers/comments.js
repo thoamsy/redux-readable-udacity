@@ -21,6 +21,7 @@ import {
   reject,
   equals,
 } from 'ramda';
+
 const byId = action => (state = {}) => {
   const { type, payload, commentId, err, voteScore } = action;
   const updateComment = assoc(commentId, __, state);
@@ -39,11 +40,14 @@ const byId = action => (state = {}) => {
     case DELETE_COMMENT:
       return dissoc(commentId, state);
     case REQUEST_UPDATE_COMMENT_VOTE:
-      return evolve({
-        [commentId]: {
-          voteScore: () => voteScore
-        }
-      }, state);
+      return evolve(
+        {
+          [commentId]: {
+            voteScore: () => voteScore,
+          },
+        },
+        state
+      );
     case FETCH_COMMENTS_FAILURE:
     case FETCH_COMMENTS_REQUEST:
     default:

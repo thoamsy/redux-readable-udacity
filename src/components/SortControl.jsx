@@ -1,21 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { sortWays } from '../reducers/posts';
 
-const textStyle = {
-  color: '#8590a6',
-  padding: 0
-};
-const SortControl = ({ isTimeStamp, onClick }) => (
-  <div className="field">
-    <a className="button is-light" onClick={onClick} style={textStyle}>
-      <span className="icon">
-        <i className="fa fa-retweet" />
-      </span>
-      <span>切换为{!isTimeStamp ? '时间' : '投票'}排序</span>
-    </a>
-  </div>
+const SortControl = ({ sortWay, onClick, className = '', ...rest }) => (
+  <a className={`has-text-grey ${className}`} onClick={onClick} {...rest}>
+    <span className="icon">
+      <i className="fa fa-retweet" />
+    </span>
+    <span>切换为{sortWay === sortWays[1] ? '时间' : '投票'}排序</span>
+  </a>
 );
-SortControl.defaultProps = {
-  isTimeStamp: true,
+SortControl.propTypes = {
+  sortWay: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default SortControl;

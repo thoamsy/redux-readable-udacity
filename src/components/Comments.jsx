@@ -1,9 +1,10 @@
 import React from 'react';
 import '../styles/comment.css';
-import distanceInWords from 'date-fns/distance_in_words';
+import distanceInWords from 'date-fns/distance_in_words_strict/';
 import zh from 'date-fns/locale/zh_cn';
 import { List } from 'react-content-loader';
 import ActionBar from './ActionBar';
+import SortControl from './SortControl';
 
 const headTitle = {
   fontSize: 16,
@@ -28,6 +29,8 @@ const Comments = ({
   onDeleteComment,
   onIncVote,
   onDecVote,
+  sortWay,
+  switchSortWay,
 }) => {
   if (err) {
     return <h1 className="title has-text-danger">评论获取失败，请重试</h1>;
@@ -59,32 +62,48 @@ const Comments = ({
         </div>
       </div>
       <div style={divider} />
-      {!!comments.length ? (
-        comments.map(comment => (
-          <div className="comment box" key={comment.id}>
-            <button className="delete" onClick={onDeleteComment(comment.id)} />
-            <header className="comment-header">
-              <p className="author">{comment.author}</p>
-              <time>
-                {distanceInWords(comment.timestamp, new Date(), {
-                  addSuffix: true,
-                  locale: zh,
-                })}
-              </time>
-            </header>
-            <article className="body">
-              <p>{comment.body}</p>
-            </article>
-            <ActionBar
-              voteScore={comment.voteScore}
-              incVoteScore={() => onIncVote(comment.id)}
-              decVoteScore={() => onDecVote(comment.id)}
-            />
-          </div>
-        ))
-      ) : (
-        <h2 className="subtitle">快来留下第一个评论吧！</h2>
-      )}
+      <div className="card">
+        <header className="card-header">
+          <h1 className="card-header-title">评论</h1>
+          <SortControl
+            className="card-header-icon"
+            aria-label="切换排序"
+            sortWay={sortWay}
+            onClick={switchSortWay}
+          />
+        </header>
+        <div className="card-content">
+          {!!comments.length ? (
+            comments.map(comment => (
+              <div className="comment box" key={comment.id}>
+                <button
+                  className="delete"
+                  onClick={onDeleteComment(comment.id)}
+                />
+                <header className="comment-header">
+                  <p className="author">{comment.author}</p>
+                  <time>
+                    {distanceInWords(comment.timestamp, new Date(), {
+                      addSuffix: true,
+                      locale: zh,
+                    })}
+                  </time>
+                </header>
+                <article className="body">
+                  <p>{comment.body}</p>
+                </article>
+                <ActionBar
+                  voteScore={comment.voteScore}
+                  incVoteScore={() => onIncVote(comment.id)}
+                  decVoteScore={() => onDecVote(comment.id)}
+                />
+              </div>
+            ))
+          ) : (
+            <h2 className="subtitle">快来留下第一个评论吧！</h2>
+          )}
+        </div>
+      </div>
     </section>
   );
 };

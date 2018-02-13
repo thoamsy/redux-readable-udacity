@@ -4,7 +4,8 @@ import {
   REQUEST_POSTS,
   RECEIVE_POST_VOTE,
   DELETE_POST,
-  CHANGE_SORT_WAY
+  SWITCH_POST_SORT_WAY,
+  SWITCH_COMMENT_SORT_WAY,
 } from '../actions/posts';
 import {
   FETCH_COMMENTS_SUCCESS,
@@ -21,7 +22,8 @@ const postsByCategory = (state = {}, action) => {
   switch (action.type) {
     case REQUEST_POSTS:
     case RECEIVE_POSTS:
-    case CHANGE_SORT_WAY:
+    case SWITCH_POST_SORT_WAY:
+    case SWITCH_COMMENT_SORT_WAY:
       return assoc(category, posts(state[category], action), state);
     case RECEIVE_POST_VOTE:
     case FETCH_COMMENTS_SUCCESS:

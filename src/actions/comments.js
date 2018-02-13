@@ -139,18 +139,21 @@ export const deleteComment = (commentId, postId, category) => ({
 });
 
 export const REQUEST_UPDATE_COMMENT_VOTE = 'REQUEST_UPDATE_COMMENT_VOTE';
-const requestUpdateCommentVote = (commentId) => (voteScore) => ({
+const requestUpdateCommentVote = commentId => voteScore => ({
   type: REQUEST_UPDATE_COMMENT_VOTE,
   commentId,
   voteScore,
 });
 
 // 和给 post 投票的方法很像
-export const updateCommentVote = (up) => (commentId) => dispatch => {
+export const updateCommentVote = up => commentId => dispatch => {
   const url = `/comments/${commentId}`;
   const option = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
 
-  const dispatchVoteScore = compose(dispatch, requestUpdateCommentVote(commentId));
+  const dispatchVoteScore = compose(
+    dispatch,
+    requestUpdateCommentVote(commentId)
+  );
   return fetch(url, {
     headers: {
       Authorization: 'hello!',
@@ -158,11 +161,13 @@ export const updateCommentVote = (up) => (commentId) => dispatch => {
     },
     body: option,
     method: 'POST',
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw Error(res.statusText);
-  }).then(prop('voteScore'))
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      throw Error(res.statusText);
+    })
+    .then(prop('voteScore'))
     .then(dispatchVoteScore, console.warn);
 };

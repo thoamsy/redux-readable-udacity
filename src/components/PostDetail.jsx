@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import Comments from './Comments';
 import PostContainer from './PostContainer';
-import { fetchComments, addComment, deleteComment, updateCommentVote } from '../actions/comments';
+import { switchCommentSortWay } from '../actions/posts';
+import {
+  fetchComments,
+  addComment,
+  deleteComment,
+  updateCommentVote,
+} from '../actions/comments';
 import { connect } from 'react-redux';
 import { getPost, getComments, isCommentsFetching } from '../reducers/';
 
@@ -20,6 +26,9 @@ class PostDetail extends Component {
   onDeleteComment = commentId => () => {
     const { deleteComment, post } = this.props;
     deleteComment(commentId, post.id, post.category);
+  };
+  switchCommentSortWay = () => {
+    this.props.switchCommentSortWay(this.props.post.id);
   };
 
   submitComment = () => {
@@ -43,7 +52,14 @@ class PostDetail extends Component {
   };
 
   render() {
-    const { post, comments, isFetching, incCommentVote, decCommentVote } = this.props;
+    const {
+      post,
+      comments,
+      isFetching,
+      incCommentVote,
+      decCommentVote,
+    } = this.props;
+    const { sortWay } = post;
     return (
       <div style={{ background: '#fafafa' }}>
         <section className="section">
@@ -58,6 +74,8 @@ class PostDetail extends Component {
               onDeleteComment={this.onDeleteComment}
               onIncVote={incCommentVote}
               onDecVote={decCommentVote}
+              sortWay={sortWay}
+              switchSortWay={this.switchCommentSortWay}
             />
           </div>
         </section>
@@ -83,4 +101,5 @@ export default connect(mapStateToMaps, {
   deleteComment,
   incCommentVote: updateCommentVote(true),
   decCommentVote: updateCommentVote(false),
+  switchCommentSortWay,
 })(PostDetail);

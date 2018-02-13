@@ -78,13 +78,15 @@ Post.defaultProps = {
 };
 
 class PostContainer extends Component {
-  onDeletePost = id => () => this.props.deletePost(id, this.props.category)
-  onClickComments = id => () => this.setState({ to: `/posts/${id}/comments` })
-  incVoteScore = () => this.props.incVoteScore(this.props.id, this.props.category)
-  decVoteScore = () => this.props.decVoteScore(this.props.id, this.props.category)
+  onDeletePost = id => () => this.props.deletePost(id, this.props.category);
+  onClickComments = id => () => this.setState({ to: `/posts/${id}/comments` });
+  incVoteScore = () =>
+    this.props.incVoteScore(this.props.id, this.props.category);
+  decVoteScore = () =>
+    this.props.decVoteScore(this.props.id, this.props.category);
 
   render() {
-    const { id, } = this.props;
+    const { id } = this.props;
     return (
       <Post
         {...this.props}

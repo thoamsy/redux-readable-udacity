@@ -8,7 +8,7 @@ import v4 from 'uuid/v4';
 import { connect } from 'react-redux';
 import { evolve, not } from 'ramda';
 import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
-import { fetchPosts, changeSortWay } from '../actions/posts';
+import { fetchPosts, switchPostSortWay } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
 import { fetchSavedPost } from '../actions/editPost';
 import {
@@ -61,12 +61,19 @@ class Root extends Component {
     );
   };
 
-  onChangeSortWay = () => {
-    this.props.changeSortWay(this.props.category);
+  onSwitchSortWay = () => {
+    this.props.switchPostSortWay(this.props.category);
   };
 
   render() {
-    const { isPostsFetching, posts, categories, category, edited, sortWay } = this.props;
+    const {
+      isPostsFetching,
+      posts,
+      categories,
+      category,
+      edited,
+      sortWay,
+    } = this.props;
     return (
       <Fragment>
         <Navbar
@@ -79,11 +86,10 @@ class Root extends Component {
         </Navbar>
 
         <section className="section" style={sectionStyle}>
-          <h1 className="title" style={titleStyle}>{category}</h1>
-          <SortControl
-            isTimeStamp={sortWay === 'timestamp'}
-            onClick={this.onChangeSortWay}
-          />
+          <h1 className="title" style={titleStyle}>
+            {category}
+          </h1>
+          <SortControl sortWay={sortWay} onClick={this.onSwitchSortWay} />
           <hr />
           {isPostsFetching ? (
             <div style={{ margin: '0 auto', width: 500 }}>
@@ -113,6 +119,6 @@ const mapStateToProps = (state, { match: { params } }) => {
 export default connect(mapStateToProps, {
   fetchPosts,
   fetchAllCategories,
-  changeSortWay,
+  switchPostSortWay,
   fetchSavedPost,
 })(Root);
