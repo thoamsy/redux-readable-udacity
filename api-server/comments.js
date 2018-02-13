@@ -69,6 +69,7 @@ function add (token, comment) {
       parentDeleted: false
     };
 
+    defaultData[comment.id] = comments[comment.id];
     posts.incrementCommentCounter(token, comment.parentId, 1);
     res(comments[comment.id]);
   });
