@@ -7,7 +7,7 @@ const SortControl = ({ sortWay, onClick, className = '', ...rest }) => (
     <span className="icon">
       <i className="fa fa-retweet" />
     </span>
-    <span>切换为{sortWay === sortWays[1] ? '时间' : '投票'}排序</span>
+    <span>切换为{sortWay === sortWays[0] ? '时间' : '投票'}排序</span>
   </a>
 );
 SortControl.propTypes = {

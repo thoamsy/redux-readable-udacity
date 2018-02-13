@@ -33,7 +33,7 @@ import {
 } from '../actions/comments';
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 
-export const sortWays = ['timestamp', 'voteScore'];
+export const sortWays = ['voteScore', 'timestamp'];
 const switchSortWay = way => sortWays[+!sortWays.indexOf(way)];
 
 const postReducer = action => (state = {}) => {
