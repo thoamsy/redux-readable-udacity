@@ -78,22 +78,18 @@ Post.defaultProps = {
 };
 
 class PostContainer extends Component {
-  onHandleVoteScoreChange = up => {
-    const { category, id, postVoteScore } = this.props;
-    return () => postVoteScore(id, category, up);
-  };
-
-  onDeletePost = id => () => this.props.deletePost(id, this.props.category);
-
-  onClickComments = id => () => this.setState({ to: `/posts/${id}/comments` });
+  onDeletePost = id => () => this.props.deletePost(id, this.props.category)
+  onClickComments = id => () => this.setState({ to: `/posts/${id}/comments` })
+  incVoteScore = () => this.props.incVoteScore(this.props.id, this.props.category)
+  decVoteScore = () => this.props.decVoteScore(this.props.id, this.props.category)
 
   render() {
-    const { id } = this.props;
+    const { id, } = this.props;
     return (
       <Post
         {...this.props}
-        incVoteScore={this.onHandleVoteScoreChange(true)}
-        decVoteScore={this.onHandleVoteScoreChange()}
+        incVoteScore={this.incVoteScore}
+        decVoteScore={this.decVoteScore}
         onDeletePost={this.onDeletePost(id)}
         onClickComments={this.onClickComments(id)}
       />
@@ -102,6 +98,7 @@ class PostContainer extends Component {
 }
 
 export default connect(null, {
-  postVoteScore,
+  incVoteScore: postVoteScore(true),
+  decVoteScore: postVoteScore(false),
   deletePost,
 })(PostContainer);

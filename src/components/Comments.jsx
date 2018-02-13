@@ -3,6 +3,7 @@ import '../styles/comment.css';
 import distanceInWords from 'date-fns/distance_in_words';
 import zh from 'date-fns/locale/zh_cn';
 import { List } from 'react-content-loader';
+import ActionBar from './ActionBar';
 
 const headTitle = {
   fontSize: 16,
@@ -25,6 +26,8 @@ const Comments = ({
   submitComment,
   isCommenting,
   onDeleteComment,
+  onIncVote,
+  onDecVote,
 }) => {
   if (err) {
     return <h1 className="title has-text-danger">评论获取失败，请重试</h1>;
@@ -72,6 +75,11 @@ const Comments = ({
             <article className="body">
               <p>{comment.body}</p>
             </article>
+            <ActionBar
+              voteScore={comment.voteScore}
+              incVoteScore={() => onIncVote(comment.id)}
+              decVoteScore={() => onDecVote(comment.id)}
+            />
           </div>
         ))
       ) : (

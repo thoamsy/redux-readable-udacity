@@ -48,18 +48,18 @@
       white-space: nowrap;
     }
   }
-
-  .actions {
-    .button {
-      color: #0084ff;
-      background: rgba(0, 132, 255, 0.1);
-      border-color: transparent;
-      padding: 0 12px;
-      margin-right: 5px;
-      &:focus {
-        color: #fff;
-        background-color: #0084ff;
-      }
+}
+.actions {
+  margin-top: 8px;
+  .button {
+    color: #0084ff;
+    background: rgba(0, 132, 255, 0.1);
+    border-color: transparent;
+    padding: 0 12px;
+    margin-right: 5px;
+    &:focus {
+      color: #fff;
+      background-color: #0084ff;
     }
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Comments from './Comments';
 import PostContainer from './PostContainer';
-import { fetchComments, addComment, deleteComment } from '../actions/comments';
+import { fetchComments, addComment, deleteComment, updateCommentVote } from '../actions/comments';
 import { connect } from 'react-redux';
 import { getPost, getComments, isCommentsFetching } from '../reducers/';
 
@@ -43,7 +43,7 @@ class PostDetail extends Component {
   };
 
   render() {
-    const { post, comments, isFetching } = this.props;
+    const { post, comments, isFetching, incCommentVote, decCommentVote } = this.props;
     return (
       <div style={{ background: '#fafafa' }}>
         <section className="section">
@@ -56,6 +56,8 @@ class PostDetail extends Component {
               currentInput={this.state.comment}
               submitComment={this.submitComment}
               onDeleteComment={this.onDeleteComment}
+              onIncVote={incCommentVote}
+              onDecVote={decCommentVote}
             />
           </div>
         </section>
@@ -79,4 +81,6 @@ export default connect(mapStateToMaps, {
   fetchComments,
   addComment,
   deleteComment,
+  incCommentVote: updateCommentVote(true),
+  decCommentVote: updateCommentVote(false),
 })(PostDetail);

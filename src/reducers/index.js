@@ -22,7 +22,7 @@ const sortPostsWith = (type) => {
 
 export const getPostsByCategory = (state, category) => {
   const posts = state.postsByCategory[category];
-  console.log(posts);
+  // console.log(posts);
   return posts ? sortPostsWith(posts.sortBy)(posts.ids.map(id => posts.byId[id])) : [];
 };
 

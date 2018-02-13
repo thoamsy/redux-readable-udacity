@@ -1,4 +1,4 @@
-import { prop, inc, dec, always } from 'ramda';
+import { prop, compose } from 'ramda';
 const headers = {
   Authorization: 'shit',
 };
@@ -21,24 +21,18 @@ const receivePosts = (posts, category) => ({
   category,
 });
 
-// 每次触发，就加一
-const requestPostVote = (postId, category, up) => ({
-  type: REQUEST_POST_VOTE,
-  postId,
-  update: up ? inc : dec,
-  category,
-});
-const receivePostVote = (postId, category, voteScore) => ({
+const receivePostVote = (postId, category) => (voteScore) => ({
   type: RECEIVE_POST_VOTE,
-  update: always(voteScore),
+  voteScore,
   postId,
   category,
 });
 
-export const postVoteScore = (postId, category, up) => dispatch => {
-  dispatch(requestPostVote(postId, category, up));
+export const postVoteScore = (up) => (postId, category) => dispatch => {
   const body = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
   const voteURL = `/posts/${postId}`;
+
+  const dispatchVoteScore = compose(dispatch, receivePostVote(postId, category));
 
   return fetch(voteURL, {
     headers: { 'content-type': 'application/json', Authorization: 'hh' },
@@ -52,8 +46,7 @@ export const postVoteScore = (postId, category, up) => dispatch => {
       throw Error(res.statusText);
     })
     .then(prop('voteScore'))
-    .then(voteScore => dispatch(receivePostVote(postId, category, voteScore)))
-    .catch(err => console.log(err));
+    .then(dispatchVoteScore, console.warn);
 };
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));

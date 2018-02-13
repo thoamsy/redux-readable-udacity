@@ -6,6 +6,7 @@ import {
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
   DELETE_COMMENT,
+  REQUEST_UPDATE_COMMENT_VOTE,
 } from '../actions/comments';
 
 import {
@@ -21,7 +22,8 @@ import {
   equals,
 } from 'ramda';
 const byId = action => (state = {}) => {
-  const { type, payload, commentId, err } = action;
+  const { type, payload, commentId, err, voteScore } = action;
+  const updateComment = assoc(commentId, __, state);
   switch (type) {
     case FETCH_COMMENTS_SUCCESS:
       return payload.reduce(
@@ -29,13 +31,19 @@ const byId = action => (state = {}) => {
         state
       );
     case ADD_COMMENT_REQUEST:
-      return assoc(commentId, { isCommenting: true }, state);
+      return updateComment({ isCommenting: true });
     case ADD_COMMENT_SUCCESS:
-      return assoc(commentId, { ...payload, isCommenting: false }, state);
+      return updateComment({ ...payload, isCommenting: false });
     case ADD_COMMENT_FAILURE:
-      return assoc(commentId, { err }, state);
+      return updateComment({ err });
     case DELETE_COMMENT:
       return dissoc(commentId, state);
+    case REQUEST_UPDATE_COMMENT_VOTE:
+      return evolve({
+        [commentId]: {
+          voteScore: () => voteScore
+        }
+      }, state);
     case FETCH_COMMENTS_FAILURE:
     case FETCH_COMMENTS_REQUEST:
     default:
@@ -77,8 +85,6 @@ const comments = (
         ids: append(payload.map(prop('id'))),
         isFetching: isFetching(action),
       });
-    case ADD_COMMENT_REQUEST:
-      return updateComment({});
     case ADD_COMMENT_SUCCESS:
       return updateComment({
         ids: append(commentId),
@@ -87,6 +93,9 @@ const comments = (
       return updateComment({
         ids: reject(equals(commentId)),
       });
+    case ADD_COMMENT_REQUEST:
+    case REQUEST_UPDATE_COMMENT_VOTE:
+      return updateComment({});
     default:
       return state;
   }

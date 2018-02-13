@@ -1,6 +1,7 @@
 import delay from '../util/delay';
 import v4 from 'uuid/v4';
 import { getPost } from '../reducers/';
+import { prop, compose } from 'ramda';
 
 export const FETCH_COMMENTS_REQUEST = 'FETCH_COMMENTS_REQUEST';
 export const FETCH_COMMENTS_SUCCESS = 'FETCH_COMMENTS_SUCCESS';
@@ -128,6 +129,7 @@ export const addComment = (parentId, content, category) => dispatch => {
     );
 };
 
+// TODO: 不仅仅是本地删除，使用 delete 方法
 export const DELETE_COMMENT = 'DELETE_COMMENT';
 export const deleteComment = (commentId, postId, category) => ({
   type: DELETE_COMMENT,
@@ -135,3 +137,32 @@ export const deleteComment = (commentId, postId, category) => ({
   postId,
   category,
 });
+
+export const REQUEST_UPDATE_COMMENT_VOTE = 'REQUEST_UPDATE_COMMENT_VOTE';
+const requestUpdateCommentVote = (commentId) => (voteScore) => ({
+  type: REQUEST_UPDATE_COMMENT_VOTE,
+  commentId,
+  voteScore,
+});
+
+// 和给 post 投票的方法很像
+export const updateCommentVote = (up) => (commentId) => dispatch => {
+  const url = `/comments/${commentId}`;
+  const option = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
+
+  const dispatchVoteScore = compose(dispatch, requestUpdateCommentVote(commentId));
+  return fetch(url, {
+    headers: {
+      Authorization: 'hello!',
+      'Content-Type': 'application/json',
+    },
+    body: option,
+    method: 'POST',
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw Error(res.statusText);
+  }).then(prop('voteScore'))
+    .then(dispatchVoteScore, console.warn);
+};

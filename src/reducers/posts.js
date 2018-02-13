@@ -33,10 +33,10 @@ import {
 import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
 
 const postReducer = action => (state = {}) => {
-  const { type, postId, update, payload, commentId } = action;
+  const { type, postId, voteScore, payload, commentId } = action;
   switch (type) {
     case RECEIVE_POST_VOTE:
-      return evolve({ [postId]: { voteScore: update } }, state);
+      return evolve({ [postId]: { voteScore: always(voteScore) } }, state);
     case RECEIVE_POSTS:
       return reduce(
         (posts, post) => assoc(post.id, post, posts),

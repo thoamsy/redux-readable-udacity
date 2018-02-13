@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 const ActionBar = ({ incVoteScore, voteScore, decVoteScore, commentCount }) => (
   <nav className="actions level is-mobile">
     <div className="level-left">
@@ -15,14 +17,22 @@ const ActionBar = ({ incVoteScore, voteScore, decVoteScore, commentCount }) => (
           </span>
         </button>
       </div>
-      <a className="level-item">
-        <span className="icon is-medium">
-          <i className="fa fa-commenting" />
-        </span>
-        {commentCount} 条评论
-      </a>
+      {commentCount !== undefined && (
+        <a className="level-item">
+          <span className="icon is-medium">
+            <i className="fa fa-commenting" />
+          </span>
+          {commentCount} 条评论
+        </a>
+      )}
     </div>
   </nav>
 );
+ActionBar.propTypes = {
+  incVoteScore: PropTypes.func.isRequired,
+  decVoteScore: PropTypes.func.isRequired,
+  voteScore: PropTypes.number.isRequired,
+  commentCount: PropTypes.number,
+};
 
 export default ActionBar;
