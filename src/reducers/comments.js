@@ -7,6 +7,8 @@ import {
   ADD_COMMENT_SUCCESS,
   DELETE_COMMENT,
   REQUEST_UPDATE_COMMENT_VOTE,
+  EDIT_COMMENT_REQUEST,
+  EDIT_COMMENT_SUCCESS,
 } from '../actions/comments';
 
 import {
@@ -28,7 +30,7 @@ const byId = action => (state = {}) => {
   switch (type) {
     case FETCH_COMMENTS_SUCCESS:
       return payload.reduce(
-        (comments, comment) => assoc(comment.id, comment, comments),
+        (comments, comment) => assoc(comment.id, { ...comment, isEditing: false }, comments),
         state
       );
     case ADD_COMMENT_REQUEST:
@@ -40,20 +42,18 @@ const byId = action => (state = {}) => {
     case DELETE_COMMENT:
       return dissoc(commentId, state);
     case REQUEST_UPDATE_COMMENT_VOTE:
-      return evolve(
-        {
-          [commentId]: {
-            voteScore: () => voteScore,
-          },
-        },
-        state
-      );
+      return updateComment({ ...state[commentId], voteScore });
+    case EDIT_COMMENT_REQUEST:
+      return updateComment({ ...state[commentId], isEditing: true });
+    case EDIT_COMMENT_SUCCESS:
+      return updateComment({ ...state[commentId], isEditing: false, body: payload });
     case FETCH_COMMENTS_FAILURE:
     case FETCH_COMMENTS_REQUEST:
     default:
       return state;
   }
 };
+
 const isFetching = action => (state = {}) => {
   switch (action.type) {
     case FETCH_COMMENTS_REQUEST:
@@ -99,6 +99,8 @@ const comments = (
       });
     case ADD_COMMENT_REQUEST:
     case REQUEST_UPDATE_COMMENT_VOTE:
+    case EDIT_COMMENT_REQUEST:
+    case EDIT_COMMENT_SUCCESS:
       return updateComment({});
     default:
       return state;

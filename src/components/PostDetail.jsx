@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import Comments from './Comments';
 import PostContainer from './PostContainer';
+import EditComment from './EditComment';
 import { switchCommentSortWay } from '../actions/posts';
 import {
   fetchComments,
   addComment,
   deleteComment,
   updateCommentVote,
+  editComment,
 } from '../actions/comments';
 import { connect } from 'react-redux';
 import { getPost, getComments, isCommentsFetching } from '../reducers/';
@@ -20,23 +22,55 @@ const leftTop = {
 class PostDetail extends Component {
   state = {
     comment: '',
+    editedComment: '',
+    editedCommentId: '',
+    isEditingComment: false,
   };
 
-  handleInputChange = ({ target }) => this.setState({ comment: target.value });
+  handleInputChange = ({ target }) =>
+    this.setState({ [target.name]: target.value });
+
   onDeleteComment = commentId => () => {
     const { deleteComment, post } = this.props;
     deleteComment(commentId, post.id, post.category);
   };
-  switchCommentSortWay = () => {
-    this.props.switchCommentSortWay(this.props.post.id);
-  };
 
-  submitComment = () => {
+  submitNewComment = () => {
     const { post, addComment } = this.props;
     addComment(post.id, this.state.comment, post.category);
     this.setState({
       comment: '',
     });
+  };
+
+  // 因为 comment id 和 comment content 不能在这个组件获得。通过这样设置 state 来间接取得
+  onClickEditButton = (commentId, content) => () => {
+    this.setState({
+      isEditingComment: true,
+      editedCommentId: commentId,
+      editedComment: content,
+    });
+  };
+
+  submitEditComment = commentId => event => {
+    if ((event.key && event.key === 'Enter') || event.keyCode === 13) {
+      const { editedComment } = this.state;
+      this.props.editComment(commentId, editedComment);
+      this.setState({
+        editedComment: '',
+        isEditingComment: false,
+      });
+    }
+  };
+
+  onCloseModal = () => {
+    this.setState({
+      isEditingComment: false,
+    });
+  };
+
+  switchCommentSortWay = () => {
+    this.props.switchCommentSortWay(this.props.post.id);
   };
 
   componentDidMount() {
@@ -70,18 +104,27 @@ class PostDetail extends Component {
               isFetching={isFetching}
               onChange={this.handleInputChange}
               currentInput={this.state.comment}
-              submitComment={this.submitComment}
+              submitComment={this.submitNewComment}
               onDeleteComment={this.onDeleteComment}
               onIncVote={incCommentVote}
               onDecVote={decCommentVote}
               sortWay={sortWay}
               switchSortWay={this.switchCommentSortWay}
+              onEditComment={this.onClickEditButton}
             />
           </div>
         </section>
         <a className="icon has-text-info" style={leftTop} onClick={this.onBack}>
           <i className="fa fa-arrow-left fa-2x" />
         </a>
+        <EditComment
+          onChange={this.handleInputChange}
+          value={this.state.editedComment}
+          isOpen={this.state.isEditingComment}
+          submitEdit={this.submitEditComment(this.state.editedCommentId)}
+          onRequestClose={this.onCloseModal}
+          isEditing={false}
+        />
       </div>
     );
   }
@@ -102,4 +145,5 @@ export default connect(mapStateToMaps, {
   incCommentVote: updateCommentVote(true),
   decCommentVote: updateCommentVote(false),
   switchCommentSortWay,
+  editComment,
 })(PostDetail);

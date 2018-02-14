@@ -106,7 +106,6 @@ export const addComment = (parentId, content, category) => dispatch => {
   );
 };
 
-// TODO: 不仅仅是本地删除，使用 delete 方法
 export const DELETE_COMMENT = 'DELETE_COMMENT';
 const deleteCommentAction = (commentId, postId, category) => ({
   type: DELETE_COMMENT,
@@ -147,4 +146,35 @@ export const updateCommentVote = up => commentId => dispatch => {
   })
     .then(prop('voteScore'))
     .then(dispatchVoteScore, console.warn);
+};
+
+
+export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST';
+export const EDIT_COMMENT_SUCCESS = 'EDIT_COMMENT_SUCCESS';
+const editCommentRequest = (commentId) => ({
+  type: EDIT_COMMENT_REQUEST,
+  commentId,
+});
+const editCommentSuccess = (commentId, content) => ({
+  type: EDIT_COMMENT_SUCCESS,
+  payload: content,
+  commentId,
+});
+
+export const editComment = (commentId, content) => (dispatch, getStore) => {
+  if (getStore().comments.byId[commentId].isEditing) return;
+  dispatch(editCommentRequest(commentId));
+  const url = `/comments/${commentId}`;
+
+  const body = {
+    body: content,
+    timestamp: Date.now(),
+  };
+  return myFetch(url, {
+    method: 'PUT',
+    body,
+  }).then(
+    () => dispatch(editCommentSuccess(commentId, content)),
+    console.warn,
+  );
 };

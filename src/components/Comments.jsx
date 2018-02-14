@@ -32,6 +32,7 @@ const Comments = ({
   onDecVote,
   sortWay,
   switchSortWay,
+  onEditComment,
 }) => {
   if (err) {
     return <h1 className="title has-text-danger">评论获取失败，请重试</h1>;
@@ -44,6 +45,7 @@ const Comments = ({
         <div className="control is-expanded">
           <input
             type="text"
+            name="comment"
             className="input"
             placeholder="Write a response"
             onChange={onChange}
@@ -96,6 +98,7 @@ const Comments = ({
                     voteScore={comment.voteScore}
                     incVoteScore={() => onIncVote(comment.id)}
                     decVoteScore={() => onDecVote(comment.id)}
+                    onEdit={onEditComment(comment.id, comment.body)}
                   />
                 </div>
               ))
@@ -121,6 +124,7 @@ Comment.propTypes = {
   currentInput: PropTypes.string.isRequired,
   submitComment: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onEditComment: PropTypes.func.isRequired,
 };
 
 export default Comments;
