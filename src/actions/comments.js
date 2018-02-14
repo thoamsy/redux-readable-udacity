@@ -131,12 +131,25 @@ export const addComment = (parentId, content, category) => dispatch => {
 
 // TODO: 不仅仅是本地删除，使用 delete 方法
 export const DELETE_COMMENT = 'DELETE_COMMENT';
-export const deleteComment = (commentId, postId, category) => ({
+const deleteCommentAction = (commentId, postId, category) => ({
   type: DELETE_COMMENT,
   commentId,
   postId,
   category,
 });
+
+export const deleteComment = (commentId, postId, category) => (dispatch) => {
+  const url = `/comments/${commentId}`;
+  return fetch(url, {
+    method: 'DELETE',
+    headers: { Authorization: 'hello' }
+  }).then(res => {
+    if (res.ok) {
+      return dispatch(deleteCommentAction(commentId, postId, category));
+    }
+    throw Error(res.statusText);
+  }).catch(console.warn);
+};
 
 export const REQUEST_UPDATE_COMMENT_VOTE = 'REQUEST_UPDATE_COMMENT_VOTE';
 const requestUpdateCommentVote = commentId => voteScore => ({

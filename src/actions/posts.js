@@ -1,4 +1,5 @@
 import { prop, compose } from 'ramda';
+import myFetch from '../util/fetch';
 const headers = {
   Authorization: 'shit',
 };
@@ -67,11 +68,16 @@ export const fetchPosts = category => (dispatch, getStore) => {
     .then(posts => dispatch(receivePosts(posts, category)));
 };
 
-export const deletePost = (postId, category) => ({
+const deletePostAction = (postId, category) => ({
   type: DELETE_POST,
   postId,
   category,
 });
+export const deletePost = (postId, category) => dispatch => {
+  const url = `/posts/${postId}`;
+  return myFetch(url, { method: 'delete' })
+    .then(() => dispatch(deletePostAction(postId, category)), console.warn);
+};
 
 export const switchPostSortWay = category => ({
   type: SWITCH_POST_SORT_WAY,
