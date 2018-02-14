@@ -15,20 +15,15 @@ import 'codemirror/mode/javascript/javascript';
 const ChooseCategory = ({ categories, value, onChange }) => (
   <div className="field">
     <label className="label">文章分类</label>
-    <div className="select is-multiple">
-      <select
-        size={categories.length}
-        onChange={onChange}
-        value={value}
-        multiple
-        name="category"
-      >
-        {categories.map(({ name }) => (
-          <option value={name} key={name}>
-            {name}
-          </option>
-        ))}
-      </select>
+    <div className="buttons">
+      {categories.map(({ name }) => (
+        <span
+          key={name}
+          onClick={onChange(name)}
+          className={`button ${value === name ? 'is-info' : ''}`}>
+          {name}
+        </span>
+      ))}
     </div>
   </div>
 );
@@ -59,6 +54,7 @@ GeneralInput.propType = {
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
 };
+
 const pickMeta = pick(['author', 'category', 'id', 'title']);
 class EditPost extends Component {
   state = pickMeta(this.props.edited);
@@ -117,6 +113,12 @@ class EditPost extends Component {
     });
   };
 
+  handleCategoryClick = (value) => () => {
+    this.setState({
+      category: value,
+    });
+  }
+
   onPublic = () => {
     const { publishPost, history } = this.props;
     if (window.confirm('你确定发布吗？')) {
@@ -165,8 +167,8 @@ class EditPost extends Component {
             />
             <ChooseCategory
               categories={this.props.categories.slice(1)}
-              value={[this.state.category]}
-              onChange={this.handleInputChange}
+              value={this.state.category}
+              onChange={this.handleCategoryClick}
             />
             <GeneralInput
               eleType="input"
