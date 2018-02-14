@@ -7,15 +7,10 @@ export const RECEIVE_POST_VOTE = 'RECEIVE_POST_VOTE';
 export const DELETE_POST = 'DELETE_POST';
 export const SWITCH_POST_SORT_WAY = 'SWITCH_POST_SORT_WAY';
 export const SWITCH_COMMENT_SORT_WAY = 'SWITCH_COMMENT_SORT_WAY';
+export const POST_WORKER = 'POST_WORKER';
 
 const requestPosts = category => ({
   type: REQUEST_POSTS,
-  category,
-});
-
-const receivePosts = (posts, category) => ({
-  type: RECEIVE_POSTS,
-  payload: posts,
   category,
 });
 
@@ -24,6 +19,13 @@ const receivePostVote = (postId, category) => voteScore => ({
   voteScore,
   postId,
   category,
+});
+
+export const renderMarkdown = (payload, category, descType) => ({
+  type: POST_WORKER,
+  payload,
+  category,
+  descType,
 });
 
 export const postVoteScore = up => (postId, category) => dispatch => {
@@ -53,7 +55,12 @@ export const fetchPosts = category => (dispatch, getStore) => {
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
   return Promise.all([myFetch(fetchURL), delay(randomDelay)]).then(
-    ([posts]) => dispatch(receivePosts(posts, category)),
+    ([posts]) =>
+      dispatch(renderMarkdown(
+        posts,
+        category,
+        RECEIVE_POSTS,
+      )),
     console.warn
   );
 };

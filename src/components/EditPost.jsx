@@ -86,6 +86,7 @@ class EditPost extends Component {
     this.code.setSize('100%', 150);
   }
 
+  // 使用 props 来初始化 state，都需要用到这个方法。
   componentWillReceiveProps(nextProps) {
     const { edited } = nextProps;
     if (!identical(edited, this.props.edited)) {
@@ -129,7 +130,7 @@ class EditPost extends Component {
       <Fragment>
         <Navbar>
           <div className="navbar-item">
-            <h1>发布</h1>
+            <h1>发布文章</h1>
           </div>
           <div className="navbar-item">
             <div className="field is-grouped">

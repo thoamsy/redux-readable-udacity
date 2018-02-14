@@ -18,12 +18,12 @@ const ActionBar = ({ incVoteScore, voteScore, decVoteScore, commentCount }) => (
         </button>
       </div>
       {commentCount !== undefined && (
-        <a className="level-item">
+        <p className="level-item has-text-info">
           <span className="icon is-medium">
             <i className="fa fa-commenting" />
           </span>
           {commentCount} 条评论
-        </a>
+        </p>
       )}
     </div>
   </nav>

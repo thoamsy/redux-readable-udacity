@@ -13,10 +13,18 @@ const md = Markdown({
   },
 });
 
+
+const renderPost = (post) => {
+  const origin = post.body;
+  post.body = md.render(origin);
+  post.origin = origin;
+};
 onmessage = ({ data }) => {
   const { category, payload } = data;
-  const origin = payload.body;
-  payload.body = md.render(origin);
-  payload.origin = origin;
+  if (Array.isArray(payload)) {
+    payload.forEach(renderPost);
+  } else {
+    renderPost(payload);
+  }
   postMessage({ category, payload, postId: payload.id });
 };

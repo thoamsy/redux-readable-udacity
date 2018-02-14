@@ -1,5 +1,6 @@
 import v4 from 'uuid/v4';
 import myFetch from '../util/fetch';
+import { renderMarkdown } from './posts';
 
 export const INIT_POST = 'INIT_POST';
 export const SAVE_POST = 'SAVE_POST';
@@ -46,11 +47,11 @@ export const publishPost = ({
     body: data,
   }).then(
     payload => {
-      dispatch({
-        type: 'POST_WORKER',
+      dispatch(renderMarkdown(
         payload,
         category,
-      });
+        PUBLISH_POST_SUCCESS,
+      ));
       removePost();
     },
     err => dispatch({ type: PUBLISH_POST_FAILURE, category, err })

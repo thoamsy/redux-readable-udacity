@@ -9,9 +9,12 @@ const methods = [
   'trace',
   'patch',
 ].map(method => method.toUpperCase());
+const isProducation = process.env.NODE_ENV === 'producation';
 
 const myFetch = (url, { method = 'get', headers = {}, body } = {}) => {
   method = method.toUpperCase();
+  // 在生产模式下，通过添加实际域名，以防止 proxy 失效的问题。
+  if (isProducation) url = 'http://localhost:3001' + url;
   if (methods.indexOf(method) === -1) {
     throw TypeError('不存在的 HTTP 方法：' + method);
   }
