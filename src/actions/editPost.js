@@ -1,4 +1,5 @@
 import v4 from 'uuid/v4';
+import myFetch from '../util/fetch';
 
 export const INIT_POST = 'INIT_POST';
 export const SAVE_POST = 'SAVE_POST';
@@ -40,31 +41,20 @@ export const publishPost = ({
     id,
     timestamp: Date.now(),
   };
-  return fetch('/posts', {
+  return myFetch('/posts', {
     method: 'post',
-    headers: {
-      'content-type': 'application/json',
-      authorization: 'hello',
+    body: data,
+  }).then(
+    payload => {
+      dispatch({
+        type: 'POST_WORKER',
+        payload,
+        category,
+      });
+      removePost();
     },
-    body: JSON.stringify(data),
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw Error(res.statusText);
-    })
-    .then(
-      payload => {
-        dispatch({
-          type: 'POST_WORKER',
-          payload,
-          category,
-        });
-        removePost();
-      },
-      err => dispatch({ type: PUBLISH_POST_FAILURE, category, err })
-    );
+    err => dispatch({ type: PUBLISH_POST_FAILURE, category, err })
+  );
 };
 
 export const fetchSavedPost = () => dispatch => {

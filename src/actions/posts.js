@@ -1,9 +1,5 @@
 import { prop, compose } from 'ramda';
 import myFetch from '../util/fetch';
-const headers = {
-  Authorization: 'shit',
-};
-
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const REQUEST_POST_VOTE = 'REQUEST_POST_VOTE';
@@ -31,7 +27,7 @@ const receivePostVote = (postId, category) => voteScore => ({
 });
 
 export const postVoteScore = up => (postId, category) => dispatch => {
-  const body = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
+  const body = { option: up ? 'upVote' : 'downVote' };
   const voteURL = `/posts/${postId}`;
 
   const dispatchVoteScore = compose(
@@ -39,17 +35,10 @@ export const postVoteScore = up => (postId, category) => dispatch => {
     receivePostVote(postId, category)
   );
 
-  return fetch(voteURL, {
-    headers: { 'content-type': 'application/json', Authorization: 'hh' },
+  return myFetch(voteURL, {
     body,
     method: 'POST',
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw Error(res.statusText);
-    })
     .then(prop('voteScore'))
     .then(dispatchVoteScore, console.warn);
 };
@@ -63,9 +52,10 @@ export const fetchPosts = category => (dispatch, getStore) => {
 
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
-  return Promise.all([fetch(fetchURL, { headers }), delay(randomDelay)])
-    .then(([res]) => res.json(), Promise.reject)
-    .then(posts => dispatch(receivePosts(posts, category)));
+  return Promise.all([myFetch(fetchURL), delay(randomDelay)]).then(
+    ([posts]) => dispatch(receivePosts(posts, category)),
+    console.warn
+  );
 };
 
 const deletePostAction = (postId, category) => ({
@@ -75,8 +65,10 @@ const deletePostAction = (postId, category) => ({
 });
 export const deletePost = (postId, category) => dispatch => {
   const url = `/posts/${postId}`;
-  return myFetch(url, { method: 'delete' })
-    .then(() => dispatch(deletePostAction(postId, category)), console.warn);
+  return myFetch(url, { method: 'delete' }).then(
+    () => dispatch(deletePostAction(postId, category)),
+    console.warn
+  );
 };
 
 export const switchPostSortWay = category => ({

@@ -20,11 +20,12 @@ const myFetch = (url, { method = 'get', headers = {}, body } = {}) => {
     mode: 'cors',
     ...headers,
   };
+
   const options = {
-    method
+    method,
   };
 
-  if (body === undefined) {
+  if (body !== undefined) {
     if (typeof body === 'object') {
       options.body = JSON.stringify(body);
       h['Content-Type'] = 'application/json';

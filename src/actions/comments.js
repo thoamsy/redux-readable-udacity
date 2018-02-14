@@ -2,6 +2,7 @@ import delay from '../util/delay';
 import v4 from 'uuid/v4';
 import { getPost } from '../reducers/';
 import { prop, compose } from 'ramda';
+import myFetch from '../util/fetch';
 
 export const FETCH_COMMENTS_REQUEST = 'FETCH_COMMENTS_REQUEST';
 export const FETCH_COMMENTS_SUCCESS = 'FETCH_COMMENTS_SUCCESS';
@@ -37,23 +38,10 @@ export const fetchComments = (fetchUrl, postId) => (dispatch, getStore) => {
   const ms = Math.random() * 1000;
   dispatch(fetchCommentsRequest(postId));
 
-  return Promise.all([
-    fetch(fetchUrl, {
-      headers: {
-        Authorization: 'shit',
-      },
-    }),
-    delay(ms),
-  ])
-    .then(([res]) => {
-      if (res.ok || res.status === 304) {
-        return res.json();
-      } else {
-        throw Error(res.statusText);
-      }
-    })
-    .then(comments => dispatch(fetchCommentsSuccess(comments, postId)))
-    .catch(err => dispatch(fetchCommentsFailure(err || 'Something Wrong')));
+  return Promise.all([myFetch(fetchUrl), delay(ms)]).then(
+    ([comments]) => dispatch(fetchCommentsSuccess(comments, postId)),
+    ([err]) => dispatch(fetchCommentsFailure(err || 'Something Wrong'))
+  );
 };
 
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
@@ -100,33 +88,22 @@ export const addComment = (parentId, content, category) => dispatch => {
   dispatch(addCommentRequest(commentId));
   const fetchUrl = '/comments';
   const author = fakeNames[~~(Math.random() * 10)];
-  const body = JSON.stringify({
+  const body = {
     id: commentId,
     timestamp: Date.now(),
     body: content,
     parentId,
     author,
-  });
+  };
 
-  return fetch(fetchUrl, {
+  return myFetch(fetchUrl, {
     method: 'POST',
-    headers: {
-      Authorization: 'whatever',
-      'Content-Type': 'application/json',
-    },
     body,
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw Error(res.statusText);
-    })
-    .then(
-      comment =>
-        dispatch(addCommentSuccess(parentId, commentId, comment, category)),
-      err => dispatch(addCommentFailure(commentId, err))
-    );
+  }).then(
+    comment =>
+      dispatch(addCommentSuccess(parentId, commentId, comment, category)),
+    err => dispatch(addCommentFailure(commentId, err))
+  );
 };
 
 // TODO: 不仅仅是本地删除，使用 delete 方法
@@ -138,17 +115,14 @@ const deleteCommentAction = (commentId, postId, category) => ({
   category,
 });
 
-export const deleteComment = (commentId, postId, category) => (dispatch) => {
+export const deleteComment = (commentId, postId, category) => dispatch => {
   const url = `/comments/${commentId}`;
-  return fetch(url, {
+  return myFetch(url, {
     method: 'DELETE',
-    headers: { Authorization: 'hello' }
-  }).then(res => {
-    if (res.ok) {
-      return dispatch(deleteCommentAction(commentId, postId, category));
-    }
-    throw Error(res.statusText);
-  }).catch(console.warn);
+  }).then(
+    () => dispatch(deleteCommentAction(commentId, postId, category)),
+    console.warn
+  );
 };
 
 export const REQUEST_UPDATE_COMMENT_VOTE = 'REQUEST_UPDATE_COMMENT_VOTE';
@@ -161,26 +135,16 @@ const requestUpdateCommentVote = commentId => voteScore => ({
 // 和给 post 投票的方法很像
 export const updateCommentVote = up => commentId => dispatch => {
   const url = `/comments/${commentId}`;
-  const option = JSON.stringify({ option: up ? 'upVote' : 'downVote' });
+  const body = { option: up ? 'upVote' : 'downVote' };
 
   const dispatchVoteScore = compose(
     dispatch,
     requestUpdateCommentVote(commentId)
   );
-  return fetch(url, {
-    headers: {
-      Authorization: 'hello!',
-      'Content-Type': 'application/json',
-    },
-    body: option,
+  return myFetch(url, {
+    body,
     method: 'POST',
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw Error(res.statusText);
-    })
     .then(prop('voteScore'))
     .then(dispatchVoteScore, console.warn);
 };
