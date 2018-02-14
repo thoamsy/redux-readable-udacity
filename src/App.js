@@ -6,6 +6,7 @@ import EditPost from './components/EditPost';
 import PostDetail from './components/PostDetail';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { getPost } from './reducers/';
 import configure from './storeConfigure';
 
 const store = configure();
@@ -15,7 +16,15 @@ const App = () => (
       <Switch>
         <Route path="/:category?" exact component={Root} />
         <Route path="/:id/edit" component={EditPost} />
-        <Route path="/posts/:id" component={PostDetail} />
+        <Route
+          path="/posts/:id"
+          render={props => (
+            <PostDetail
+              post={getPost(store.getState(), props.match.params.id)}
+              {...props}
+            />
+          )}
+        />
       </Switch>
     </Router>
   </Provider>
