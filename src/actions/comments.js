@@ -148,10 +148,9 @@ export const updateCommentVote = up => commentId => dispatch => {
     .then(dispatchVoteScore, console.warn);
 };
 
-
 export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST';
 export const EDIT_COMMENT_SUCCESS = 'EDIT_COMMENT_SUCCESS';
-const editCommentRequest = (commentId) => ({
+const editCommentRequest = commentId => ({
   type: EDIT_COMMENT_REQUEST,
   commentId,
 });
@@ -173,8 +172,7 @@ export const editComment = (commentId, content) => (dispatch, getStore) => {
   return myFetch(url, {
     method: 'PUT',
     body,
-  }).then(
-    () => dispatch(editCommentSuccess(commentId, content)),
-    console.warn,
-  );
+  })
+    .then(() => delay(Math.random() * 1000))
+    .then(() => dispatch(editCommentSuccess(commentId, content)), console.warn);
 };

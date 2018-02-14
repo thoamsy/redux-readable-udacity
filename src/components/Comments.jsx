@@ -16,7 +16,11 @@ import {
   updateCommentVote,
   editComment,
 } from '../actions/comments';
-import { getComments, isCommentsFetching } from '../reducers/';
+import {
+  getComments,
+  isCommentsFetching,
+  getCommentEditStatus,
+} from '../reducers/';
 
 const headTitle = {
   fontSize: 16,
@@ -52,7 +56,7 @@ class Comments extends Component {
     const { postId, fetchComments } = this.props;
     const url = `/posts/${postId}/comments`;
     fetchComments(url, postId);
-  }
+  };
 
   switchCommentSortWay = () => {
     this.props.switchCommentSortWay(this.props.postId);
@@ -87,10 +91,11 @@ class Comments extends Component {
     // 按回车的时候就自动提交
     if ((event.key && event.key === 'Enter') || event.keyCode === 13) {
       const { editedComment } = this.state;
-      this.props.editComment(commentId, editedComment);
-      this.setState({
-        editedComment: '',
-        isEditingComment: false,
+      this.props.editComment(commentId, editedComment).then(() => {
+        this.setState({
+          editedComment: '',
+          isEditingComment: false,
+        });
       });
     }
   };
@@ -100,6 +105,10 @@ class Comments extends Component {
       isEditingComment: false,
     });
   };
+
+  get isPending() {
+    return this.props.isPending(this.state.editedCommentId);
+  }
 
   render() {
     const {
@@ -190,7 +199,7 @@ class Comments extends Component {
           isOpen={this.state.isEditingComment}
           submitEdit={this.submitEditComment(this.state.editedCommentId)}
           onRequestClose={this.onCloseModal}
-          isEditing={false}
+          isPending={this.isPending}
         />
       </section>
     );
@@ -202,6 +211,7 @@ const mapStateToMaps = (state, ownProps) => {
   return {
     comments: getComments(state, postId),
     isFetching: isCommentsFetching(state, postId),
+    isPending: getCommentEditStatus(state),
   };
 };
 export default connect(mapStateToMaps, {

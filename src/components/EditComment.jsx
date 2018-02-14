@@ -9,10 +9,17 @@ const overlayStyle = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(10,10,10,.86)'
-  }
+    backgroundColor: 'rgba(10,10,10,.86)',
+  },
 };
-const EditComment = ({ isOpen = true, value, onChange, submitEdit, onRequestClose, isEditing }) => {
+const EditComment = ({
+  isOpen,
+  value,
+  onChange,
+  submitEdit,
+  onRequestClose,
+  isPending,
+}) => {
   let inputRef;
   return (
     <Modal
@@ -25,10 +32,10 @@ const EditComment = ({ isOpen = true, value, onChange, submitEdit, onRequestClos
     >
       <article className="modal-content">
         <div className="field">
-          <div className={`control ${isEditing ? 'is-loading' : ''}`}>
+          <div className={`control ${isPending ? 'is-loading' : ''}`}>
             <input
               name="editedComment"
-              ref={node => inputRef = node}
+              ref={node => (inputRef = node)}
               type="text"
               className="input"
               value={value}
@@ -39,7 +46,7 @@ const EditComment = ({ isOpen = true, value, onChange, submitEdit, onRequestClos
           </div>
         </div>
       </article>
-      <button className="modal-close is-large" onClick={onRequestClose}></button>
+      <button className="modal-close is-large" onClick={onRequestClose} />
     </Modal>
   );
 };
@@ -50,5 +57,6 @@ EditComment.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   submitEdit: PropTypes.func.isRequired,
   onRequestClose: PropTypes.func.isRequired,
+  isPending: PropTypes.bool.isRequired,
 };
 export default EditComment;

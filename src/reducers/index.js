@@ -43,6 +43,9 @@ export const getComments = (state, postId) => {
 export const isCommentsFetching = (state, postId) =>
   pathOr(false, ['comments', 'isFetching', postId], state);
 
+export const getCommentEditStatus = (state) => (commentId) =>
+  pathOr(false, ['comments', 'byId', commentId, 'isEditing'], state);
+
 export const getCategories = prop('categories');
 export const getEdited = prop('edited');
 export const getPost = (state, postId) =>
