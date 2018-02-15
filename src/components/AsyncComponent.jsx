@@ -1,8 +1,13 @@
 import React from 'react';
-import ContentLoader from 'react-content-loader';
-const Instgram = () => <ContentLoader type="instgram" />;
+import delay from '../util/delay';
+import 'bulma-pageloader/dist/bulma-pageloader.min.css';
 
-function generateAsyncComponent(loader, Placeholder = Instgram) {
+const PageLoader = () => (
+  <div className="pageloader is-active">
+    <span className="title">加载中♪(´ε｀ )</span>
+  </div>
+);
+function generateAsyncComponent(loader, Placeholder = PageLoader) {
   let Component = null;
   return class AsyncComponent extends React.Component {
     state = {
@@ -10,17 +15,20 @@ function generateAsyncComponent(loader, Placeholder = Instgram) {
     };
 
     componentWillMount() {
-      console.log('You will show me how many times you can be invoked.');
-      AsyncComponent.load().then(this.updateState);
+      delay(Math.random() * 1500)
+        .then(this.load)
+        .then(this.updateState);
     }
 
-    static load() {
+    load() {
       return loader().then(ResolvedComponent => {
+        // ES Module or Common JS
         Component = ResolvedComponent.default || ResolvedComponent;
       });
     }
 
     updateState = () => {
+      // 重新进入 mount 该组件的时候，因为 Component 已经存在，免除无用的 render。
       if (this.state.Component !== Component) {
         this.setState({
           Component,
@@ -34,7 +42,7 @@ function generateAsyncComponent(loader, Placeholder = Instgram) {
         return <Component {...this.props} />;
       }
       if (Placeholder) {
-        return <Placeholder {...this.props} />;
+        return <Placeholder />;
       }
       return null;
     }

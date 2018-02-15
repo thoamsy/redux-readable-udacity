@@ -1190,6 +1190,14 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "http://registry.npm.taobao.org/builtin-status-codes/download/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
+bulma-pageloader@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/bulma-pageloader/download/bulma-pageloader-1.0.0.tgz#2b237f00730ff02263b9737c94e47745c6abff9e"
+
+bulma-tooltip@^1.0.3:
+  version "1.0.3"
+  resolved "http://registry.npm.taobao.org/bulma-tooltip/download/bulma-tooltip-1.0.3.tgz#1307cd884e2113cf45686581cbb2b1fbc2907fc2"
+
 bulma@^0.6.2:
   version "0.6.2"
   resolved "http://registry.npm.taobao.org/bulma/download/bulma-0.6.2.tgz#f4b1d11d5acc51a79644eb0a2b0b10649d3d71f5"

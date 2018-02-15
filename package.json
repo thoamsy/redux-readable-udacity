@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "bulma": "^0.6.2",
+    "bulma-pageloader": "^1.0.0",
+    "bulma-tooltip": "^1.0.3",
     "codemirror": "^5.33.0",
     "date-fns": "^1.29.0",
     "font-awesome": "^4.7.0",
