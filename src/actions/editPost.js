@@ -47,11 +47,7 @@ export const publishPost = ({
     body: data,
   }).then(
     payload => {
-      dispatch(renderMarkdown(
-        payload,
-        category,
-        PUBLISH_POST_SUCCESS,
-      ));
+      dispatch(renderMarkdown(payload, category, PUBLISH_POST_SUCCESS));
       removePost();
     },
     err => dispatch({ type: PUBLISH_POST_FAILURE, category, err })
@@ -65,4 +61,25 @@ export const fetchSavedPost = () => dispatch => {
     type: INIT_POST,
     saved: JSON.parse(saved),
   });
+};
+
+export const MODIFY_POST_SUCCESS = 'MODIFY_POST_SUCCESS';
+const modifyPostRequest = (postId, payload) => ({
+  type: MODIFY_POST_SUCCESS,
+  postId,
+  payload,
+});
+export const modifyPost = ({
+  body,
+  title,
+  id: postId,
+  category,
+}) => dispatch => {
+  return myFetch(`/posts/${postId}`, {
+    method: 'PUT',
+    body: { body, title },
+  }).then(
+    payload => dispatch(renderMarkdown(payload, category, MODIFY_POST_SUCCESS)),
+    console.warn
+  );
 };

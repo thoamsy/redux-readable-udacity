@@ -8,8 +8,12 @@ import { getPost } from './reducers/';
 import configure from './storeConfigure';
 
 import generageAsyncComment from './components/AsyncComponent';
-const AsyncPostDetail = generageAsyncComment(() => import('./components/PostDetail'));
-const AsyncEditPost = generageAsyncComment(() => import('./components/EditPost'));
+const AsyncPostDetail = generageAsyncComment(() =>
+  import('./components/PostDetail')
+);
+const AsyncEditPost = generageAsyncComment(() =>
+  import('./components/EditPost')
+);
 const AsyncRoot = generageAsyncComment(() => import('./components/Root'));
 
 const store = configure();
@@ -18,7 +22,15 @@ const App = () => (
     <Router>
       <Switch>
         <Route path="/:category?" exact component={AsyncRoot} />
-        <Route path="/:id/edit" component={AsyncEditPost} />
+        <Route
+          path="/:id/:verb(create|edit)"
+          render={props => (
+            <AsyncEditPost
+              edited={getPost(store.getState(), props.match.params.id)}
+              {...props}
+            />
+          )}
+        />
         <Route
           path="/posts/:id"
           render={props => (

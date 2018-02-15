@@ -8,7 +8,6 @@ const leftTop = {
 };
 
 class PostDetail extends Component {
-
   componentDidMount() {
     // 通过路由切换的试图的时候，滚动条可能还是保留在那个位置。
     if (!!window.scrollY) window.scrollTo(0, 0);
@@ -19,20 +18,14 @@ class PostDetail extends Component {
   };
 
   render() {
-    const {
-      post,
-    } = this.props;
+    const { post } = this.props;
     const { sortWay, id, category } = post;
     return (
       <div style={{ background: '#fafafa' }}>
         <section className="section">
           <div className="container">
             <PostContainer {...post} />
-            <Comments
-              sortWay={sortWay}
-              postId={id}
-              postCategory={category}
-            />
+            <Comments sortWay={sortWay} postId={id} postCategory={category} />
           </div>
         </section>
         <a className="icon has-text-info" style={leftTop} onClick={this.onBack}>

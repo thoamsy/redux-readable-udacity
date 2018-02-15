@@ -43,6 +43,8 @@ class Comments extends Component {
     decCommentVote: PropTypes.func.isRequired,
     sortWay: PropTypes.string.isRequired,
     deleteComment: PropTypes.func.isRequired,
+    postId: PropTypes.string.isRequired,
+    postCategory: PropTypes.string.isRequired,
   };
 
   state = {

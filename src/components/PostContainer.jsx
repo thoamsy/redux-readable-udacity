@@ -10,7 +10,7 @@ import { postVoteScore } from '../actions/posts';
 const Post = ({
   title,
   timestamp,
-  body,
+  rendered,
   category,
   author,
   voteScore,
@@ -41,7 +41,7 @@ const Post = ({
       </h4>
       <div className="body">
         <div
-          dangerouslySetInnerHTML={{ __html: body }}
+          dangerouslySetInnerHTML={{ __html: rendered }}
           className={`content ${isThumbnail ? 'is-thumbnail' : ''}`}
         />
         {isThumbnail && <Link to={`/posts/${id}`}>阅读全文</Link>}
@@ -55,6 +55,7 @@ const Post = ({
       incVoteScore={incVoteScore}
       decVoteScore={decVoteScore}
       commentCount={commentCount}
+      editPostLink={`/${id}/edit`}
     />
   </div>
 );

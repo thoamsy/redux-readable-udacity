@@ -2,7 +2,12 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { pick, identical, isEmpty, complement } from 'ramda';
 import { connect } from 'react-redux';
-import { savePost, fetchSavedPost, publishPost } from '../actions/editPost';
+import {
+  savePost,
+  fetchSavedPost,
+  publishPost,
+  modifyPost,
+} from '../actions/editPost';
 import Navbar from './Navbar';
 import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
@@ -12,17 +17,19 @@ import 'codemirror/addon/display/placeholder';
 import 'codemirror/addon/selection/active-line';
 import 'codemirror/mode/javascript/javascript';
 
-const ChooseCategory = ({ categories, value, onChange }) => (
+const ChooseCategory = ({ categories, value, onChange, disabled }) => (
   <div className="field">
     <label className="label">文章分类</label>
     <div className="buttons">
       {categories.map(({ name }) => (
-        <span
+        <button
+          disabled={disabled}
           key={name}
           onClick={onChange(name)}
-          className={`button ${value === name ? 'is-info' : ''}`}>
+          className={`button ${value === name ? 'is-info' : ''}`}
+        >
           {name}
-        </span>
+        </button>
       ))}
     </div>
   </div>
@@ -55,7 +62,7 @@ GeneralInput.propType = {
   placeholder: PropTypes.string,
 };
 
-const pickMeta = pick(['author', 'category', 'id', 'title']);
+const pickMeta = pick(['author', 'category', 'id', 'title', 'body']);
 class EditPost extends Component {
   state = pickMeta(this.props.edited);
   get post() {
@@ -64,9 +71,14 @@ class EditPost extends Component {
       body: this.code.doc.getValue(),
     };
   }
+  get isPublishPost() {
+    return this.props.match.params.verb === 'create';
+  }
 
   componentDidMount() {
-    this.props.fetchSavedPost();
+    if (this.isPublishPost) {
+      this.props.fetchSavedPost();
+    }
     this.code = CodeMirror.fromTextArea(
       document.querySelector('#editSection'),
       {
@@ -79,7 +91,6 @@ class EditPost extends Component {
         lineNumber: true,
       }
     );
-    this.code.setSize('100%', 150);
   }
 
   // 使用 props 来初始化 state，都需要用到这个方法。
@@ -96,6 +107,7 @@ class EditPost extends Component {
     // 防止 code mirror 导致的内存泄漏。
     this.code.toTextArea();
 
+    if (!this.isPublishPost) return;
     const { post } = this;
     const keys = Object.keys(post);
     for (let key of keys) {
@@ -113,16 +125,22 @@ class EditPost extends Component {
     });
   };
 
-  handleCategoryClick = (value) => () => {
+  handleCategoryClick = value => () => {
     this.setState({
       category: value,
     });
-  }
+  };
 
   onPublic = () => {
-    const { publishPost, history } = this.props;
+    const { publishPost, history, modifyPost } = this.props;
     if (window.confirm('你确定发布吗？')) {
-      publishPost(this.post).then(() => history.goBack());
+      if (this.isPublishPost) {
+        publishPost(this.post).then(() => history.goBack());
+      } else {
+        modifyPost(pick(['id', 'body', 'title', 'category'], this.post)).then(
+          () => history.goBack()
+        );
+      }
     }
   };
 
@@ -141,7 +159,7 @@ class EditPost extends Component {
                   onClick={this.onPublic}
                   className={`button is-text ${isSaving ? 'is-loading' : ''}`}
                 >
-                  Publish
+                  {this.isPublishPost ? '发布' : '修改'}
                 </a>
               </p>
               <p className="control">
@@ -164,11 +182,13 @@ class EditPost extends Component {
               value={this.state.author}
               onChange={this.handleInputChange}
               name="author"
+              disabled={!this.isPublishPost}
             />
             <ChooseCategory
               categories={this.props.categories.slice(1)}
               value={this.state.category}
               onChange={this.handleCategoryClick}
+              disabled={!this.isPublishPost}
             />
             <GeneralInput
               eleType="input"
@@ -193,10 +213,16 @@ class EditPost extends Component {
     );
   }
 }
-EditPost = connect(pick(['categories', 'edited']), {
+
+const mapStateToProps = (state, ownProps) => ({
+  categories: state.categories,
+  edited: ownProps.edited || state.edited,
+});
+EditPost = connect(mapStateToProps, {
   savePost,
   fetchSavedPost,
   publishPost,
+  modifyPost,
 })(EditPost);
 
 export default EditPost;

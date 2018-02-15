@@ -30,7 +30,8 @@ const byId = action => (state = {}) => {
   switch (type) {
     case FETCH_COMMENTS_SUCCESS:
       return payload.reduce(
-        (comments, comment) => assoc(comment.id, { ...comment, isEditing: false }, comments),
+        (comments, comment) =>
+          assoc(comment.id, { ...comment, isEditing: false }, comments),
         state
       );
     case ADD_COMMENT_REQUEST:
@@ -46,7 +47,11 @@ const byId = action => (state = {}) => {
     case EDIT_COMMENT_REQUEST:
       return updateComment({ ...state[commentId], isEditing: true });
     case EDIT_COMMENT_SUCCESS:
-      return updateComment({ ...state[commentId], isEditing: false, body: payload });
+      return updateComment({
+        ...state[commentId],
+        isEditing: false,
+        body: payload,
+      });
     case FETCH_COMMENTS_FAILURE:
     case FETCH_COMMENTS_REQUEST:
     default:

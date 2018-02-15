@@ -43,10 +43,19 @@ export const getComments = (state, postId) => {
 export const isCommentsFetching = (state, postId) =>
   pathOr(false, ['comments', 'isFetching', postId], state);
 
-export const getCommentEditStatus = (state) => (commentId) =>
+export const getCommentEditStatus = state => commentId =>
   pathOr(false, ['comments', 'byId', commentId, 'isEditing'], state);
 
 export const getCategories = prop('categories');
 export const getEdited = prop('edited');
+
+const defaultPost = {
+  id: '1234567890',
+  title: '请完整的打开该应用',
+  author: 'Thomas',
+  rendered: '<p>因为偷懒，程序的某些地方没有那么健壮，请在首页打开该程序。<p>',
+  category: 'React',
+  timestamp: Date.now(),
+};
 export const getPost = (state, postId) =>
-  state.postsByCategory.all.byId[postId];
+  pathOr(defaultPost, ['postsByCategory', 'all', 'byId', postId], state);

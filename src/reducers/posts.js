@@ -31,7 +31,7 @@ import {
   ADD_COMMENT_SUCCESS,
   DELETE_COMMENT,
 } from '../actions/comments';
-import { PUBLISH_POST_SUCCESS } from '../actions/editPost';
+import { PUBLISH_POST_SUCCESS, MODIFY_POST_SUCCESS } from '../actions/editPost';
 
 export const sortWays = ['voteScore', 'timestamp'];
 const switchSortWay = way => sortWays[+!sortWays.indexOf(way)];
@@ -59,6 +59,7 @@ const postReducer = action => (state = {}) => {
         },
       });
     case PUBLISH_POST_SUCCESS:
+    case MODIFY_POST_SUCCESS:
       return assoc(postId, payload, state);
     case DELETE_POST:
       return dissoc(postId, state);
@@ -114,6 +115,7 @@ const posts = (
     case ADD_COMMENT_SUCCESS:
     case DELETE_COMMENT:
     case SWITCH_COMMENT_SORT_WAY:
+    case MODIFY_POST_SUCCESS:
       return updatePosts({});
     case SWITCH_POST_SORT_WAY:
       // 针对整个分类的排序，所以作为该 state 下的属性即可。

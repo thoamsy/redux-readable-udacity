@@ -55,12 +55,7 @@ export const fetchPosts = category => (dispatch, getStore) => {
   dispatch(requestPosts(category));
   const fetchURL = category !== 'all' ? `${category}/posts` : '/posts';
   return Promise.all([myFetch(fetchURL), delay(randomDelay)]).then(
-    ([posts]) =>
-      dispatch(renderMarkdown(
-        posts,
-        category,
-        RECEIVE_POSTS,
-      )),
+    ([posts]) => dispatch(renderMarkdown(posts, category, RECEIVE_POSTS)),
     console.warn
   );
 };
