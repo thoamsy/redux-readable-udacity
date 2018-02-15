@@ -64,11 +64,6 @@ export const fetchSavedPost = () => dispatch => {
 };
 
 export const MODIFY_POST_SUCCESS = 'MODIFY_POST_SUCCESS';
-const modifyPostRequest = (postId, payload) => ({
-  type: MODIFY_POST_SUCCESS,
-  postId,
-  payload,
-});
 export const modifyPost = ({
   body,
   title,
