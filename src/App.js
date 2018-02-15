@@ -31,15 +31,7 @@ const App = () => (
             />
           )}
         />
-        <Route
-          path="/posts/:id"
-          render={props => (
-            <AsyncPostDetail
-              post={getPost(store.getState(), props.match.params.id)}
-              {...props}
-            />
-          )}
-        />
+        <Route path="/posts/:id" component={AsyncPostDetail} />
       </Switch>
     </Router>
   </Provider>

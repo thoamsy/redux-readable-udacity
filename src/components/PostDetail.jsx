@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getPost } from '../reducers/';
 import Comments from './Comments';
 import PostContainer from './PostContainer';
 const leftTop = {
@@ -36,4 +38,6 @@ class PostDetail extends Component {
   }
 }
 
-export default PostDetail;
+export default connect((state, ownProps) => ({
+  post: getPost(state, ownProps.match.params.id),
+}))(PostDetail);
