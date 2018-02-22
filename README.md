@@ -2,8 +2,13 @@
 
 使用下面代码能就能运行了
 ```bash
-yarn && yarn start
+yarn
+cd api-server && yarn
+cd ..
+yarn start
 ```
+
+因为需要代码中还包含了一个本地的后端代码，所以不能放在 GitHub Pages 下展示。
 
 该项目主要用到了 [bulma](https://bulma.io/) 作为 css 库, 一些自定义样式使用 `scss` 编写.
 Redux 的风格主要参考 redux 文档的内容。其中用到了一些第三方库，
