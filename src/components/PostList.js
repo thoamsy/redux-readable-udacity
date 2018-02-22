@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import '../styles/post.css';
 import 'highlight.js/styles/github.css';
 import PostContainer from './PostContainer';
 

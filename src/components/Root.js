@@ -3,7 +3,6 @@ import PostList from '../components/PostList';
 import { List } from 'react-content-loader';
 import Navbar from './Navbar';
 import SortControl from './SortControl';
-
 import v4 from 'uuid/v4';
 import { connect } from 'react-redux';
 import { evolve, not } from 'ramda';

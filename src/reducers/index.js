@@ -49,13 +49,5 @@ export const getCommentEditStatus = state => commentId =>
 export const getCategories = prop('categories');
 export const getEdited = prop('edited');
 
-const defaultPost = {
-  id: '1234567890',
-  title: '请完整的打开该应用',
-  author: 'Thomas',
-  rendered: '<p>因为偷懒，程序的某些地方没有那么健壮，请在首页打开该程序。<p>',
-  category: 'React',
-  timestamp: Date.now(),
-};
 export const getPost = (state, postId) =>
-  pathOr(defaultPost, ['postsByCategory', 'all', 'byId', postId], state);
+  pathOr(null, ['postsByCategory', 'all', 'byId', postId], state);
