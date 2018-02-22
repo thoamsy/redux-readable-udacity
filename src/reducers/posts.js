@@ -59,8 +59,11 @@ const postReducer = action => (state = {}) => {
         },
       });
     case PUBLISH_POST_SUCCESS:
-    case MODIFY_POST_SUCCESS:
       return assoc(postId, payload, state);
+    case MODIFY_POST_SUCCESS:
+      return evolve(__, state)({
+        [postId]: merge(__, payload),
+      });
     case DELETE_POST:
       return dissoc(postId, state);
     case DELETE_COMMENT:
