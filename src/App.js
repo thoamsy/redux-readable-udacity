@@ -24,7 +24,7 @@ const App = () => (
       <Switch>
         <Route path="/:category?" exact component={AsyncRoot} />
         <Route
-          path="/:id/:verb(create|edit)"
+          path="/:verb(create|edit)/:id"
           render={props => (
             <AsyncEditPost
               edited={getPost(store.getState(), props.match.params.id)}
@@ -32,7 +32,7 @@ const App = () => (
             />
           )}
         />
-        <Route path="/posts/:id" component={AsyncPostDetail} />
+        <Route path="/:category/:id" component={AsyncPostDetail} />
       </Switch>
     </Router>
   </Provider>

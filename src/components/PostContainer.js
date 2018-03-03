@@ -44,7 +44,7 @@ const Post = ({
           dangerouslySetInnerHTML={{ __html: rendered }}
           className={`content ${isThumbnail ? 'is-thumbnail' : ''}`}
         />
-        {isThumbnail && <Link to={`/posts/${id}`}>阅读全文</Link>}
+        {isThumbnail && <Link to={`/${category}/${id}`}>阅读全文</Link>}
       </div>
       <time className="has-text-grey" style={{ margin: '10px 0' }}>
         {format(timestamp, 'YYYY-MM-DD')}
@@ -55,7 +55,7 @@ const Post = ({
       incVoteScore={incVoteScore}
       decVoteScore={decVoteScore}
       commentCount={commentCount}
-      editPostLink={`/${id}/edit`}
+      editPostLink={`/edit/${id}`}
     />
   </div>
 );

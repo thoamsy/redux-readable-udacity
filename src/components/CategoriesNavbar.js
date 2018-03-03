@@ -6,7 +6,7 @@ import '../styles/category.css';
 const EditPostItem = ({ id }) => (
   <div className="navbar-item">
     <Link
-      to={`/${id}/create`}
+      to={`/create/${id}`}
       data-tooltip="新建帖子"
       className="tooltip is-tooltip-bottom"
     >

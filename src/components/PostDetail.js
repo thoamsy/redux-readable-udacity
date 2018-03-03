@@ -15,7 +15,7 @@ class PostDetail extends Component {
   componentDidMount() {
     // 通过路由切换的试图的时候，滚动条可能还是保留在那个位置。
     if (!!window.scrollY) window.scrollTo(0, 0);
-    // 说明时直接从 URL 读取的，同样的也要去获取所有的 post。
+    // 说明是直接从 URL 读取的，同样的也要去获取所有的 post(不然 redux 的 store 是不完整的)
     if (this.props.post === null) {
       const { fetchPosts, fetchAllCategories } = this.props;
       let pos = 0;
