@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import EditComment from './EditComment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import '../styles/comment.css';
+import { List } from 'react-content-loader';
+import styled from 'styled-components';
 import distanceInWords from 'date-fns/distance_in_words_strict/';
 import zh from 'date-fns/locale/zh_cn';
-import { List } from 'react-content-loader';
+import EditComment from './EditComment';
 import ActionBar from './ActionBar';
 import SortControl from './SortControl';
 import { switchCommentSortWay } from '../actions/posts';
@@ -21,19 +21,19 @@ import {
   isCommentsFetching,
   getCommentEditStatus,
 } from '../reducers/';
+import '../styles/comment.css';
 
-const headTitle = {
-  fontSize: 16,
-  color: 'rgba(0,0,0,.68)',
-  fontWeight: 600,
-  margin: '10px 0',
-};
-const divider = {
-  marginBottom: 20,
-  borderTop: '2px solid rgba(0,0,0,.54)',
-  width: 75,
-};
-
+const HeadTitle = styled.h4`
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.68);
+  font-weight: 600;
+  width: 75px;
+`;
+const Divider = styled.div`
+  margin-bottom: 20px;
+  border-top: 2px solid rgba(0, 0, 0, 0.54);
+  width: 75px;
+`;
 class Comments extends Component {
   static propTypes = {
     err: PropTypes.string,
@@ -127,7 +127,7 @@ class Comments extends Component {
     }
     return (
       <section className="comment-block">
-        <h4 style={headTitle}>Response</h4>
+        <HeadTitle>Response</HeadTitle>
         <div className="field is-grouped">
           <div className="control is-expanded">
             <input
@@ -145,7 +145,7 @@ class Comments extends Component {
             </a>
           </div>
         </div>
-        <div style={divider} />
+        <Divider />
         {isFetching ? (
           <div style={{ margin: '0 auto', width: 500 }}>
             <List />

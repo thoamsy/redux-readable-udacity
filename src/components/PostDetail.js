@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { getPost, getCategories } from '../reducers/';
 import { fetchPosts } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
 import Comments from './Comments';
 import PostContainer from './PostContainer';
-const leftTop = {
-  position: 'absolute',
-  left: 48,
-  top: 24,
-};
+
+const GoBackLink = styled.a`
+  position: absolute;
+  left: 48px;
+  top: 24px;
+`;
 
 class PostDetail extends Component {
   componentDidMount() {
@@ -36,10 +38,10 @@ class PostDetail extends Component {
 
   render() {
     const { post } = this.props;
-    const { sortWay, id, category } = post;
     if (post === null) {
       return null;
     }
+    const { sortWay, id, category } = post;
 
     return (
       <div style={{ background: '#fafafa' }}>
@@ -49,9 +51,9 @@ class PostDetail extends Component {
             <Comments sortWay={sortWay} postId={id} postCategory={category} />
           </div>
         </section>
-        <a className="icon has-text-info" style={leftTop} onClick={this.onBack}>
+        <GoBackLink className="icon has-text-info" onClick={this.onBack}>
           <i className="fa fa-arrow-left fa-2x" />
-        </a>
+        </GoBackLink>
       </div>
     );
   }

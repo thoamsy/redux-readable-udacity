@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react';
-import PostList from '../components/PostList';
-import { List } from 'react-content-loader';
-import Navbar from './Navbar';
-import SortControl from './SortControl';
 import v4 from 'uuid/v4';
+import { List } from 'react-content-loader';
 import { connect } from 'react-redux';
 import { evolve, not } from 'ramda';
+import styled from 'styled-components';
+
+import PostList from '../components/PostList';
+import Navbar from './Navbar';
+import SortControl from './SortControl';
 import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
 import { fetchPosts, switchPostSortWay } from '../actions/posts';
 import { fetchAllCategories } from '../actions/category';
@@ -18,13 +20,13 @@ import {
   getPostSortWay,
 } from '../reducers/';
 
-const sectionStyle = {
-  marginTop: '2rem',
-  backgroundColor: '#f6f6f6',
-};
-const titleStyle = {
-  textTransform: 'capitalize',
-};
+const Section = styled.section`
+  margin-top: 2rem;
+  background-color: #f6f6f6;
+`;
+const CategoryTitle = styled.h1`
+  text-transform: capitalize;
+`;
 
 class Root extends Component {
   // 导航栏的三明治效果，这个仅仅是 UI 变换，为了方便就放在 state 里
@@ -84,10 +86,8 @@ class Root extends Component {
           <EditPostItem id={edited.id || v4()} />
         </Navbar>
 
-        <section className="section" style={sectionStyle}>
-          <h1 className="title" style={titleStyle}>
-            {category}
-          </h1>
+        <Section className="section">
+          <CategoryTitle className="title">{category}</CategoryTitle>
           <SortControl sortWay={sortWay} onClick={this.onSwitchSortWay} />
           <hr />
           {isPostsFetching ? (
@@ -97,7 +97,7 @@ class Root extends Component {
           ) : (
             <PostList posts={posts} />
           )}
-        </section>
+        </Section>
       </Fragment>
     );
   }

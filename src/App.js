@@ -1,14 +1,15 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
+
 import 'font-awesome/css/font-awesome.min.css';
 import 'bulma/css/bulma.css';
 import 'bulma-tooltip/dist/bulma-tooltip.min.css';
-import './styles/post.css';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { getPost } from './reducers/';
 import configure from './storeConfigure';
-
 import generageAsyncComment from './components/AsyncComponent';
+import './styles/post.css';
+
 const AsyncPostDetail = generageAsyncComment(() =>
   import('./components/PostDetail')
 );
