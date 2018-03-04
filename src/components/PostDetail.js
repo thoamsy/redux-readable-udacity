@@ -46,10 +46,19 @@ class PostDetail extends Component {
   };
 
   render() {
-    const { post } = this.props;
+    const { post, location } = this.props;
     if (post === null) {
       if (this.state.hadFetch) {
-        return <Redirect to="/not-found" />;
+        return (
+          <Redirect
+            to={{
+              pathname: '/not-found',
+              state: {
+                from: location.pathname,
+              },
+            }}
+          />
+        );
       }
       return null;
     }
