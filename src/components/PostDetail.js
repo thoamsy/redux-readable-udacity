@@ -42,7 +42,7 @@ class PostDetail extends Component {
   }
 
   onBack = () => {
-    this.props.history.goBack();
+    this.props.history.push('/');
   };
 
   render() {
