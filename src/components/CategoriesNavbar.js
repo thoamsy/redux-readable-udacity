@@ -1,8 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { NavLink, Link } from 'react-router-dom';
-import '../styles/category.css';
 
+const CategoryLink = styled(NavLink)`
+  text-transform: uppercase;
+  font-size: 18px;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.56);
+  transition: color ease-out 0.3s;
+  &:hover {
+    color: rgba(0, 0, 0, 0.84);
+    text-decoration: underline;
+  }
+`;
 const EditPostItem = ({ id }) => (
   <div className="navbar-item">
     <Link
@@ -18,15 +29,18 @@ const EditPostItem = ({ id }) => (
 );
 const CategoriesItem = ({ categories }) =>
   categories.map(category => (
-    <NavLink
+    <CategoryLink
       key={category.name}
       exact
-      activeClassName="is-active"
-      className="navbar-item category"
+      activeStyle={{
+        color: 'rgba(0, 0, 0, 0.84)',
+        fontWeight: 600,
+      }}
+      className="navbar-item"
       to={'/' + category.path}
     >
       {category.name}
-    </NavLink>
+    </CategoryLink>
   ));
 
 CategoriesItem.propTypes = {

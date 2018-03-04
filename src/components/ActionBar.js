@@ -1,6 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+
+const VoteButton = styled.button`
+  color: #0084ff;
+  background: rgba(0, 132, 255, 0.1);
+  border-color: transparent;
+
+  padding: 0 12px;
+  margin-right: 5px;
+  &:focus {
+    color: #fff;
+    background-color: #0084ff;
+  }
+`;
 
 const ActionBar = ({
   incVoteScore,
@@ -19,11 +33,11 @@ const ActionBar = ({
           </span>
           <span>{voteScore}</span>
         </button>
-        <button className="button vote" onClick={decVoteScore}>
+        <VoteButton className="button" onClick={decVoteScore}>
           <span className="icon is-small">
             <i className="fa fa-angle-down" />
           </span>
-        </button>
+        </VoteButton>
       </div>
 
       <div className="level-item">
