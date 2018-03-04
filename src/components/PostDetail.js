@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { getPost, getCategories } from '../reducers/';
-import { fetchPosts } from '../actions/posts';
-import { fetchAllCategories } from '../actions/category';
+import { getPost } from '../reducers/';
 import Comments from './Comments';
 import PostContainer from './PostContainer';
 
@@ -15,30 +13,9 @@ const GoBackLink = styled.a`
 `;
 
 class PostDetail extends Component {
-  state = {
-    hadFetch: false,
-  };
   componentDidMount() {
     // 通过路由切换的试图的时候，滚动条可能还是保留在那个位置。
     if (!!window.scrollY) window.scrollTo(0, 0);
-    // 说明是直接从 URL 读取的，同样的也要去获取所有的 post(不然 redux 的 store 是不完整的)
-    if (this.props.post === null) {
-      const { fetchPosts, fetchAllCategories } = this.props;
-      let pos = 0;
-      fetchAllCategories()
-        .then(() => this.props.categories)
-        .then(function preload(categories) {
-          if (!categories.length) return;
-          categories.slice(0, 3).map(({ name }) => fetchPosts(name));
-          pos += 3;
-          return preload(categories.slice(pos));
-        })
-        .then(() => {
-          this.setState({
-            hadFetch: true,
-          });
-        });
-    }
   }
 
   onBack = () => {
@@ -46,23 +23,15 @@ class PostDetail extends Component {
   };
 
   render() {
-    const { post, location } = this.props;
+    const { post } = this.props;
     if (post === null) {
-      if (this.state.hadFetch) {
-        return (
-          <Redirect
-            to={{
-              pathname: '/not-found',
-              state: {
-                from: location.pathname,
-              },
-            }}
-          />
-        );
-      }
       return null;
     }
-    const { sortWay, id, category } = post;
+    const { sortWay, id, category, error } = post;
+
+    if (error) {
+      return <Redirect to={error} />;
+    }
 
     return (
       <div style={{ background: '#fafafa' }}>
@@ -80,13 +49,6 @@ class PostDetail extends Component {
   }
 }
 
-export default connect(
-  (state, ownProps) => ({
-    post: getPost(state, ownProps.match.params.id),
-    categories: getCategories(state),
-  }),
-  {
-    fetchPosts,
-    fetchAllCategories,
-  }
-)(PostDetail);
+export default connect((state, ownProps) => ({
+  post: getPost(state, ownProps.match.params.id),
+}))(PostDetail);

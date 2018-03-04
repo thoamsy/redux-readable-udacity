@@ -10,7 +10,6 @@ import Navbar from './Navbar';
 import SortControl from './SortControl';
 import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
 import { fetchPosts, switchPostSortWay } from '../actions/posts';
-import { fetchAllCategories } from '../actions/category';
 import { fetchSavedPost } from '../actions/editPost';
 import {
   getPostsByCategory,
@@ -34,18 +33,9 @@ class Root extends Component {
     isToggle: false,
   };
 
-  componentDidMount() {
-    const { fetchPosts, fetchAllCategories } = this.props;
-    let pos = 0;
-    Promise.all([fetchSavedPost(), fetchAllCategories()])
-      .then(() => this.props.categories)
-      .then(function preload(categories) {
-        if (!categories.length) return;
-        categories.slice(0, 3).map(({ name }) => fetchPosts(name));
-        pos += 3;
-        return preload(categories.slice(pos));
-      });
-  }
+  componentDidMount = () => {
+    this.props.fetchSavedPost();
+  };
 
   componentDidUpdate(prevProps) {
     const { fetchPosts, category } = this.props;
@@ -117,7 +107,6 @@ const mapStateToProps = (state, { match: { params } }) => {
 
 export default connect(mapStateToProps, {
   fetchPosts,
-  fetchAllCategories,
   switchPostSortWay,
   fetchSavedPost,
 })(Root);

@@ -49,5 +49,13 @@ export const getCommentEditStatus = state => commentId =>
 export const getCategories = prop('categories');
 export const getEdited = prop('edited');
 
-export const getPost = (state, postId) =>
-  pathOr(null, ['postsByCategory', 'all', 'byId', postId], state);
+export const getPost = (state, postId) => {
+  // 在 fetch 结束后, 再确定该 post 是否存在.
+  if (
+    !isPostsFetching(state, 'all') &&
+    !state.postsByCategory.all.byId[postId]
+  ) {
+    return { error: `/${postId}/notfound` };
+  }
+  return pathOr(null, ['postsByCategory', 'all', 'byId', postId], state);
+};

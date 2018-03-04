@@ -18,7 +18,6 @@ const NotFound = ({ location }) => (
         <h1 className="title has-text-grey is-spaced">文章没有找到(╯﹏╰)</h1>
         <ActionMenu>
           <Link to="/">回到首页</Link>
-          <Link to={location.state.from}>刷新重试</Link>
         </ActionMenu>
       </div>
     </div>
