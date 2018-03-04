@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { pick, identical, isEmpty, complement } from 'ramda';
 import { connect } from 'react-redux';
@@ -24,6 +24,7 @@ const ChooseCategory = ({ categories, value, onChange, disabled }) => (
       {categories.map(({ name }) => (
         <button
           disabled={disabled}
+          type="button"
           key={name}
           onClick={onChange(name)}
           className={`button ${value === name ? 'is-info' : ''}`}
@@ -76,6 +77,9 @@ class EditPost extends Component {
   }
 
   componentDidMount() {
+    if (!!window.scrollY) {
+      window.scrollTo(0, 0);
+    }
     if (this.isPublishPost) {
       this.props.fetchSavedPost();
     }
@@ -131,7 +135,8 @@ class EditPost extends Component {
     });
   };
 
-  onPublic = () => {
+  onPublic = event => {
+    event.preventDefault();
     const { publishPost, history, modifyPost } = this.props;
     if (window.confirm('你确定发布吗？')) {
       if (this.isPublishPost) {
@@ -147,7 +152,7 @@ class EditPost extends Component {
   render() {
     const { history, edited: { isSaving } } = this.props;
     return (
-      <Fragment>
+      <form onSubmit={this.onPublic}>
         <Navbar>
           <div className="navbar-item">
             <h1>发布文章</h1>
@@ -155,12 +160,12 @@ class EditPost extends Component {
           <div className="navbar-item">
             <div className="field is-grouped">
               <p className="control">
-                <a
-                  onClick={this.onPublic}
+                <button
+                  type="submit"
                   className={`button is-text ${isSaving ? 'is-loading' : ''}`}
                 >
                   {this.isPublishPost ? '发布' : '修改'}
-                </a>
+                </button>
               </p>
               <p className="control">
                 <a
@@ -183,6 +188,7 @@ class EditPost extends Component {
               onChange={this.handleInputChange}
               name="author"
               disabled={!this.isPublishPost}
+              required
             />
             <ChooseCategory
               categories={this.props.categories.slice(1)}
@@ -197,6 +203,7 @@ class EditPost extends Component {
               value={this.state.title}
               onChange={this.handleInputChange}
               name="title"
+              required
             />
             <GeneralInput
               eleType="textarea"
@@ -209,7 +216,7 @@ class EditPost extends Component {
             />
           </div>
         </section>
-      </Fragment>
+      </form>
     );
   }
 }
