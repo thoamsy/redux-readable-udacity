@@ -7,22 +7,24 @@ import 'bulma/css/bulma.css';
 import 'bulma-tooltip/dist/bulma-tooltip.min.css';
 import { getPost } from './reducers/';
 import configure from './storeConfigure';
-import generageAsyncComment from './components/AsyncComponent';
+import generateAsyncComponent from './components/AsyncComponent';
+import NotFound from './components/404';
 import './styles/post.css';
 
-const AsyncPostDetail = generageAsyncComment(() =>
+const AsyncPostDetail = generateAsyncComponent(() =>
   import('./components/PostDetail')
 );
-const AsyncEditPost = generageAsyncComment(() =>
+const AsyncEditPost = generateAsyncComponent(() =>
   import('./components/EditPost')
 );
-const AsyncRoot = generageAsyncComment(() => import('./components/Root'));
+const AsyncRoot = generateAsyncComponent(() => import('./components/Root'));
 
 const store = configure();
 const App = () => (
   <Provider store={store}>
     <Router>
       <Switch>
+        <Route path="/not-found" component={NotFound} />
         <Route path="/:category?" exact component={AsyncRoot} />
         <Route
           path="/:verb(create|edit)/:id"

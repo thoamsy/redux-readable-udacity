@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { getPost, getCategories } from '../reducers/';
@@ -14,6 +15,9 @@ const GoBackLink = styled.a`
 `;
 
 class PostDetail extends Component {
+  state = {
+    hadFetch: false,
+  };
   componentDidMount() {
     // 通过路由切换的试图的时候，滚动条可能还是保留在那个位置。
     if (!!window.scrollY) window.scrollTo(0, 0);
@@ -28,6 +32,11 @@ class PostDetail extends Component {
           categories.slice(0, 3).map(({ name }) => fetchPosts(name));
           pos += 3;
           return preload(categories.slice(pos));
+        })
+        .then(() => {
+          this.setState({
+            hadFetch: true,
+          });
         });
     }
   }
@@ -39,6 +48,9 @@ class PostDetail extends Component {
   render() {
     const { post } = this.props;
     if (post === null) {
+      if (this.state.hadFetch) {
+        return <Redirect to="/not-found" />;
+      }
       return null;
     }
     const { sortWay, id, category } = post;
