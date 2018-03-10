@@ -16,7 +16,6 @@ import {
   isPostsFetching,
   getCategories,
   getEdited,
-  getPostSortWay,
 } from '../reducers/';
 
 const Section = styled.section`
@@ -35,7 +34,6 @@ class Root extends Component {
 
   componentDidMount = () => {
     this.props.fetchSavedPost();
-    setInterval(() => this.setState({ a: 1 }), 1000);
   };
 
   componentDidUpdate(prevProps) {

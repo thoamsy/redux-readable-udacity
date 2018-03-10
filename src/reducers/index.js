@@ -20,10 +20,10 @@ export const isPostsFetching = (state, category) =>
 const sortWith = compose(sort, descend, prop);
 
 const postsSelector = (state, category) => state.postsByCategory[category];
-export const getPostsByCategory = createSelector(postsSelector, posts => {
-  console.log('running');
-  return sortWith(posts.sortWay)(posts.ids.map(id => posts.byId[id]));
-});
+export const getPostsByCategory = createSelector(
+  postsSelector,
+  ({ sortWay, ids, byId }) => sortWith(sortWay)(ids.map(id => byId[id]))
+);
 
 export const getComments = (state, postId) => {
   const { comments: { byId } } = state;
