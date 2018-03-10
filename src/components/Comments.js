@@ -208,7 +208,7 @@ class Comments extends Component {
   }
 }
 
-const mapStateToMaps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps) => {
   const { postId } = ownProps;
   return {
     comments: getComments(state, postId),
@@ -216,7 +216,7 @@ const mapStateToMaps = (state, ownProps) => {
     isPending: getCommentEditStatus(state),
   };
 };
-export default connect(mapStateToMaps, {
+export default connect(mapStateToProps, {
   addComment,
   deleteComment,
   editComment,

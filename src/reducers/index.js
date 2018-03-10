@@ -1,9 +1,11 @@
+import { combineReducers } from 'redux';
+import { prop, __, descend, sort, compose, propOr, pathOr } from 'ramda';
+import { createSelector } from 'reselect';
+
 import categories from './category';
 import postsByCategory from './postsByCategory';
 import edited from './editPost';
 import comments from './comments';
-import { combineReducers } from 'redux';
-import { prop, pathOr, __, propOr, descend, sort, compose } from 'ramda';
 
 export default combineReducers({
   categories,
@@ -15,29 +17,21 @@ export default combineReducers({
 export const isPostsFetching = (state, category) =>
   pathOr(false, ['postsByCategory', category, 'isFetching'], state);
 
-const sortWith = type => {
-  const sortDescendWith = compose(sort, descend, prop);
-  return sortDescendWith(type);
-};
+const sortWith = compose(sort, descend, prop);
 
-export const getPostSortWay = (state, category) => {
-  return pathOr('timestamp', ['postsByCategory', category, 'sortWay'], state);
-};
-
-export const getPostsByCategory = (state, category) => {
-  const posts = state.postsByCategory[category];
-  const result = posts
-    ? sortWith(posts.sortWay)(posts.ids.map(id => posts.byId[id]))
-    : [];
-  return result;
-};
+const postsSelector = (state, category) => state.postsByCategory[category];
+export const getPostsByCategory = createSelector(postsSelector, posts => {
+  console.log('running');
+  return sortWith(posts.sortWay)(posts.ids.map(id => posts.byId[id]));
+});
 
 export const getComments = (state, postId) => {
   const { comments: { byId } } = state;
-  const post = getPost(state, postId);
-  return sortWith(post.sortWay)(
-    propOr([], 'comments', post).map(prop(__, byId))
-  );
+  return createSelector(getPost, post => {
+    return sortWith(post.sortWay)(
+      propOr([], 'comments', post).map(prop(__, byId))
+    );
+  })(state, postId);
 };
 
 export const isCommentsFetching = (state, postId) =>

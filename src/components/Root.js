@@ -35,6 +35,7 @@ class Root extends Component {
 
   componentDidMount = () => {
     this.props.fetchSavedPost();
+    setInterval(() => this.setState({ a: 1 }), 1000);
   };
 
   componentDidUpdate(prevProps) {
@@ -57,14 +58,9 @@ class Root extends Component {
   };
 
   render() {
-    const {
-      isPostsFetching,
-      posts,
-      categories,
-      category,
-      edited,
-      sortWay,
-    } = this.props;
+    const { isPostsFetching, posts, categories, category, edited } = this.props;
+
+    const { sortWay = 'timestamp' } = posts;
     return (
       <Fragment>
         <Navbar
@@ -101,7 +97,6 @@ const mapStateToProps = (state, { match: { params } }) => {
     posts: getPostsByCategory(state, category),
     categories: getCategories(state),
     edited: getEdited(state),
-    sortWay: getPostSortWay(state, category),
   };
 };
 
