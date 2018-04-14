@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { pick, identical, isEmpty, complement, equals } from 'ramda';
+import { pick, isEmpty, complement } from 'ramda';
 import { connect } from 'react-redux';
 import {
   savePost,
