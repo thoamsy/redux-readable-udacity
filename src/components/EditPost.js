@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { pick, identical, isEmpty, complement } from 'ramda';
+import { pick, identical, isEmpty, complement, equals } from 'ramda';
 import { connect } from 'react-redux';
 import {
   savePost,
@@ -97,15 +97,13 @@ class EditPost extends Component {
     );
   }
 
-  // 使用 props 来初始化 state，都需要用到这个方法。
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     const { edited } = nextProps;
-    if (!identical(edited, this.props.edited)) {
-      this.setState(pickMeta(edited));
-      this.code.doc.setValue(edited.body);
+    if (edited.body !== prevState.body) {
+      return pickMeta(edited);
     }
+    return null;
   }
-
   componentWillUnmount() {
     const isValid = complement(isEmpty);
     // 防止 code mirror 导致的内存泄漏。

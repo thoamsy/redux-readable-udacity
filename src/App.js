@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, StrictMode } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import 'font-awesome/css/font-awesome.min.css';
@@ -39,25 +39,28 @@ class App extends Component {
   };
 
   render() {
+    console.log(React.version);
     return (
-      <Provider store={store}>
-        <Router>
-          <Switch>
-            <Route path="/:id/notfound" component={NotFound} />
-            <Route path="/:category?" exact component={AsyncRoot} />
-            <Route
-              path="/:verb(create|edit)/:id"
-              render={props => (
-                <AsyncEditPost
-                  edited={getPost(store.getState(), props.match.params.id)}
-                  {...props}
-                />
-              )}
-            />
-            <Route path="/:category/:id" component={AsyncPostDetail} />
-          </Switch>
-        </Router>
-      </Provider>
+      <StrictMode>
+        <Provider store={store}>
+          <Router>
+            <Switch>
+              <Route path="/:id/notfound" component={NotFound} />
+              <Route path="/:category?" exact component={AsyncRoot} />
+              <Route
+                path="/:verb(create|edit)/:id"
+                render={props => (
+                  <AsyncEditPost
+                    edited={getPost(store.getState(), props.match.params.id)}
+                    {...props}
+                  />
+                )}
+              />
+              <Route path="/:category/:id" component={AsyncPostDetail} />
+            </Switch>
+          </Router>
+        </Provider>
+      </StrictMode>
     );
   }
 }

@@ -14,7 +14,7 @@ function generateAsyncComponent(loader, Placeholder = PageLoader) {
       Component,
     };
 
-    componentWillMount() {
+    componentDidMount() {
       delay(Math.random() * 1000)
         .then(this.load)
         .then(this.updateState);
