@@ -14,5 +14,17 @@ yarn start
 Redux 的风格主要参考 redux 文档的内容。其中用到了一些第三方库，
 像 `Ramda，react-modal, codemirror, markdown-it`等以提升开发体验。
 
-代码存在一个可能需要运行两次 reducer 的问题，这不算 bug，这是为了前期开发的方便。
-在后期会进行优化，以提高性能。
+**支持路由级别的动态加载**
+
+## 截图
+### 导航栏:
+![navbar](./img/nav.png)
+
+### 主体
+![body](./img/body.png)
+
+### 详情
+![detail](./img/detail.png)
+
+### 新增
+![create](./img/create.png)
