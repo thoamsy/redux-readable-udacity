@@ -1,9 +1,7 @@
 import React, { Component, lazy, Suspense } from 'react';
 import { Router } from '@reach/router';
-// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import { getPost } from './reducers';
 import configure from './storeConfigure';
 import { fetchAllCategories } from './actions/category';
 import { fetchPosts } from './actions/posts';
@@ -43,13 +41,13 @@ class App extends Component {
         <Suspense fallback={<PageLoader />}>
           <Router>
             <Root path="/" />
-            <Root path=":category" />
-            {/* <EditPost
-                path="/:verb(create|edit)/:id"
-                edited={getPost(store.getState(), props.match.params.id)}
-              /> */}
-            <PostDetail path=":category/:id" />
-            <NotFound path=":id/notfound" defualt />
+            <EditPost path="create/:id" />
+            <EditPost path="edit/:id" />
+            <Root path=":category">
+              <PostDetail path="/:id" />
+            </Root>
+
+            <NotFound path=":id/notfound" default />
           </Router>
         </Suspense>
       </Provider>

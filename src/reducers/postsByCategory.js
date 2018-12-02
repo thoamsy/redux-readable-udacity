@@ -1,4 +1,3 @@
-// import createReducer from './createReducer';
 import {
   RECEIVE_POSTS,
   REQUEST_POSTS,

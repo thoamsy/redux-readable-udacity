@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { pick, isEmpty, complement } from 'ramda';
 import { connect } from 'react-redux';
+
 import {
   savePost,
   fetchSavedPost,
   publishPost,
   modifyPost,
 } from '../actions/editPost';
+import { getPost } from '../reducers';
 import Navbar from './Navbar';
 import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
@@ -58,7 +60,6 @@ const GeneralInput = ({ eleType, labelName, ...props }) => (
 );
 GeneralInput.propType = {
   eleType: PropTypes.oneOf(['input', 'textarea', 'button']),
-  inputRef: PropTypes.func,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
 };
@@ -73,7 +74,7 @@ class EditPost extends Component {
     };
   }
   get isPublishPost() {
-    return this.props.match.params.verb === 'create';
+    return this.props.uri.includes('create');
   }
 
   componentDidMount() {
@@ -121,7 +122,7 @@ class EditPost extends Component {
   }
 
   handleInputChange = ({ target }) => {
-    let { value, name } = target;
+    const { value, name } = target;
     this.setState({
       [name]: value,
     });
@@ -135,20 +136,26 @@ class EditPost extends Component {
 
   onPublic = event => {
     event.preventDefault();
-    const { publishPost, history, modifyPost } = this.props;
+    const { publishPost, navigate, modifyPost } = this.props;
     if (window.confirm('你确定发布吗？')) {
       if (this.isPublishPost) {
-        publishPost(this.post).then(() => history.goBack());
+        publishPost(this.post).then(() => navigate('/', { replace: true }));
       } else {
         modifyPost(pick(['id', 'body', 'title', 'category'], this.post)).then(
-          () => history.goBack()
+          () => navigate('/', { replace: true })
         );
       }
     }
   };
 
   render() {
-    const { history, edited: { isSaving } } = this.props;
+    const {
+      navigate,
+      categories,
+      edited: { isSaving },
+    } = this.props;
+    const { body, title, author, category } = this.state;
+
     return (
       <form onSubmit={this.onPublic}>
         <Navbar>
@@ -168,7 +175,7 @@ class EditPost extends Component {
               <p className="control">
                 <a
                   className="button is-danger"
-                  onClick={() => !isSaving && history.goBack()}
+                  onClick={() => !isSaving && navigate('/', { replace: true })}
                 >
                   Cancel
                 </a>
@@ -182,15 +189,15 @@ class EditPost extends Component {
               eleType="input"
               labelName="作者"
               placeholder="请输入一个名字"
-              value={this.state.author}
+              value={author}
               onChange={this.handleInputChange}
               name="author"
               disabled={!this.isPublishPost}
               required
             />
             <ChooseCategory
-              categories={this.props.categories.slice(1)}
-              value={this.state.category}
+              categories={categories.slice(1)}
+              value={category}
               onChange={this.handleCategoryClick}
               disabled={!this.isPublishPost}
             />
@@ -198,7 +205,7 @@ class EditPost extends Component {
               eleType="input"
               labelName="文章标题"
               placeholder="请输入标题"
-              value={this.state.title}
+              value={title}
               onChange={this.handleInputChange}
               name="title"
               required
@@ -208,7 +215,7 @@ class EditPost extends Component {
               labelName="文章"
               placeholder="说点什么吧, 支持 Markdown"
               id="editSection"
-              value={this.state.body}
+              value={body}
               onChange={this.handleInputChange}
               name="body"
             />
@@ -219,15 +226,20 @@ class EditPost extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  categories: state.categories,
-  edited: ownProps.edited || state.edited,
-});
-EditPost = connect(mapStateToProps, {
-  savePost,
-  fetchSavedPost,
-  publishPost,
-  modifyPost,
-})(EditPost);
+const mapStateToProps = (state, { id }) => {
+  return {
+    categories: state.categories,
+    edited: getPost(state, id) || {},
+  };
+};
+EditPost = connect(
+  mapStateToProps,
+  {
+    savePost,
+    fetchSavedPost,
+    publishPost,
+    modifyPost,
+  }
+)(EditPost);
 
 export default EditPost;
