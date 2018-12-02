@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from '@reach/router';
 
-const CategoryLink = styled(NavLink)`
+const CategoryLink = styled(Link)`
   text-transform: uppercase;
   font-size: 18px;
   text-decoration: none;

@@ -1,11 +1,9 @@
 import React, { Component, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Router } from '@reach/router';
+// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import 'font-awesome/css/font-awesome.min.css';
-import 'bulma/css/bulma.css';
-import 'bulma-tooltip/dist/bulma-tooltip.min.css';
 
-import { getPost } from './reducers/';
+import { getPost } from './reducers';
 import configure from './storeConfigure';
 import { fetchAllCategories } from './actions/category';
 import { fetchPosts } from './actions/posts';
@@ -42,24 +40,17 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router>
-          <Suspense fallback={PageLoader}>
-            <Switch>
-              <Route path="/:id/notfound" component={NotFound} />
-              <Route path="/:category?" exact component={Root} />
-              <Route
+        <Suspense fallback={<PageLoader />}>
+          <Router>
+            <Root path=":category?" />
+            {/* <EditPost
                 path="/:verb(create|edit)/:id"
-                render={props => (
-                  <EditPost
-                    edited={getPost(store.getState(), props.match.params.id)}
-                    {...props}
-                  />
-                )}
-              />
-              <Route path="/:category/:id" component={PostDetail} />
-            </Switch>
-          </Suspense>
-        </Router>
+                edited={getPost(store.getState(), props.match.params.id)}
+              /> */}
+            <PostDetail path=":category/:id" />
+            <NotFound path=":id/notfound" defualt />
+          </Router>
+        </Suspense>
       </Provider>
     );
   }

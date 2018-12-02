@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ActionBar from './ActionBar';
 import format from 'date-fns/format';
-import { Link } from 'react-router-dom';
+import { Link } from '@reach/router';
 import { connect } from 'react-redux';
+
+import ActionBar from './ActionBar';
 import { deletePost } from '../actions/posts';
 import { postVoteScore } from '../actions/posts';
 
@@ -100,8 +101,11 @@ class PostContainer extends Component {
   }
 }
 
-export default connect(null, {
-  incVoteScore: postVoteScore(true),
-  decVoteScore: postVoteScore(false),
-  deletePost,
-})(PostContainer);
+export default connect(
+  null,
+  {
+    incVoteScore: postVoteScore(true),
+    decVoteScore: postVoteScore(false),
+    deletePost,
+  }
+)(PostContainer);

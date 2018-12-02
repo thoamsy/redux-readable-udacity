@@ -87,8 +87,7 @@ class Root extends Component {
   }
 }
 
-const mapStateToProps = (state, { match: { params } }) => {
-  const { category = 'all' } = params;
+const mapStateToProps = (state, { category = 'all' }) => {
   return {
     category,
     isPostsFetching: isPostsFetching(state, category),
@@ -98,8 +97,11 @@ const mapStateToProps = (state, { match: { params } }) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  fetchPosts,
-  switchPostSortWay,
-  fetchSavedPost,
-})(Root);
+export default connect(
+  mapStateToProps,
+  {
+    fetchPosts,
+    switchPostSortWay,
+    fetchSavedPost,
+  }
+)(Root);
