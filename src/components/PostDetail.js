@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect } from '@reach/router';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { getPost } from '../reducers/';
