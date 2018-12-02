@@ -60,4 +60,32 @@ const mapStateToProps = (state, { category = 'all' }) => {
   };
 };
 
+export const PublishNavBar = ({ isSaving, isPublishPost, navigate }) => (
+  <Navbar>
+    <div className="navbar-item">
+      <h1>发布文章</h1>
+    </div>
+    <div className="navbar-item">
+      <div className="field is-grouped">
+        <p className="control">
+          <button
+            type="submit"
+            className={`button is-text ${isSaving ? 'is-loading' : ''}`}
+          >
+            {isPublishPost ? '发布' : '修改'}
+          </button>
+        </p>
+        <p className="control">
+          <a
+            className="button is-danger"
+            onClick={() => !isSaving && navigate('/all', { replace: true })}
+          >
+            Cancel
+          </a>
+        </p>
+      </div>
+    </div>
+  </Navbar>
+);
+
 export default connect(mapStateToProps)(TopNavBar);

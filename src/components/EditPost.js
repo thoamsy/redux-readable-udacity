@@ -10,7 +10,7 @@ import {
   modifyPost,
 } from '../actions/editPost';
 import { getPost } from '../reducers';
-import Navbar from './Navbar';
+import { PublishNavBar } from './Navbar';
 import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/gfm/gfm';
@@ -18,7 +18,6 @@ import 'codemirror/theme/ttcn.css';
 import 'codemirror/addon/display/placeholder';
 import 'codemirror/addon/selection/active-line';
 import 'codemirror/mode/javascript/javascript';
-
 const ChooseCategory = ({ categories, value, onChange, disabled }) => (
   <div className="field">
     <label className="label">文章分类</label>
@@ -150,7 +149,6 @@ class EditPost extends Component {
 
   render() {
     const {
-      navigate,
       categories,
       edited: { isSaving },
     } = this.props;
@@ -158,33 +156,11 @@ class EditPost extends Component {
 
     return (
       <form onSubmit={this.onPublic}>
-        <Navbar>
-          <div className="navbar-item">
-            <h1>发布文章</h1>
-          </div>
-          <div className="navbar-item">
-            <div className="field is-grouped">
-              <p className="control">
-                <button
-                  type="submit"
-                  className={`button is-text ${isSaving ? 'is-loading' : ''}`}
-                >
-                  {this.isPublishPost ? '发布' : '修改'}
-                </button>
-              </p>
-              <p className="control">
-                <a
-                  className="button is-danger"
-                  onClick={() =>
-                    !isSaving && navigate('/all', { replace: true })
-                  }
-                >
-                  Cancel
-                </a>
-              </p>
-            </div>
-          </div>
-        </Navbar>
+        <PublishNavBar
+          navigate={this.props.navigate}
+          isSaving={isSaving}
+          isPublishPost={this.isPublishPost}
+        />
         <section className="section">
           <div className="container">
             <GeneralInput
