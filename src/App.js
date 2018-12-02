@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import 'font-awesome/css/font-awesome.min.css';
@@ -7,19 +7,20 @@ import 'bulma-tooltip/dist/bulma-tooltip.min.css';
 
 import { getPost } from './reducers/';
 import configure from './storeConfigure';
-import generateAsyncComponent from './components/AsyncComponent';
 import { fetchAllCategories } from './actions/category';
 import { fetchPosts } from './actions/posts';
 import NotFound from './components/NotFound';
 import './styles/post.css';
 
-const AsyncPostDetail = generateAsyncComponent(() =>
-  import('./components/PostDetail')
+const PageLoader = () => (
+  <div className="pageloader is-active">
+    <span className="title">加载中♪(´ε｀ )</span>
+  </div>
 );
-const AsyncEditPost = generateAsyncComponent(() =>
-  import('./components/EditPost')
-);
-const AsyncRoot = generateAsyncComponent(() => import('./components/Root'));
+
+const PostDetail = lazy(() => import('./components/PostDetail'));
+const EditPost = lazy(() => import('./components/EditPost'));
+const Root = lazy(() => import('./components/Root'));
 
 const store = configure();
 class App extends Component {
@@ -42,20 +43,22 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <Switch>
-            <Route path="/:id/notfound" component={NotFound} />
-            <Route path="/:category?" exact component={AsyncRoot} />
-            <Route
-              path="/:verb(create|edit)/:id"
-              render={props => (
-                <AsyncEditPost
-                  edited={getPost(store.getState(), props.match.params.id)}
-                  {...props}
-                />
-              )}
-            />
-            <Route path="/:category/:id" component={AsyncPostDetail} />
-          </Switch>
+          <Suspense fallback={PageLoader}>
+            <Switch>
+              <Route path="/:id/notfound" component={NotFound} />
+              <Route path="/:category?" exact component={Root} />
+              <Route
+                path="/:verb(create|edit)/:id"
+                render={props => (
+                  <EditPost
+                    edited={getPost(store.getState(), props.match.params.id)}
+                    {...props}
+                  />
+                )}
+              />
+              <Route path="/:category/:id" component={PostDetail} />
+            </Switch>
+          </Suspense>
         </Router>
       </Provider>
     );
