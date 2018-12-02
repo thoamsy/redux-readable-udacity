@@ -42,7 +42,8 @@ class App extends Component {
       <Provider store={store}>
         <Suspense fallback={<PageLoader />}>
           <Router>
-            <Root path=":category?" />
+            <Root path="/" />
+            <Root path=":category" />
             {/* <EditPost
                 path="/:verb(create|edit)/:id"
                 edited={getPost(store.getState(), props.match.params.id)}

@@ -19,7 +19,7 @@ class PostDetail extends Component {
   }
 
   onBack = () => {
-    this.props.history.push('/');
+    this.props.navigate('/');
   };
 
   render() {
@@ -49,6 +49,6 @@ class PostDetail extends Component {
   }
 }
 
-export default connect((state, ownProps) => ({
-  post: getPost(state, ownProps.match.params.id),
+export default connect((state, { id }) => ({
+  post: getPost(state, id),
 }))(PostDetail);
