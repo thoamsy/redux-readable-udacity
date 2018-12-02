@@ -1,22 +1,13 @@
 import React, { Component, Fragment } from 'react';
-import v4 from 'uuid/v4';
 import { List } from 'react-content-loader';
 import { connect } from 'react-redux';
-import { evolve, not } from 'ramda';
 import styled from 'styled-components';
 
 import PostList from '../components/PostList';
-import Navbar from './Navbar';
 import SortControl from './SortControl';
-import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
 import { fetchPosts, switchPostSortWay } from '../actions/posts';
 import { fetchSavedPost } from '../actions/editPost';
-import {
-  getPostsByCategory,
-  isPostsFetching,
-  getCategories,
-  getEdited,
-} from '../reducers/';
+import { getPostsByCategory, isPostsFetching } from '../reducers';
 
 const Section = styled.section`
   margin-top: 2rem;
@@ -43,32 +34,24 @@ class Root extends Component {
     }
   }
 
-  onToggleMenu = ({ target }) => {
-    this.setState(
-      evolve({
-        isToggle: not,
-      })
-    );
-  };
-
   onSwitchSortWay = () => {
     this.props.switchPostSortWay(this.props.category);
   };
 
   render() {
-    const { isPostsFetching, posts, categories, category, edited } = this.props;
+    const { isPostsFetching, posts, category } = this.props;
 
     const { sortWay = 'timestamp' } = posts;
     return (
       <Fragment>
-        <Navbar
+        {/* <Navbar
           categories={categories}
           onToggleMenu={this.onToggleMenu}
           isNavbarToggle={this.state.isToggle}
         >
           {categories => <CategoriesItem categories={categories} />}
           <EditPostItem id={edited.id || v4()} />
-        </Navbar>
+        </Navbar> */}
 
         <Section className="section">
           <CategoryTitle className="title">{category}</CategoryTitle>
@@ -89,11 +72,8 @@ class Root extends Component {
 
 const mapStateToProps = (state, { category = 'all' }) => {
   return {
-    category,
     isPostsFetching: isPostsFetching(state, category),
     posts: getPostsByCategory(state, category),
-    categories: getCategories(state),
-    edited: getEdited(state),
   };
 };
 

@@ -34,7 +34,7 @@ class PostDetail extends Component {
     }
 
     return (
-      <div style={{ background: '#fafafa' }}>
+      <div style={{ background: '#fafafa', paddingTop: '1.5rem' }}>
         <section className="section">
           <div className="container">
             <PostContainer {...post} />

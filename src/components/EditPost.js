@@ -139,10 +139,10 @@ class EditPost extends Component {
     const { publishPost, navigate, modifyPost } = this.props;
     if (window.confirm('你确定发布吗？')) {
       if (this.isPublishPost) {
-        publishPost(this.post).then(() => navigate('/', { replace: true }));
+        publishPost(this.post).then(() => navigate('/all', { replace: true }));
       } else {
         modifyPost(pick(['id', 'body', 'title', 'category'], this.post)).then(
-          () => navigate('/', { replace: true })
+          () => navigate('/all', { replace: true })
         );
       }
     }
@@ -175,7 +175,9 @@ class EditPost extends Component {
               <p className="control">
                 <a
                   className="button is-danger"
-                  onClick={() => !isSaving && navigate('/', { replace: true })}
+                  onClick={() =>
+                    !isSaving && navigate('/all', { replace: true })
+                  }
                 >
                   Cancel
                 </a>

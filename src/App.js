@@ -1,5 +1,5 @@
 import React, { Component, lazy, Suspense } from 'react';
-import { Router } from '@reach/router';
+import { Router, Redirect } from '@reach/router';
 import { Provider } from 'react-redux';
 
 import configure from './storeConfigure';
@@ -17,8 +17,10 @@ const PageLoader = () => (
 const PostDetail = lazy(() => import('./components/PostDetail'));
 const EditPost = lazy(() => import('./components/EditPost'));
 const Root = lazy(() => import('./components/Root'));
+const Nav = lazy(() => import('./components/Navbar'));
 
 const store = configure();
+
 class App extends Component {
   // fetch 的操作改为一打开应用就开始
   componentDidMount = () => {
@@ -40,13 +42,16 @@ class App extends Component {
       <Provider store={store}>
         <Suspense fallback={<PageLoader />}>
           <Router>
-            <Root path="/" />
             <EditPost path="create/:id" />
             <EditPost path="edit/:id" />
-            <Root path=":category">
-              <PostDetail path="/:id" />
-            </Root>
 
+            <Nav path=":category">
+              <Root path="/" />
+              <PostDetail path=":id" />
+            </Nav>
+
+            {/* <PostDetail path=":category/:id" /> */}
+            <Redirect from="/" to="/all" />
             <NotFound path=":id/notfound" default />
           </Router>
         </Suspense>
