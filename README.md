@@ -10,11 +10,11 @@ yarn start
 
 因为需要代码中还包含了一个本地的后端代码，所以不能放在 GitHub Pages 下展示。
 
-该项目主要用到了 [bulma](https://bulma.io/) 作为 css 库, 一些自定义样式使用 `scss` 编写.
-Redux 的风格主要参考 redux 文档的内容。其中用到了一些第三方库，
+该项目主要用到了 [bulma](https://bulma.io/) 作为 css 库, Redux 的风格主要参考 redux 文档的内容。
+其中用到了一些第三方库，
 像 `Ramda，react-modal, codemirror, markdown-it`等以提升开发体验。
 
-**支持路由级别的动态加载**
+**PS: 虽然 dep 中，React 是 16.7，但是因为代码写得太早，不愿意也不容易重构成 hooks**
 
 ## 截图
 ### 导航栏:
