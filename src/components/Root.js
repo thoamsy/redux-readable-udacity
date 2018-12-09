@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { List } from 'react-content-loader';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -43,39 +43,26 @@ class Root extends Component {
 
     const { sortWay = 'timestamp' } = posts;
     return (
-      <Fragment>
-        {/* <Navbar
-          categories={categories}
-          onToggleMenu={this.onToggleMenu}
-          isNavbarToggle={this.state.isToggle}
-        >
-          {categories => <CategoriesItem categories={categories} />}
-          <EditPostItem id={edited.id || v4()} />
-        </Navbar> */}
-
-        <Section className="section">
-          <CategoryTitle className="title">{category}</CategoryTitle>
-          <SortControl sortWay={sortWay} onClick={this.onSwitchSortWay} />
-          <hr />
-          {isPostsFetching ? (
-            <div style={{ margin: '0 auto', width: 500 }}>
-              <List />
-            </div>
-          ) : (
-            <PostList posts={posts} />
-          )}
-        </Section>
-      </Fragment>
+      <Section className="section">
+        <CategoryTitle className="title">{category}</CategoryTitle>
+        <SortControl sortWay={sortWay} onClick={this.onSwitchSortWay} />
+        <hr />
+        {isPostsFetching ? (
+          <div style={{ margin: '0 auto', width: 500 }}>
+            <List />
+          </div>
+        ) : (
+          <PostList posts={posts} />
+        )}
+      </Section>
     );
   }
 }
 
-const mapStateToProps = (state, { category = 'all' }) => {
-  return {
-    isPostsFetching: isPostsFetching(state, category),
-    posts: getPostsByCategory(state, category),
-  };
-};
+const mapStateToProps = (state, { category = 'all' }) => ({
+  isPostsFetching: isPostsFetching(state, category),
+  posts: getPostsByCategory(state, category),
+});
 
 export default connect(
   mapStateToProps,
