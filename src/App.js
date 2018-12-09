@@ -50,7 +50,6 @@ class App extends Component {
               <PostDetail path=":id" />
             </Nav>
 
-            {/* <PostDetail path=":category/:id" /> */}
             <Redirect from="/" to="/all" />
             <NotFound path=":id/notfound" default />
           </Router>
