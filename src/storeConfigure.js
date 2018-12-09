@@ -13,14 +13,17 @@ const workerMiddleware = ({ dispatch }) => {
     render.onmessage = ({ data }) => {
       dispatch({ type: action.descType, ...data });
     };
-    render.postMessage({ ...action });
+    render.postMessage(action);
   };
 };
 
 const dev =
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 const middlewares = dev
-  ? compose(applyMiddleware(thunk, workerMiddleware), dev)
+  ? compose(
+      applyMiddleware(thunk, workerMiddleware),
+      dev
+    )
   : applyMiddleware(thunk, workerMiddleware);
 
 export default () => createStore(reducers, middlewares);

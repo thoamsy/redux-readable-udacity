@@ -7,7 +7,7 @@ const categories = (
   state = [
     {
       name: 'all',
-      path: '',
+      path: 'all',
     },
   ],
   action

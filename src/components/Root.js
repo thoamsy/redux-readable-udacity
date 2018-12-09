@@ -1,22 +1,13 @@
-import React, { Component, Fragment } from 'react';
-import v4 from 'uuid/v4';
+import React, { Component } from 'react';
 import { List } from 'react-content-loader';
 import { connect } from 'react-redux';
-import { evolve, not } from 'ramda';
 import styled from 'styled-components';
 
 import PostList from '../components/PostList';
-import Navbar from './Navbar';
 import SortControl from './SortControl';
-import { CategoriesItem, EditPostItem } from './CategoriesNavbar';
 import { fetchPosts, switchPostSortWay } from '../actions/posts';
 import { fetchSavedPost } from '../actions/editPost';
-import {
-  getPostsByCategory,
-  isPostsFetching,
-  getCategories,
-  getEdited,
-} from '../reducers/';
+import { getPostsByCategory, isPostsFetching } from '../reducers';
 
 const Section = styled.section`
   margin-top: 2rem;
@@ -43,63 +34,41 @@ class Root extends Component {
     }
   }
 
-  onToggleMenu = ({ target }) => {
-    this.setState(
-      evolve({
-        isToggle: not,
-      })
-    );
-  };
-
   onSwitchSortWay = () => {
     this.props.switchPostSortWay(this.props.category);
   };
 
   render() {
-    const { isPostsFetching, posts, categories, category, edited } = this.props;
+    const { isPostsFetching, posts, category } = this.props;
 
     const { sortWay = 'timestamp' } = posts;
     return (
-      <Fragment>
-        <Navbar
-          categories={categories}
-          onToggleMenu={this.onToggleMenu}
-          isNavbarToggle={this.state.isToggle}
-        >
-          {categories => <CategoriesItem categories={categories} />}
-          <EditPostItem id={edited.id || v4()} />
-        </Navbar>
-
-        <Section className="section">
-          <CategoryTitle className="title">{category}</CategoryTitle>
-          <SortControl sortWay={sortWay} onClick={this.onSwitchSortWay} />
-          <hr />
-          {isPostsFetching ? (
-            <div style={{ margin: '0 auto', width: 500 }}>
-              <List />
-            </div>
-          ) : (
-            <PostList posts={posts} />
-          )}
-        </Section>
-      </Fragment>
+      <Section className="section">
+        <CategoryTitle className="title">{category}</CategoryTitle>
+        <SortControl sortWay={sortWay} onClick={this.onSwitchSortWay} />
+        <hr />
+        {isPostsFetching ? (
+          <div style={{ margin: '0 auto', width: 500 }}>
+            <List />
+          </div>
+        ) : (
+          <PostList posts={posts} />
+        )}
+      </Section>
     );
   }
 }
 
-const mapStateToProps = (state, { match: { params } }) => {
-  const { category = 'all' } = params;
-  return {
-    category,
-    isPostsFetching: isPostsFetching(state, category),
-    posts: getPostsByCategory(state, category),
-    categories: getCategories(state),
-    edited: getEdited(state),
-  };
-};
+const mapStateToProps = (state, { category = 'all' }) => ({
+  isPostsFetching: isPostsFetching(state, category),
+  posts: getPostsByCategory(state, category),
+});
 
-export default connect(mapStateToProps, {
-  fetchPosts,
-  switchPostSortWay,
-  fetchSavedPost,
-})(Root);
+export default connect(
+  mapStateToProps,
+  {
+    fetchPosts,
+    switchPostSortWay,
+    fetchSavedPost,
+  }
+)(Root);

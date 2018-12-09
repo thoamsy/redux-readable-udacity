@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect } from '@reach/router';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { getPost } from '../reducers/';
@@ -19,7 +19,7 @@ class PostDetail extends Component {
   }
 
   onBack = () => {
-    this.props.history.push('/');
+    this.props.navigate('/');
   };
 
   render() {
@@ -34,7 +34,7 @@ class PostDetail extends Component {
     }
 
     return (
-      <div style={{ background: '#fafafa' }}>
+      <div style={{ background: '#fafafa', paddingTop: '1.5rem' }}>
         <section className="section">
           <div className="container">
             <PostContainer {...post} />
@@ -49,6 +49,6 @@ class PostDetail extends Component {
   }
 }
 
-export default connect((state, ownProps) => ({
-  post: getPost(state, ownProps.match.params.id),
+export default connect((state, { id }) => ({
+  post: getPost(state, id),
 }))(PostDetail);

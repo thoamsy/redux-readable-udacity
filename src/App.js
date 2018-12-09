@@ -1,27 +1,26 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { Component, lazy, Suspense } from 'react';
+import { Router, Redirect } from '@reach/router';
 import { Provider } from 'react-redux';
-import 'font-awesome/css/font-awesome.min.css';
-import 'bulma/css/bulma.css';
-import 'bulma-tooltip/dist/bulma-tooltip.min.css';
 
-import { getPost } from './reducers/';
 import configure from './storeConfigure';
-import generateAsyncComponent from './components/AsyncComponent';
 import { fetchAllCategories } from './actions/category';
 import { fetchPosts } from './actions/posts';
 import NotFound from './components/NotFound';
 import './styles/post.css';
 
-const AsyncPostDetail = generateAsyncComponent(() =>
-  import('./components/PostDetail')
+const PageLoader = () => (
+  <div className="pageloader is-active">
+    <span className="title">加载中♪(´ε｀ )</span>
+  </div>
 );
-const AsyncEditPost = generateAsyncComponent(() =>
-  import('./components/EditPost')
-);
-const AsyncRoot = generateAsyncComponent(() => import('./components/Root'));
+
+const PostDetail = lazy(() => import('./components/PostDetail'));
+const EditPost = lazy(() => import('./components/EditPost'));
+const Root = lazy(() => import('./components/Root'));
+const Nav = lazy(() => import('./components/Navbar'));
 
 const store = configure();
+
 class App extends Component {
   // fetch 的操作改为一打开应用就开始
   componentDidMount = () => {
@@ -41,22 +40,20 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router>
-          <Switch>
-            <Route path="/:id/notfound" component={NotFound} />
-            <Route path="/:category?" exact component={AsyncRoot} />
-            <Route
-              path="/:verb(create|edit)/:id"
-              render={props => (
-                <AsyncEditPost
-                  edited={getPost(store.getState(), props.match.params.id)}
-                  {...props}
-                />
-              )}
-            />
-            <Route path="/:category/:id" component={AsyncPostDetail} />
-          </Switch>
-        </Router>
+        <Suspense fallback={<PageLoader />}>
+          <Router>
+            <EditPost path="create/:id" />
+            <EditPost path="edit/:id" />
+
+            <Nav path=":category">
+              <Root path="/" />
+              <PostDetail path=":id" />
+            </Nav>
+
+            <Redirect from="/" to="/all" />
+            <NotFound path=":id/notfound" default />
+          </Router>
+        </Suspense>
       </Provider>
     );
   }

@@ -1,7 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from '@reach/router';
+
+const NavLink = props => (
+  <Link
+    {...props}
+    getProps={({ isCurrent }) =>
+      isCurrent
+        ? {
+            style: {
+              color: 'rgba(0, 0, 0, 0.84)',
+              fontWeight: 600,
+            },
+          }
+        : null
+    }
+  />
+);
 
 const CategoryLink = styled(NavLink)`
   text-transform: uppercase;
@@ -9,6 +25,7 @@ const CategoryLink = styled(NavLink)`
   text-decoration: none;
   color: rgba(0, 0, 0, 0.56);
   transition: color ease-out 0.3s;
+
   &:hover {
     color: rgba(0, 0, 0, 0.84);
     text-decoration: underline;
@@ -31,11 +48,6 @@ const CategoriesItem = ({ categories }) =>
   categories.map(category => (
     <CategoryLink
       key={category.name}
-      exact
-      activeStyle={{
-        color: 'rgba(0, 0, 0, 0.84)',
-        fontWeight: 600,
-      }}
       className="navbar-item"
       to={'/' + category.path}
     >
